@@ -1,0 +1,4 @@
+.DS_Store
+node_modules/
+# Local working files and earlier sketch versions are not submission files.
+output/
