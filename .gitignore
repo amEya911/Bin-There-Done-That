@@ -2,3 +2,20 @@
 node_modules/
 # Local working files and earlier sketch versions are not submission files.
 output/
+.next/
+.env*
+!.env.example
+.data/
+*.tsbuildinfo
+coverage/
+.impeccable/review/
+public/vision-runtime/
+public/models/vision/*.onnx
+# Python environments, annotation caches and local service state.
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+supabase/.temp/

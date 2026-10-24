@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "1.0.0",
+  "datasetId": "bin-there-waste-v1",
+  "taxonomy": "training/recognition-v1.json",
+  "dataRoot": ".data/waste-dataset",
+  "seed": 20261024,
+  "splitRatios": { "train": 0.7, "val": 0.15, "test": 0.15 },
+  "nearDuplicateHammingDistance": 6,
+  "starterImageLimit": 120,
+  "collectionTargetImages": 3500,
+  "collectionRequestedRange": [3000, 4000],
+  "reviewRequired": true,
+  "runtimeActivation": false,
+  "notes": [
+    "Forty planned object classes remain fixed; missing classes are coverage gaps, not trained support.",
+    "Object detection and three-class single-bin crop classification are separate tasks.",
+    "Public-source labels are proposals until taxonomy, completeness, rights and grouping review.",
+    "COCO validation benchmark and earlier demo/smoke-test images are reserved from training.",
+    "Split related sessions, entities, sites and duplicate images together; frozen assignments cannot silently move.",
+    "Collection targets are planning aids and do not establish accuracy or model readiness."
+  ]
+}

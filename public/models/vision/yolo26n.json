@@ -1,0 +1,24 @@
+{
+  "id": "yolo26n",
+  "url": "/models/vision/yolo26n-2b1a87cfb9d5.onnx",
+  "bytes": 9884242,
+  "sha256": "2b1a87cfb9d5af9ef85313dc4fa0b591cc84c90b2fd0dc874cac14f4fafdf5c4",
+  "source": "https://huggingface.co/Ultralytics/YOLO26/resolve/main/yolo26n.pt",
+  "license": "AGPL-3.0",
+  "size": 640,
+  "decoder": "yolo-raw",
+  "input": "images",
+  "outputs": {
+    "output0": [
+      1,
+      84,
+      8400
+    ]
+  },
+  "versions": {
+    "torch": "2.14.1",
+    "onnx": "1.23.2",
+    "ultralytics": "8.4.187",
+    "rfdetr": "1.11.2"
+  }
+}

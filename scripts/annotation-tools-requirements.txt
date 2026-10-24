@@ -1,0 +1,2 @@
+# Optional free local annotation workspace, isolated from the website.
+label-studio==1.23.2

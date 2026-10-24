@@ -1,0 +1,13 @@
+# Export tooling only; never installed on a visitor's phone or the Next server.
+# Verified with Python 3.12.14 on macOS ARM64.
+torch==2.14.1
+torchvision==0.29.1
+ultralytics==8.4.187
+rfdetr[onnx]==1.11.2
+onnx==1.23.2
+onnxruntime==1.31.0
+onnxscript==0.7.2
+onnxsim==0.8.1
+playwright==1.64.1
+pycocotools==2.0.11
+pillow==13.0.0

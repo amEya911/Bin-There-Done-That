@@ -1,0 +1,29 @@
+{
+  "id": "rfdetr-nano",
+  "url": "/models/vision/rfdetr-nano-06b14d3e39b1.onnx",
+  "bytes": 107824162,
+  "sha256": "06b14d3e39b133b8466e330b4c417dd81c3ef9c3f900fbd918811b579356698c",
+  "source": "https://storage.googleapis.com/rfdetr/nano_coco/checkpoint_best_regular.pth",
+  "license": "Apache-2.0",
+  "size": 384,
+  "decoder": "rfdetr",
+  "input": "input",
+  "outputs": {
+    "dets": [
+      1,
+      300,
+      4
+    ],
+    "labels": [
+      1,
+      300,
+      91
+    ]
+  },
+  "versions": {
+    "torch": "2.14.1",
+    "onnx": "1.23.2",
+    "ultralytics": "8.4.187",
+    "rfdetr": "1.11.2"
+  }
+}

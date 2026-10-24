@@ -1,0 +1,8 @@
+{
+  "source": "https://open.toronto.ca/dataset/street-furniture-litter-receptacle/",
+  "importedAt": "2026-10-22T18:47:13.266Z",
+  "sha256": "c5a5d208ad3cad1ca06cfa7b7720320ad9c50e93af7d40dbdf0197e2b4810c12",
+  "total": 10457,
+  "active": 9822,
+  "removed": 635
+}

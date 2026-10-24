@@ -1,0 +1,174 @@
+.page {
+  width: min(100%, 540px);
+  margin: 16px auto 50px;
+  color: var(--ink);
+}
+.page h1 {
+  margin: 0 0 12px;
+  font-size: clamp(30px, 4vw, 40px);
+  font-weight: 500;
+  letter-spacing: -0.045em;
+}
+.intro {
+  margin: 0 0 30px;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.6;
+}
+.form {
+  display: grid;
+  gap: 20px;
+}
+.photo {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  min-height: 290px;
+  padding: 30px;
+  border: 1px dashed var(--muted);
+  border-radius: 12px;
+  color: var(--ink);
+  background: var(--surface-alt);
+  cursor: pointer;
+  overflow: hidden;
+}
+.photo:focus-within {
+  outline: 2px solid var(--brand);
+  outline-offset: 4px;
+}
+.photo input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+.photo strong {
+  font-size: 16px;
+  font-weight: 500;
+}
+.photo > span {
+  color: var(--muted);
+  font-size: 13px;
+}
+.hasPhoto {
+  padding: 0;
+  height: 340px;
+  border-style: solid;
+  border-color: var(--line);
+  background: var(--paper);
+}
+.photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.photo .replace {
+  position: absolute;
+  bottom: 14px;
+  padding: 10px 14px;
+  border-radius: 6px;
+  color: var(--ink);
+  background: var(--paper);
+  box-shadow: var(--shadow);
+  pointer-events: none;
+}
+.location {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+.location > span {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.location p {
+  margin: 0;
+}
+.location button {
+  min-height: 44px;
+  color: var(--link);
+  background: transparent;
+  padding: 0;
+  font-size: 13px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 48px;
+  padding: 12px 20px;
+  border: 0;
+  border-radius: 8px;
+  color: var(--action-ink);
+  background: var(--action);
+  font-size: 14px;
+  font-weight: 600;
+}
+.submit:hover:enabled {
+  background: var(--action-hover);
+}
+.submit:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.note {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+.error {
+  margin: 0;
+  color: var(--link);
+  font-size: 14px;
+  line-height: 1.6;
+}
+.success {
+  padding-block: 60px;
+}
+.success > svg {
+  margin-bottom: 22px;
+  color: var(--brand);
+}
+.success p {
+  color: var(--muted);
+  margin-bottom: 30px;
+}
+.success .submit {
+  width: fit-content;
+}
+.spin {
+  animation: locating 1s linear infinite;
+}
+@keyframes locating {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .spin {
+    animation: none;
+  }
+}
+@media (max-width: 760px) {
+  .page {
+    margin-top: 8px;
+  }
+  .photo {
+    min-height: 260px;
+    padding: 20px;
+  }
+  .hasPhoto {
+    padding: 0;
+  }
+}

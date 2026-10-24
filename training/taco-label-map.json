@@ -1,0 +1,34 @@
+{
+  "version": "1.0.0",
+  "policy": "Proposals only. Every image needs completeness, subtype, material and grouping review. null means REVIEW_UNMAPPED, never silently background.",
+  "source": "https://zenodo.org/records/3587843",
+  "annotationRevision": "3844bcd3535cd12ec0218494d1d79f1372f553cc",
+  "mapping": {
+    "Aluminium foil": "foil_sheet", "Battery": "battery",
+    "Aluminium blister pack": null, "Carded blister pack": null,
+    "Other plastic bottle": "bottle", "Clear plastic bottle": "bottle", "Glass bottle": "bottle",
+    "Plastic bottle cap": "bottle_cap", "Metal bottle cap": "bottle_cap", "Broken glass": null,
+    "Food Can": "food_tin", "Aerosol": "aerosol_can", "Drink can": "beverage_can",
+    "Toilet tube": "paper_tube", "Other carton": null, "Egg carton": null,
+    "Drink carton": "carton", "Corrugated carton": "cardboard_box", "Meal carton": null, "Pizza box": "cardboard_box",
+    "Paper cup": "cup_body", "Disposable plastic cup": "cup_body", "Foam cup": "cup_body",
+    "Glass cup": "drinking_glass", "Other plastic cup": null, "Food waste": "food_scraps", "Glass jar": "jar",
+    "Plastic lid": null, "Metal lid": "container_lid", "Other plastic": null,
+    "Magazine paper": "paper_sheet", "Tissues": "napkin_tissue", "Wrapping paper": "paper_sheet", "Normal paper": "paper_sheet",
+    "Paper bag": "paper_bag", "Plastified paper bag": "paper_bag", "Plastic film": "flexible_film",
+    "Six pack rings": null, "Garbage bag": "waste_bag", "Other plastic wrapper": null,
+    "Single-use carrier bag": "carrier_bag", "Polypropylene bag": null, "Crisp packet": "snack_packet",
+    "Spread tub": "food_container", "Tupperware": "food_container", "Disposable food container": "food_container",
+    "Foam food container": null, "Other plastic container": null, "Plastic glooves": "disposable_glove",
+    "Plastic utensils": "cutlery", "Pop tab": null, "Rope & strings": null, "Scrap metal": null,
+    "Shoe": "footwear", "Squeezable tube": null, "Plastic straw": "straw", "Paper straw": "straw",
+    "Styrofoam piece": null, "Unlabeled litter": null, "Cigarette": "cigarette_butt"
+  },
+  "reviewNotes": [
+    "Bottles must be beverage bottles; source bottle labels may include household products or jars.",
+    "Reclip cup-body boxes and add independently visible lids/straws; source labels do not guarantee all our parts are labeled.",
+    "Plastic lids need a decision between cup_lid and container_lid; do not guess from the source material label.",
+    "Material remains unknown unless a separate verifiable product/marking reference is recorded.",
+    "Unmapped source regions must be resolved as a canonical target or explicitly reviewed as non-target before acceptance."
+  ]
+}
