@@ -9,7 +9,7 @@ import zipfile
 import threading
 from PIL import Image, ImageOps
 from .core import ROOT, CONFIG, REVIEW_SENTINEL, image_fingerprint, now, read_jsonl, sha, write_json, write_jsonl
-from .archive import RangeReader
+from .archive import RangeReader, RequestPacer
 
 
 def seed(home, limit=120):
@@ -50,10 +50,16 @@ def seed(home, limit=120):
     selected.update(pool[:max(0, limit - len(selected))])
     existing = {r["id"]: r for r in read_jsonl(home / "manifest.jsonl")}
     archive_url = "https://zenodo.org/records/3587843/files/TACO.zip?download=1"
-    reader = RangeReader(archive_url, release["files"][0]["size"])
-    archive = zipfile.ZipFile(reader)
-    reader.prefetch = {entry.header_offset: entry.compress_size + len(entry.filename.encode()) + 4096 for entry in archive.infolist() if entry.filename.endswith(".jpg")}
-    archive_lock = threading.Lock()
+    pacer = RequestPacer(); worker = threading.local(); archives = []; archive_lock = threading.Lock()
+
+    def source_archive():
+        if not hasattr(worker, "archive"):
+            reader = RangeReader(archive_url, release["files"][0]["size"], pacer=pacer)
+            archive = zipfile.ZipFile(reader)
+            reader.prefetch = {entry.header_offset: entry.compress_size + len(entry.filename.encode()) + 4096 for entry in archive.infolist() if entry.filename.endswith(".jpg")}
+            worker.archive = archive
+            with archive_lock: archives.append((archive, reader))
+        return worker.archive
 
     def fetch(identity):
         image = images[identity]; key = f"taco-{identity:05d}"
@@ -63,7 +69,7 @@ def seed(home, limit=120):
         if not original.exists():
             # The mirror returned403 for part of the source. Use the public
             # archive linked by the dataset authors, without retrying that mirror.
-            with archive_lock: content = archive.read("TACO/data/" + image["file_name"])
+            content = source_archive().read("TACO/data/" + image["file_name"])
             part = original.with_suffix(".part"); part.write_bytes(content)
             with Image.open(part) as check: check.verify()
             part.replace(original)
@@ -98,6 +104,7 @@ def seed(home, limit=120):
                 print(f"Public source images prepared: {index}/{len(selected)}", flush=True)
                 write_jsonl(home / "manifest.jsonl", sorted(existing.values(), key=lambda r: r["id"]))
     write_jsonl(home / "manifest.jsonl", sorted(existing.values(), key=lambda r: r["id"]))
-    archive.close()
+    for archive, reader in archives:
+        archive.close(); reader.close()
     write_json(home / "sources/taco-download-status.json", {"requested": len(selected), "failed": failures, "annotationRevision": revision, "annotationSha256": sha(annotation)})
     print(f"Starter queue: {len(existing)} images; {len(failures)} download failures. All labels await review.", flush=True)

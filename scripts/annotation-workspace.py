@@ -49,6 +49,36 @@ def start():
     raise RuntimeError("Annotation service is still starting; inspect local log")
 
 
+def task_ids(project_id):
+    """Read every task page before importing, so large queues remain idempotent."""
+    seen = set(); identities = set(); page = 1; expected = None
+    while True:
+        data = api(f"/api/tasks?project={project_id}&page_size=250&page={page}")
+        rows = data.get("tasks", data.get("results", [])) if isinstance(data, dict) else data
+        total = data.get("total", len(rows)) if isinstance(data, dict) else len(rows)
+        if expected is None: expected = total
+        if total != expected: raise RuntimeError("Task list changed during pagination; retry sync")
+        for task in rows:
+            if task["id"] in seen: raise RuntimeError("Task pagination repeated an entry; refusing duplicate import")
+            seen.add(task["id"])
+            identity = task.get("data", {}).get("dataset_id")
+            if identity:
+                if identity in identities: raise RuntimeError("Existing annotation queue contains duplicate dataset IDs")
+                identities.add(identity)
+        if len(seen) == expected: return identities
+        if not rows or len(seen) > expected: raise RuntimeError("Incomplete task pagination; refusing duplicate import")
+        page += 1
+
+
+def image_storage(project_id, folder):
+    """Authorize only the image directory, without generating duplicate file tasks."""
+    path = str((HOME / folder).resolve())
+    data = api(f"/api/storages/localfiles/?project={project_id}")
+    stores = data.get("results", []) if isinstance(data, dict) else data
+    if not any(str(Path(store["path"]).resolve()) == path for store in stores):
+        api("/api/storages/localfiles/", {"project": project_id, "title": "Dataset image files", "path": path, "use_blob_urls": True, "recursive_scan": False, "regex_filter": r".*\.jpg$"})
+
+
 def sync():
     directory = HOME / "label-studio"
     projects = api("/api/projects/")
@@ -59,12 +89,11 @@ def sync():
         project = next((p for p in existing if p["title"] == title), None)
         if project is None:
             project = api("/api/projects/", {"title": title, "label_config": (directory / config).read_text(), "description": "Local dataset preparation. Source annotations are proposals; review every target, rights and related-image grouping. No public app reports or model activation."})
-        data = api(f"/api/tasks?project={project['id']}&page_size=1000")
-        current = data.get("tasks", data.get("results", [])) if isinstance(data, dict) else data
-        if isinstance(data, dict) and data.get("total", len(current)) > len(current): raise RuntimeError("Task pagination requires another page; refusing duplicate import")
-        ids = {task.get("data", {}).get("dataset_id") for task in current}
+        image_storage(project["id"], "conditions" if config == "conditions.xml" else "images")
+        ids = task_ids(project["id"])
         tasks = [t for t in json.loads((directory / task_file).read_text()) if t["data"]["dataset_id"] not in ids]
-        if tasks: api(f"/api/projects/{project['id']}/import", tasks)
+        for offset in range(0, len(tasks), 250):
+            api(f"/api/projects/{project['id']}/import", tasks[offset:offset + 250])
         saved.append({"title": title, "id": project["id"], "url": BASE + f"/projects/{project['id']}/data", "newTasks": len(tasks)})
         print(title, "new tasks:", len(tasks), flush=True)
     write_json(directory / "workspace.json", saved)

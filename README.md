@@ -2,7 +2,7 @@
 
 A camera-first Toronto waste companion, with a live inventory map, source-backed sorting guidance, community observations and an operator follow-through workflow.
 
-The app uses **Supabase PostgreSQL + PostGIS** for shared data and **private Supabase Storage** for retained images. The existing production server is shared through Nginx and a temporary Cloudflare Tunnel. The application server still runs on this computer; the database and image objects are managed by Supabase. No GitHub staging, commits or pushes are part of this setup.
+The app uses **Supabase PostgreSQL + PostGIS** for shared data and **private Supabase Storage** for retained images. The existing production server is shared through Nginx and a temporary Cloudflare Tunnel. The application server still runs on this computer; the database and image objects are managed by Supabase. This repository contains project source and preparation tools; credentials, local databases and downloaded training images are excluded.
 
 ## Run locally
 

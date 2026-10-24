@@ -57,7 +57,7 @@ uv pip install --python .data/annotation-tools/bin/python -r scripts/annotation-
 .data/vision-tools/bin/python scripts/annotation-workspace.py sync
 ```
 
-Open `http://127.0.0.1:9090`. The generated local account credentials are in private `.data/label-studio-login.json` (mode0600). Label Studio binds to loopback, serves files only from the dataset root, and has analytics disabled. Its account and SQLite database are separate from Supabase and the website. No paid service or cloud annotation account is created.
+Open `http://127.0.0.1:9090`. The generated local account credentials are in private `.data/label-studio-login.json` (mode0600). Label Studio binds to loopback, has analytics disabled, and authorizes only each queue's image subdirectory under the dataset root. Sync registers these local image stores without running automatic file-task imports, then appends missing tasks in batches after reading all existing task pages. Its account and SQLite database are separate from Supabase and the website. No paid service or cloud annotation account is created.
 
 Four queues are prepared: source-proposal review; independent Pilot A and B using the same frozen20 images without proposed boxes; and bin-condition crops. Use different reviewers/accounts for the two pilot passes. Two passes by the same person do not establish independent agreement.
 
