@@ -255,6 +255,12 @@ The included [City of Toronto litter-receptacle dataset](https://open.toronto.ca
 
 Map attribution remains available in the interface: [OpenFreeMap](https://openfreemap.org/), [OpenMapTiles](https://www.openmaptiles.org/), and [OpenStreetMap contributors](https://www.openstreetmap.org/copyright). Reference photographs used by tests retain their [attribution](public/images/ATTRIBUTION.md). Data, photos, and experimental models retain their respective source licences.
 
+## Team
+
+**Team members:** Ameya Kulkarni · Noora Raad
+
+**Mentor:** Nirbhay Pherwani
+
 ## Project guides
 
 | Guide                                                         | Read it when you want to...                                    |
