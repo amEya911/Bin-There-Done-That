@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Camera, Square, ScanLine, RotateCcw } from "lucide-react";
+import { Camera, Square, ScanLine, RotateCcw, LayoutDashboard } from "lucide-react";
 import { Brand } from "./ui";
 import { cameraCrop, containedFrame } from "@/lib/ar";
 import { api } from "@/lib/client";
@@ -385,11 +385,22 @@ export default function CameraScanner({
     <div className={styles.page}>
       <header className={styles.header}>
         <Brand />
+        <Link
+          href="/dashboard"
+          className={styles.dashboardLink}
+          aria-label="Open dashboard"
+          title="Dashboard"
+        >
+          <LayoutDashboard size={22} strokeWidth={1.8} aria-hidden="true" />
+        </Link>
       </header>
       <main className={styles.main}>
         <div className={styles.heading}>
           <h1>Point. Sort. Done.</h1>
-          <p>Point at an item or bin. A photo is taken after two seconds.</p>
+          <p>
+            Point at a piece of trash or overflowing bin. A photo is taken after
+            two seconds.
+          </p>
         </div>
         <div className={styles.workspace}>
           <section

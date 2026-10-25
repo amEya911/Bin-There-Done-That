@@ -481,7 +481,7 @@ Modal fields use paper, ink, line, muted placeholders, an 8px radius and 12px by
 
 ### Navigation
 
-The shared header keeps the two-line wordmark on the left and aligned Overview/More controls on the right, followed by the camera action. More is a native disclosure opening a 225px paper menu with 7px inset, a 12px radius and 7px row corners. It contains Add a bin, Review cases and About the project. Mobile preserves horizontal navigation with reduced gaps. The scanner has only the brand linking home; it has no separate Dashboard or power header action. Review cases opens the public queue directly; the optional Management sign-in appears only when management access is configured. Existing authenticated operator routes remain separately available.
+The shared header keeps the two-line wordmark on the left and aligned Overview/More controls on the right, followed by the camera action. More is a native disclosure opening a 225px paper menu with 7px inset, a 12px radius and 7px row corners. It contains Add a bin, Review cases and About the project. Mobile preserves horizontal navigation with reduced gaps. The scanner header has the brand linking home and a top-right dashboard grid icon. The icon is a 44px link with an accessible “Open dashboard” label, following the system theme. There is no power header action. Review cases opens the public queue directly; the optional Management sign-in appears only when management access is configured. Existing authenticated operator routes remain separately available.
 
 ### Report Feed and Map
 
@@ -530,7 +530,7 @@ Photo selection is the first interaction. A camera line icon, short label and mu
 ### Don't:
 
 - **Don't** restore orange scanner trim, brown page planes, a provider/billing card, persistent location controls, idle/control strips or a persistent 311 footer sentence.
-- **Don't** add a scanner power control or Dashboard link; the brand is its home navigation and leaving the scanner releases active hardware.
+- **Don't** add a scanner power control; the brand and dashboard grid icon provide home navigation, and leaving the scanner releases active hardware.
 - **Don't** restore the provider-unavailable idle sentence or make feedback resize the camera.
 - **Don't** gate public case review on setup or display private management evidence in the public queue.
 - **Don't** restore a dashboard data-disclosure footer or Live demo/Connection setup items in More.

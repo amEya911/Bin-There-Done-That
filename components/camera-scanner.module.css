@@ -9,6 +9,23 @@
   border-bottom: 1px solid var(--line);
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.dashboardLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper);
+  color: var(--ink);
+}
+.dashboardLink:hover {
+  background: var(--surface-alt);
 }
 .main {
   max-width: 900px;

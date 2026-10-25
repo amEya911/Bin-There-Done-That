@@ -30,7 +30,7 @@ Mobile entry opens the scanner; desktop entry opens the dashboard. The website n
 
 ## Brand Commitments
 
-The user-facing name is Bin There Done That. Orange is a small accent, not a page background. Dashboard, scanner and browser safe areas follow the system light/dark preference. The scanner uses a neutral viewing area and brand-only header navigation, with no provider billing card, persistent location controls or 311 footer line. The dashboard has no source-disclosure footer and no live-demo/setup menu links. Preserve its map-first layout and align navigation controls.
+The user-facing name is Bin There Done That. Orange is a small accent, not a page background. Dashboard, scanner and browser safe areas follow the system light/dark preference. The scanner uses a neutral viewing area and a brand link and top-right dashboard icon in the header, with no provider billing card, persistent location controls or 311 footer line. The dashboard has no source-disclosure footer and no live-demo/setup menu links. Preserve its map-first layout and align navigation controls.
 
 ## Evidence on Hand
 
