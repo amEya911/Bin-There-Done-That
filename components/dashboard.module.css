@@ -20,7 +20,7 @@
 }
 .summary {
   display: grid;
-  grid-template-columns: repeat(4, minmax(94px, 1fr));
+  grid-template-columns: repeat(3, minmax(94px, 1fr));
   gap: clamp(22px, 3.5vw, 58px);
   margin: 0;
 }
@@ -42,7 +42,7 @@
   font-variant-numeric: tabular-nums;
 }
 .accentMetric dd {
-  color: var(--link);
+  color: var(--orange);
 }
 .workspace {
   display: grid;
@@ -61,74 +61,6 @@
   gap: 22px;
   border-bottom: 1px solid var(--line);
   z-index: 20;
-}
-.search {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex: 1;
-  position: relative;
-  min-width: 140px;
-  color: var(--muted);
-}
-.search input {
-  background: none;
-  border: 0;
-  padding: 10px 0;
-  margin: 0;
-  min-width: 0;
-  font-size: 13px;
-  border-radius: 3px;
-}
-.search input::placeholder {
-  color: var(--muted);
-}
-.search button {
-  padding: 8px;
-  display: flex;
-}
-.results {
-  position: absolute;
-  top: calc(100% + 10px);
-  left: -3px;
-  width: min(420px, 85vw);
-  padding: 6px;
-  background: var(--paper);
-  border-radius: 10px;
-  box-shadow: 0 12px 32px #25282021;
-  color: var(--ink);
-  z-index: 40;
-}
-.results > button {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  text-align: left;
-  width: 100%;
-  padding: 12px 10px;
-  border-radius: 6px;
-}
-.results > button:hover {
-  background: var(--surface-alt);
-}
-.results > button > span {
-  flex: 1;
-  min-width: 0;
-}
-.results strong {
-  display: block;
-  font-size: 13px;
-  font-weight: 500;
-}
-.results small {
-  display: block;
-  margin-top: 3px;
-  color: var(--muted);
-  font-size: 11px;
-}
-.results p {
-  padding: 14px;
-  font-size: 13px;
 }
 .filters {
   display: flex;
@@ -156,9 +88,6 @@
   font-size: 12px;
   appearance: none;
   border-radius: 6px;
-}
-.select:last-child select {
-  padding-left: 11px;
 }
 .select > svg:last-child {
   position: absolute;
@@ -313,7 +242,7 @@
   align-items: center;
   gap: 7px;
   margin-top: 21px;
-  color: var(--link);
+  color: var(--orange);
   font-size: 12px;
   font-weight: 550;
   min-height: 38px;
@@ -452,13 +381,13 @@
   flex-shrink: 0;
 }
 .binDot {
-  background: #6b8278;
+  background: var(--brand);
 }
 .issueDot {
-  background: #de5c31;
+  background: var(--orange);
 }
 .communityDot {
-  background: #607e9a;
+  background: var(--link);
 }
 .footer {
   display: flex;
@@ -533,7 +462,7 @@
 @media (max-width: 1050px) {
   .summary {
     gap: 24px;
-    grid-template-columns: repeat(4, minmax(75px, 1fr));
+    grid-template-columns: repeat(3, minmax(75px, 1fr));
   }
   .workspace {
     grid-template-columns: minmax(0, 1fr) 275px;
@@ -556,7 +485,7 @@
   .summary {
     margin-top: 24px;
     gap: 20px 12px;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
   .summary dd {
     font-size: 23px;
@@ -574,13 +503,6 @@
     flex-wrap: wrap;
     gap: 0;
     padding: 8px 13px 10px;
-  }
-  .search {
-    flex-basis: 100%;
-  }
-  .search input {
-    min-height: 44px;
-    font-size: 13px;
   }
   .filters {
     width: 100%;

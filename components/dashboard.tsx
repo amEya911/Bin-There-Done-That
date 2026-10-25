@@ -7,8 +7,6 @@ import {
   ArrowRight,
   Check,
   ChevronDown,
-  Search,
-  MapPin,
   RefreshCw,
   X,
   Plus,
@@ -41,9 +39,6 @@ export default function Dashboard({
   const [layer, setLayer] = useState<"bins" | "density" | "reports">("bins");
   const [selected, setSelected] = useState<Bin | null>(null);
   const [pin, setPin] = useState<Point | null>(null);
-  const [query, setQuery] = useState("");
-  const [results, setResults] = useState<Bin[]>([]);
-  const [searching, setSearching] = useState(false);
   const [tab, setTab] = useState("all");
   const [lastUpdated, setLastUpdated] = useState("");
   const refreshVersion = useRef(0);
@@ -89,35 +84,6 @@ export default function Dashboard({
       globalThis.removeEventListener("online", online);
     };
   }, [scope, window]);
-  useEffect(() => {
-    if (query.trim().length < 2) {
-      setResults([]);
-      setSearching(false);
-      return;
-    }
-    let cancelled = false;
-    setSearching(true);
-    const t = setTimeout(
-      () =>
-        api<{ bins: Bin[] }>(
-          scoped(`/api/bins?q=${encodeURIComponent(query)}&limit=7`, scope),
-        )
-          .then((r) => {
-            if (!cancelled) setResults(r.bins);
-          })
-          .catch(() => {
-            if (!cancelled) setResults([]);
-          })
-          .finally(() => {
-            if (!cancelled) setSearching(false);
-          }),
-      220,
-    );
-    return () => {
-      cancelled = true;
-      clearTimeout(t);
-    };
-  }, [query, scope]);
   async function choose(id: string) {
     const version = ++selectionVersion.current;
     try {
@@ -125,8 +91,6 @@ export default function Dashboard({
       if (version !== selectionVersion.current) return;
       setSelected(d.bin);
       setPin(null);
-      setQuery("");
-      setResults([]);
       revealMap();
     } catch (e) {
       if (version === selectionVersion.current) setError((e as Error).message);
@@ -152,7 +116,14 @@ export default function Dashboard({
       cases: data?.cases.filter((c) => c.binId === id).length || 0,
     }));
   return (
-    <Shell wide scanHref={scanner}>
+    <Shell
+      wide
+      scanHref={scanner}
+      dashboard
+      affectedBins={data?.affectedBins}
+      reportWindow={window}
+      onReportWindowChange={setWindow}
+    >
       {scope !== "public" && (
         <div className="notice demo-notice">
           <strong>Demo session</strong> {demoTitle || "Camera demonstration"} ·
@@ -176,7 +147,6 @@ export default function Dashboard({
           <Metric label="Bin locations" value={data?.inventory.active} />
           <Metric label="Open reports" value={data?.totalReports} accent />
           <Metric label="Open cases" value={data?.activeCases} />
-          <Metric label="Affected bins" value={data?.affectedBins} />
         </dl>
       </section>
       {error && (
@@ -189,49 +159,6 @@ export default function Dashboard({
         aria-label="Toronto bins and reports"
       >
         <div className={styles.toolbar}>
-          <div className={styles.search}>
-            <Search size={17} aria-hidden="true" />
-            <input
-              aria-label="Search bins by address or City ID"
-              placeholder="Search a street or bin"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-            />
-            {query && (
-              <button aria-label="Clear search" onClick={() => setQuery("")}>
-                <X size={15} />
-              </button>
-            )}
-            {query.trim().length >= 2 && (
-              <div
-                className={styles.results}
-                role="region"
-                aria-label="Bin search results"
-              >
-                {searching ? (
-                  <p>Searching…</p>
-                ) : results.length ? (
-                  results.map((b) => (
-                    <button key={b.id} onClick={() => choose(b.id)}>
-                      <MapPin size={15} />
-                      <span>
-                        <strong>{b.name}</strong>
-                        <small>
-                          {b.sourceId || "Community-added"} ·{" "}
-                          {b.status === "Existing"
-                            ? b.side || "Toronto"
-                            : "Temporarily removed"}
-                        </small>
-                      </span>
-                      <ArrowUpRight size={14} />
-                    </button>
-                  ))
-                ) : (
-                  <p>No bins found. Try a nearby street.</p>
-                )}
-              </div>
-            )}
-          </div>
           <div className={styles.filters}>
             <label className={styles.select}>
               <Layers size={15} aria-hidden="true" />
@@ -247,23 +174,11 @@ export default function Dashboard({
               </select>
               <ChevronDown size={13} aria-hidden="true" />
             </label>
-            <label className={styles.select}>
-              <span className="sr-only">Report time window</span>
-              <select
-                aria-label="Report time window"
-                value={window}
-                onChange={(e) => setWindow(e.target.value)}
-              >
-                <option value="24h">Last 24 hours</option>
-                <option value="7d">Last 7 days</option>
-                <option value="all">All time</option>
-              </select>
-              <ChevronDown size={13} aria-hidden="true" />
-            </label>
           </div>
         </div>
         <div className={styles.map} ref={mapRoot}>
           <BinMap
+            palette="forest"
             layer={layer}
             reports={data?.reports || []}
             mapPoints={data?.mapPoints}

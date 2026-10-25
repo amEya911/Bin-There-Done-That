@@ -5,6 +5,7 @@ import { Map as LibreMap, GeoJSONSource, Marker } from "maplibre-gl";
 import type { Bin, Point, PublicReport, Area, MapPoint } from "@/lib/types";
 import { isCaseOpen } from "@/lib/cases";
 export type MapProps = {
+  palette?: "default" | "forest";
   layer?: "bins" | "density" | "reports";
   reports?: PublicReport[];
   mapPoints?: MapPoint[];
@@ -16,6 +17,7 @@ export type MapProps = {
   areas?: Area[];
 };
 export default function BinMap({
+  palette = "default",
   layer = "bins",
   reports = [],
   mapPoints,
@@ -50,6 +52,7 @@ export default function BinMap({
   pickRef.current = onPick;
   useEffect(() => {
     if (!root.current || dark === null) return;
+    const forest = palette === "forest";
     let disposed = false;
     try {
       maplibregl.setWorkerUrl("/vendor/maplibre/maplibre-gl-worker.mjs");
@@ -155,19 +158,33 @@ export default function BinMap({
                 0,
                 "rgba(255,255,255,0)",
                 0.15,
-                "#e9ebcd",
+                forest
+                  ? source !== "reports"
+                    ? "#e5ede1"
+                    : "#f9ece6"
+                  : "#e9ebcd",
                 0.4,
-                "#bbcf8f",
+                forest
+                  ? source !== "reports"
+                    ? "#8fae93"
+                    : "#f19168"
+                  : "#bbcf8f",
                 0.65,
                 color,
                 1,
-                source !== "reports" ? "#4b633a" : "#e45432",
+                forest
+                  ? source !== "reports"
+                    ? "#1f5e3b"
+                    : "#ad3e1c"
+                  : source !== "reports"
+                    ? "#4b633a"
+                    : "#e45432",
               ],
             },
           });
-        heat("density-heat", "density", "#71894d");
-        heat("manual-density", "manual", "#71894d");
-        heat("reports-heat", "reports", "#ff8c51");
+        heat("density-heat", "density", forest ? "#4a6f50" : "#71894d");
+        heat("manual-density", "manual", forest ? "#4a6f50" : "#71894d");
+        heat("reports-heat", "reports", forest ? "#c74b25" : "#ff8c51");
         m.setPaintProperty("reports-heat", "heatmap-weight", ["get", "count"]);
         m.addLayer({
           id: "clusters",
@@ -199,7 +216,9 @@ export default function BinMap({
             "text-size": 12,
             "text-font": ["Noto Sans Regular"],
           },
-          paint: { "text-color": dark ? "#d3dfd0" : "#3c5d50" },
+          paint: {
+            "text-color": dark ? "#d3dfd0" : forest ? "#1f5e3b" : "#3c5d50",
+          },
         });
         m.addLayer({
           id: "bin-points",
@@ -207,7 +226,13 @@ export default function BinMap({
           source: "inventory",
           filter: ["!", ["has", "point_count"]],
           paint: {
-            "circle-color": dark ? "#93ad9f" : "#6b8278",
+            "circle-color": forest
+              ? dark
+                ? "#a3c7a8"
+                : "#1f5e3b"
+              : dark
+                ? "#93ad9f"
+                : "#6b8278",
             "circle-radius": 4,
             "circle-stroke-color": dark ? "#1d211c" : "#ffffff",
             "circle-stroke-width": 1,
@@ -218,7 +243,7 @@ export default function BinMap({
           type: "circle",
           source: "manual",
           paint: {
-            "circle-color": "#607e9a",
+            "circle-color": forest ? (dark ? "#8cc0ec" : "#165788") : "#607e9a",
             "circle-radius": 6,
             "circle-stroke-color": dark ? "#1d211c" : "#ffffff",
             "circle-stroke-width": 2,
@@ -229,7 +254,7 @@ export default function BinMap({
           type: "circle",
           source: "reports",
           paint: {
-            "circle-color": "#f35931",
+            "circle-color": forest ? (dark ? "#f19168" : "#c74b25") : "#f35931",
             "circle-radius": 12,
             "circle-stroke-color": "#fff",
             "circle-stroke-width": 3,
@@ -290,7 +315,9 @@ export default function BinMap({
       });
     } catch {
       setError(
-        "The map is unavailable on this device. Use search and the report list.",
+        palette === "forest"
+          ? "The map is unavailable on this device. Use the report list."
+          : "The map is unavailable on this device. Use search and the report list.",
       );
     }
     return () => {
@@ -309,7 +336,7 @@ export default function BinMap({
       }
       map.current = null;
     };
-  }, [dark]);
+  }, [dark, palette]);
   useEffect(() => {
     const m = map.current;
     if (!m || !ready || loadedMap.current !== m) return;
@@ -389,7 +416,9 @@ export default function BinMap({
     const p =
       pin || (selected ? ([selected.lng, selected.lat] as Point) : null);
     if (p) {
-      marker.current = new maplibregl.Marker({ color: "#f45d36" })
+      marker.current = new maplibregl.Marker({
+        color: palette === "forest" ? "#c74b25" : "#f45d36",
+      })
         .setLngLat(p)
         .addTo(m);
       m.easeTo({
@@ -400,7 +429,7 @@ export default function BinMap({
           : 700,
       });
     }
-  }, [ready, selected, pin]);
+  }, [ready, selected, pin, palette]);
   return (
     <div className={`map-component ${ready ? "is-ready" : ""}`}>
       <div

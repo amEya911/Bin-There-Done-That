@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import styles from "./shell.module.css";
+import theme from "./brand-theme.module.css";
 import {
   ArrowUpRight,
   Camera,
@@ -13,25 +14,32 @@ import {
   ScanLine,
   Radio,
   ChevronDown,
+  Check,
+  Clock,
 } from "lucide-react";
 export function Brand({
   light = false,
   href = "/dashboard",
+  variant = "classic",
 }: {
   light?: boolean;
   href?: string;
+  variant?: "classic" | "forest";
 }) {
+  const forest = variant === "forest";
   return (
     <Link
       href={href}
-      className={`brand ${styles.brand} ${light ? `light ${styles.light}` : ""}`}
-      aria-label="Bin There Done That home"
+      className={`brand ${styles.brand} ${forest ? styles.forestBrand : ""} ${light ? `light ${styles.light}` : ""}`}
+      aria-label={
+        forest ? "Bin There, Done That home" : "Bin There Done That home"
+      }
     >
       <span className={styles.symbol} aria-hidden="true">
-        <Trash2 size={27} strokeWidth={1.8} />
+        {forest ? <ForestLogo /> : <Trash2 size={27} strokeWidth={1.8} />}
       </span>
       <span className={styles.wordmark}>
-        <span>Bin There</span>{" "}
+        <span>Bin There{forest ? "," : ""}</span>{" "}
         <span>
           Done That<span className={styles.period}>.</span>
         </span>
@@ -39,14 +47,61 @@ export function Brand({
     </Link>
   );
 }
+function ForestLogo() {
+  return (
+    <svg width="54" height="54" viewBox="0 0 100 100" fill="none">
+      <path
+        d="M6 28V14Q6 6 14 6H28M72 6H86Q94 6 94 14V28M94 72V86Q94 94 86 94H72M28 94H14Q6 94 6 86V72"
+        stroke="var(--logo-frame)"
+        strokeWidth="6"
+        strokeLinecap="round"
+      />
+      <g transform="translate(19 20) scale(0.62)">
+        <path
+          d="M40 22V18Q40 14 44 14H56Q60 14 60 18V22"
+          stroke="var(--logo-bin)"
+          strokeWidth="6"
+          strokeLinecap="round"
+        />
+        <rect
+          x="20"
+          y="22"
+          width="60"
+          height="10"
+          rx="4"
+          fill="var(--logo-bin)"
+        />
+        <path
+          d="M26 36H74L69.5 84Q69 90 63 90H37Q31 90 30.5 84Z"
+          fill="var(--logo-bin)"
+        />
+        <path
+          d="M39 62L47 70L61 54"
+          stroke="var(--logo-mark)"
+          strokeWidth="7"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </g>
+    </svg>
+  );
+}
 export function Shell({
   children,
   wide = false,
   scanHref = "/scan",
+  dashboard = false,
+  affectedBins,
+  reportWindow,
+  onReportWindowChange,
 }: {
   children: React.ReactNode;
   wide?: boolean;
   scanHref?: string;
+  dashboard?: boolean;
+  affectedBins?: number;
+  reportWindow?: string;
+  onReportWindowChange?: (value: string) => void;
 }) {
   const path = usePathname();
   const items = [
@@ -56,10 +111,27 @@ export function Shell({
     { href: "/manage/cases", name: "Review cases", icon: Radio },
   ];
   return (
-    <div className={styles.shell}>
+    <div
+      className={`${styles.shell} ${dashboard ? `${styles.dashboard} ${theme.theme}` : ""}`}
+    >
       <header className={styles.header}>
-        <Brand />
+        <Brand variant={dashboard ? "forest" : "classic"} />
         <nav className={styles.navigation} aria-label="Main navigation">
+          {dashboard && (
+            <span
+              className={styles.affectedBins}
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+            >
+              <strong>
+                {affectedBins === undefined
+                  ? "—"
+                  : affectedBins.toLocaleString()}
+              </strong>
+              <span>Affected bins</span>
+            </span>
+          )}
           <Link
             href="/dashboard"
             className={
@@ -76,6 +148,39 @@ export function Shell({
               More <ChevronDown size={14} />
             </summary>
             <div className={styles.menu}>
+              {dashboard && reportWindow && onReportWindowChange && (
+                <div
+                  className={styles.reportWindows}
+                  role="group"
+                  aria-label="Report time window"
+                >
+                  <p className={styles.menuLabel}>Reports shown</p>
+                  {[
+                    { value: "24h", label: "Last 24 hours" },
+                    { value: "7d", label: "Last 7 days" },
+                    { value: "all", label: "All time" },
+                  ].map((option) => (
+                    <button
+                      type="button"
+                      key={option.value}
+                      aria-pressed={reportWindow === option.value}
+                      onClick={(event) => {
+                        onReportWindowChange(option.value);
+                        event.currentTarget
+                          .closest("details")
+                          ?.removeAttribute("open");
+                      }}
+                    >
+                      {reportWindow === option.value ? (
+                        <Check size={16} aria-hidden="true" />
+                      ) : (
+                        <Clock size={16} aria-hidden="true" />
+                      )}
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+              )}
               {items
                 .filter((i) => !["/dashboard", "/scan"].includes(i.href))
                 .map((i) => (
