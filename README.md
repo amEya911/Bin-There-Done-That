@@ -257,9 +257,9 @@ Map attribution remains available in the interface: [OpenFreeMap](https://openfr
 
 ## Team
 
-**Team members:** Ameya Kulkarni · Noora Raad
+**Team members:** [Ameya Kulkarni](https://ameyak.me) · [Noora Raad](https://www.linkedin.com/in/nora-raad/)
 
-**Mentor:** Nirbhay Pherwani
+**Mentor:** [Nirbhay Pherwani](https://linktree.com/nirbhaypherwani)
 
 ## Project guides
 
