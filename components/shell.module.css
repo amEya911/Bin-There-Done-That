@@ -24,7 +24,7 @@
   display: flex;
   flex-direction: column;
   font-family: var(--display);
-  font-size: 17px;
+  font-size: 20px;
   font-weight: 650;
   letter-spacing: -0.035em;
   line-height: 1.05;
@@ -44,7 +44,7 @@
   align-self: stretch;
   gap: 28px;
   margin-left: auto;
-  font-size: 13px;
+  font-size: 15px;
   line-height: 1;
   color: var(--muted);
 }
@@ -56,16 +56,31 @@
   position: relative;
 }
 .navigation > a:hover,
+.more summary:hover,
 .navigation .current {
   color: var(--ink);
 }
-.navigation .current::after {
+.navigation .current {
+  font-weight: 600;
+}
+.navigation > a.current::after,
+.more.current::after {
   content: "";
   position: absolute;
-  height: 2px;
-  background: var(--brand);
+  height: 3px;
+  border-radius: 3px 3px 0 0;
+  background: var(--action);
   bottom: -1px;
   inset-inline: 0;
+}
+.navigation > a:focus-visible,
+.menu a:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+.navigation .narrowOnly {
+  display: none;
 }
 .more {
   margin: 0;
@@ -90,15 +105,18 @@
   display: none;
 }
 .more summary:focus-visible {
-  outline: 2px solid var(--brand);
-  outline-offset: 4px;
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
   border-radius: 4px;
+}
+.more[open] summary {
+  color: var(--ink);
 }
 .menu {
   position: absolute;
   top: calc(100% + 12px);
   right: 0;
-  width: 225px;
+  width: 240px;
   padding: 7px;
   background: var(--paper);
   box-shadow: var(--shadow);
@@ -117,21 +135,38 @@
 .menu a:hover {
   background: var(--surface-alt);
 }
+.menu a[aria-current] {
+  font-weight: 600;
+  background: var(--orange-soft);
+}
+.menuLabel {
+  margin: 0;
+  padding: 10px 12px 6px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+.menuLabel ~ .menuLabel {
+  margin-top: 6px;
+  border-top: 1px solid var(--line);
+  padding-top: 14px;
+}
 .scanLink {
   display: inline-flex;
+  flex-shrink: 0;
   align-items: center;
   justify-content: center;
   gap: 9px;
   min-height: 42px;
   padding: 0 17px;
   border-radius: 8px;
-  background: var(--action);
-  color: var(--action-ink);
-  font-size: 13px;
+  background: var(--report);
+  color: var(--report-ink);
+  font-size: 15px;
   font-weight: 600;
 }
 .scanLink:hover {
-  background: var(--action-hover);
+  background: var(--report-hover);
 }
 .main {
   max-width: 1640px;
@@ -141,6 +176,14 @@
 .wide {
   max-width: 1800px;
 }
+@media (max-width: 1100px) {
+  .navigation .wideOnly {
+    display: none;
+  }
+  .navigation .narrowOnly {
+    display: flex;
+  }
+}
 @media (max-width: 760px) {
   .header {
     min-height: calc(76px + env(safe-area-inset-top));
@@ -149,7 +192,7 @@
   }
   .navigation {
     gap: 18px;
-    font-size: 12px;
+    font-size: 14px;
   }
   .scanLink {
     width: 42px;
@@ -162,10 +205,11 @@
     padding: 26px 20px 22px;
   }
   .wordmark {
-    font-size: 15px;
+    font-size: 17px;
   }
   .symbol svg {
-    width: 24px;
+    width: 46px;
+    height: 46px;
   }
   .brand {
     gap: 7px;
@@ -174,12 +218,38 @@
 @media (max-width: 380px) {
   .header {
     padding: env(safe-area-inset-top) 14px 0;
-    gap: 14px;
+    gap: 10px;
+  }
+  .symbol svg {
+    width: 38px;
+    height: 38px;
+  }
+  .wordmark {
+    font-size: 15px;
   }
   .navigation {
     gap: 12px;
   }
   .main {
     padding-inline: 14px;
+  }
+}
+@media (max-width: 300px) {
+  .header {
+    gap: 8px;
+  }
+  .navigation {
+    gap: 8px;
+    font-size: 13px;
+  }
+  .symbol svg {
+    width: 32px;
+    height: 32px;
+  }
+  .wordmark {
+    font-size: 14px;
+  }
+  .brand {
+    gap: 5px;
   }
 }

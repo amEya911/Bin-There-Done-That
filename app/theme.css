@@ -1,39 +1,63 @@
 :root {
   color-scheme: light;
-  --bg: #fafaf8;
+  --bg: #f5f1e8;
   --paper: #ffffff;
-  --ink: #252820;
-  --muted: #656c5f;
-  --line: #dfe3da;
-  --surface-alt: #f0f2ed;
-  --brand: #c65330;
+  --ink: #17231e;
+  --muted: #47524c;
+  --line: #ddd6c6;
+  --surface-alt: #ece7da;
+  --brand: #1f5e3b;
   --action: #c74b25;
   --action-hover: #ad3e1c;
   --action-ink: #ffffff;
-  --link: #ae4322;
+  --support: #4a6f50;
+  --support-hover: #3b5a40;
+  --support-ink: #ffffff;
+  --support-soft: #e5ede1;
+  --support-text: #3f5f45;
+  --focus: #165788;
+  --link: #165788;
+  --report: #c74b25;
+  --report-hover: #ad3e1c;
+  --report-ink: #ffffff;
   --orange: #c74b25;
   --orange-soft: #f9ece6;
-  --green-soft: #eef2e9;
-  --shadow: 0 10px 30px #1820151a;
-  --scrim: #10140f66;
+  --green-soft: #e5ede1;
+  --logo-frame: #4a6f50;
+  --logo-bin: #1f5e3b;
+  --logo-mark: #f5f1e8;
+  --shadow: 0 10px 30px #00352d1a;
+  --scrim: #00261f66;
 }
 @media (prefers-color-scheme: dark) {
   :root {
     color-scheme: dark;
-    --bg: #141614;
-    --paper: #1d211c;
-    --ink: #edf0e8;
-    --muted: #afb8a7;
-    --line: #3a4235;
-    --surface-alt: #252b22;
-    --brand: #f19168;
+    --bg: #0e1a16;
+    --paper: #15241f;
+    --ink: #eaf1ec;
+    --muted: #c2cfc7;
+    --line: #2d4038;
+    --surface-alt: #1c2e27;
+    --brand: #a3c7a8;
     --action: #f19168;
     --action-hover: #ffac86;
     --action-ink: #2a1c13;
-    --link: #f5a17d;
+    --support: #a3c7a8;
+    --support-hover: #b9d6bd;
+    --support-ink: #10241a;
+    --support-soft: #1d3326;
+    --support-text: #b9d6bd;
+    --focus: #8cc0ec;
+    --link: #8cc0ec;
+    --report: #f19168;
+    --report-hover: #ffac86;
+    --report-ink: #2a1c13;
     --orange: #f19168;
     --orange-soft: #33281f;
-    --green-soft: #263021;
+    --green-soft: #1d3326;
+    --logo-frame: #7fa886;
+    --logo-bin: #c9dfcc;
+    --logo-mark: #0e1a16;
     --shadow: 0 10px 30px #00000040;
     --scrim: #00000099;
   }
@@ -77,8 +101,10 @@ button:focus-visible,
 a:focus-visible,
 input:focus-visible,
 select:focus-visible,
-textarea:focus-visible {
-  outline-color: var(--brand);
+textarea:focus-visible,
+summary:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
 }
 .panel,
 .notice,
@@ -115,10 +141,13 @@ textarea:focus-visible {
 .scanner-page .modal .text-button {
   color: var(--link);
 }
-.scanner-page .modal .button.primary,
 .button.primary {
   background: var(--action);
   color: var(--action-ink);
+}
+.scanner-page .modal .button.primary {
+  background: var(--report);
+  color: var(--report-ink);
 }
 .maplibregl-ctrl-group {
   background: var(--paper);
@@ -130,7 +159,7 @@ textarea:focus-visible {
   border-radius: 6px;
   background: var(--paper);
   color: var(--muted);
-  font-size: 10px !important;
+  font-size: 12px !important;
   line-height: 1.5;
 }
 .map-component:not(.is-ready) .maplibregl-ctrl-attrib {

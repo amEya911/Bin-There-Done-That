@@ -6,7 +6,7 @@
   margin: 0 0 28px;
 }
 .title h1 {
-  font-size: 34px;
+  font-size: 37px;
   line-height: 1.1;
   letter-spacing: -0.04em;
 }
@@ -15,14 +15,15 @@
 }
 .title p {
   color: var(--muted);
-  font-size: 13px;
+  font-size: 15px;
   margin-top: 7px;
 }
 .summary {
   display: grid;
-  grid-template-columns: repeat(4, minmax(94px, 1fr));
+  grid-template-columns: repeat(3, minmax(94px, 1fr));
   gap: clamp(22px, 3.5vw, 58px);
   margin: 0;
+  position: relative;
 }
 .summary > div {
   display: flex;
@@ -31,18 +32,57 @@
 }
 .summary dt {
   color: var(--muted);
-  font-size: 12px;
+  font-size: 15px;
+  font-weight: 500;
+}
+.hint {
+  display: inline-flex;
+  vertical-align: -3px;
+  padding: 6px;
+  margin: -6px -4px -6px -2px;
+  border-radius: 50%;
+  color: var(--muted);
+}
+.hint:hover {
+  color: var(--ink);
+}
+.tip {
+  display: none;
+  position: absolute;
+  top: calc(100% + 10px);
+  inset-inline: 0;
+  max-width: 320px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper);
+  box-shadow: var(--shadow);
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.45;
+  z-index: 30;
+}
+.summary > div:nth-child(2) .tip {
+  margin-inline: auto;
+}
+.summary > div:last-child .tip {
+  margin-left: auto;
+}
+.hint:hover + .tip,
+.hint:focus-visible + .tip {
+  display: block;
 }
 .summary dd {
   margin: 0;
-  font-size: 28px;
+  font-size: 31px;
   line-height: 1.1;
   font-weight: 550;
   letter-spacing: -0.035em;
   font-variant-numeric: tabular-nums;
 }
 .accentMetric dd {
-  color: var(--link);
+  color: var(--orange);
 }
 .workspace {
   display: grid;
@@ -55,84 +95,16 @@
 .toolbar {
   grid-column: 1 / -1;
   min-height: 62px;
-  padding: 11px 18px;
+  padding: 12px 20px;
   display: flex;
   align-items: center;
-  gap: 22px;
+  gap: 20px;
   border-bottom: 1px solid var(--line);
   z-index: 20;
 }
-.search {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex: 1;
-  position: relative;
-  min-width: 140px;
-  color: var(--muted);
-}
-.search input {
-  background: none;
-  border: 0;
-  padding: 10px 0;
-  margin: 0;
-  min-width: 0;
-  font-size: 13px;
-  border-radius: 3px;
-}
-.search input::placeholder {
-  color: var(--muted);
-}
-.search button {
-  padding: 8px;
-  display: flex;
-}
-.results {
-  position: absolute;
-  top: calc(100% + 10px);
-  left: -3px;
-  width: min(420px, 85vw);
-  padding: 6px;
-  background: var(--paper);
-  border-radius: 10px;
-  box-shadow: 0 12px 32px #25282021;
-  color: var(--ink);
-  z-index: 40;
-}
-.results > button {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  text-align: left;
-  width: 100%;
-  padding: 12px 10px;
-  border-radius: 6px;
-}
-.results > button:hover {
-  background: var(--surface-alt);
-}
-.results > button > span {
-  flex: 1;
-  min-width: 0;
-}
-.results strong {
-  display: block;
-  font-size: 13px;
-  font-weight: 500;
-}
-.results small {
-  display: block;
-  margin-top: 3px;
-  color: var(--muted);
-  font-size: 11px;
-}
-.results p {
-  padding: 14px;
-  font-size: 13px;
-}
 .filters {
   display: flex;
-  gap: 9px;
+  gap: 10px;
   align-items: center;
 }
 .select {
@@ -153,7 +125,7 @@
   border: 0;
   padding: 9px 27px 9px 2px;
   background: none;
-  font-size: 12px;
+  font-size: 14px;
   appearance: none;
   border-radius: 6px;
 }
@@ -178,10 +150,10 @@
 }
 .map :global(.map-error) {
   max-width: 350px;
-  font-size: 12px;
+  font-size: 14px;
 }
 .map :global(.city-attribution) {
-  font-size: 9px;
+  font-size: 11px;
   background: var(--paper);
   color: var(--muted);
 }
@@ -204,18 +176,18 @@
   color: var(--muted);
 }
 .provenance {
-  font-size: 11px;
+  font-size: 13px;
   color: var(--muted);
 }
 .inspector h2 {
-  font-size: 18px;
+  font-size: 21px;
   line-height: 1.3;
   letter-spacing: -0.03em;
   margin: 9px 0 5px;
   padding-right: 7px;
 }
 .inspector p {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--muted);
 }
 .inspector > div {
@@ -226,7 +198,7 @@
   gap: 14px;
   padding-top: 14px;
   border-top: 1px solid var(--line);
-  font-size: 11px;
+  font-size: 13px;
 }
 .inspector a {
   display: flex;
@@ -251,10 +223,20 @@
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  padding: 21px 20px 17px;
+  padding: 20px 20px 8px;
+}
+.terms {
+  padding: 0 20px 16px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+.terms strong {
+  color: var(--ink);
+  font-weight: 600;
 }
 .feedHeading h2 {
-  font-size: 15px;
+  font-size: 18px;
   letter-spacing: -0.025em;
   display: flex;
   align-items: baseline;
@@ -262,7 +244,7 @@
 }
 .feedHeading h2 > span {
   color: var(--muted);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 450;
   font-variant-numeric: tabular-nums;
 }
@@ -274,8 +256,8 @@
   padding: 7px 3px;
   width: auto;
   border: 0;
-  font-size: 11px;
-  color: var(--muted);
+  font-size: 14px;
+  color: var(--ink);
   background: transparent;
 }
 .feedBody {
@@ -288,23 +270,23 @@
 .empty {
   height: 100%;
   min-height: 260px;
-  padding: 48px 30px;
+  padding: 48px 20px;
   display: flex;
   align-items: flex-start;
   justify-content: center;
   flex-direction: column;
 }
 .empty > svg {
-  color: var(--muted);
+  color: var(--support);
   margin-bottom: 20px;
 }
 .empty h3 {
-  font-size: 17px;
+  font-size: 20px;
   letter-spacing: -0.03em;
 }
 .empty p {
   color: var(--muted);
-  font-size: 12px;
+  font-size: 14px;
   margin-top: 9px;
   max-width: 25ch;
 }
@@ -313,20 +295,21 @@
   align-items: center;
   gap: 7px;
   margin-top: 21px;
-  color: var(--link);
-  font-size: 12px;
+  color: var(--orange);
+  font-size: 14px;
   font-weight: 550;
   min-height: 38px;
 }
 .hotspots {
-  padding: 4px 20px 15px;
+  padding: 16px 20px;
+  border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
 }
 .hotspots h3,
 .reports > h3 {
   font-family: var(--font);
-  font-weight: 500;
-  font-size: 11px;
+  font-weight: 600;
+  font-size: 14px;
   letter-spacing: 0;
   color: var(--muted);
   margin: 0 0 8px;
@@ -342,27 +325,27 @@
 }
 .hotspots strong {
   display: block;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 550;
   line-height: 1.45;
 }
 .hotspots small {
   display: block;
-  font-size: 11px;
+  font-size: 13px;
   color: var(--muted);
   margin-top: 3px;
 }
 .reportCount {
   color: var(--link);
   white-space: nowrap;
-  font-size: 16px;
+  font-size: 18px;
   font-variant-numeric: tabular-nums;
 }
 .reportCount > span {
-  font-size: 10px;
+  font-size: 13px;
 }
 .reports {
-  padding: 17px 20px;
+  padding: 16px 20px;
 }
 .report {
   display: flex;
@@ -383,24 +366,24 @@
 }
 .report strong {
   display: block;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 550;
 }
 .report > span > span {
   display: block;
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.5;
   margin-top: 5px;
   color: var(--muted);
 }
 .report small {
   display: block;
-  font-size: 10px;
+  font-size: 13px;
   color: var(--muted);
   margin-top: 6px;
 }
 .report > svg {
-  color: var(--muted);
+  color: var(--support);
   margin-top: 2px;
 }
 .report > .issueDot {
@@ -414,7 +397,7 @@
   padding: 6px 20px;
   border-top: 1px solid var(--line);
   color: var(--muted);
-  font-size: 10px;
+  font-size: 13px;
 }
 .feedFooter button {
   padding: 8px;
@@ -422,43 +405,45 @@
 }
 .legend {
   grid-column: 1 / -1;
-  min-height: 42px;
-  padding: 11px 18px;
+  min-height: 46px;
+  padding: 12px 20px;
   border-top: 1px solid var(--line);
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 18px;
-  font-size: 10px;
-  color: var(--muted);
+  gap: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
 }
 .legend > span {
   display: flex;
-  gap: 6px;
+  gap: 8px;
   align-items: center;
 }
 .legend small {
   margin-left: auto;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 13px;
+  font-weight: 400;
 }
 .binDot,
 .issueDot,
 .communityDot {
   display: inline-block;
-  width: 7px;
-  height: 7px;
+  width: 11px;
+  height: 11px;
   border-radius: 50%;
   flex-shrink: 0;
 }
 .binDot {
-  background: #6b8278;
+  background: var(--brand);
 }
 .issueDot {
-  background: #de5c31;
+  background: var(--orange);
 }
 .communityDot {
-  background: #607e9a;
+  background: var(--link);
 }
 .footer {
   display: flex;
@@ -466,7 +451,7 @@
   justify-content: flex-end;
   gap: 24px;
   padding-top: 19px;
-  font-size: 11px;
+  font-size: 13px;
   color: var(--muted);
 }
 .footer > a {
@@ -494,7 +479,7 @@
   display: none;
 }
 .dataDetails summary:focus-visible {
-  outline: 2px solid var(--brand);
+  outline: 3px solid var(--focus);
   outline-offset: 4px;
 }
 .dataDetails[open] summary svg {
@@ -505,7 +490,7 @@
   max-width: 64ch;
 }
 .dataDetails p {
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.7;
 }
 .dataDetails dl {
@@ -533,13 +518,13 @@
 @media (max-width: 1050px) {
   .summary {
     gap: 24px;
-    grid-template-columns: repeat(4, minmax(75px, 1fr));
+    grid-template-columns: repeat(3, minmax(75px, 1fr));
   }
   .workspace {
     grid-template-columns: minmax(0, 1fr) 275px;
   }
   .title h1 {
-    font-size: 30px;
+    font-size: 33px;
   }
 }
 @media (max-width: 760px) {
@@ -548,21 +533,21 @@
     margin-bottom: 22px;
   }
   .title h1 {
-    font-size: 29px;
+    font-size: 32px;
   }
   .title p {
-    font-size: 12px;
+    font-size: 14px;
   }
   .summary {
     margin-top: 24px;
     gap: 20px 12px;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
   .summary dd {
-    font-size: 23px;
+    font-size: 25px;
   }
   .summary dt {
-    font-size: 10px;
+    font-size: 13px;
   }
   .workspace {
     display: flex;
@@ -573,26 +558,17 @@
     display: flex;
     flex-wrap: wrap;
     gap: 0;
-    padding: 8px 13px 10px;
-  }
-  .search {
-    flex-basis: 100%;
-  }
-  .search input {
-    min-height: 44px;
-    font-size: 13px;
+    padding: 8px 16px 12px;
   }
   .filters {
     width: 100%;
-    justify-content: space-between;
     gap: 8px;
-    padding-top: 6px;
   }
   .select {
     flex: 1;
   }
   .select select {
-    font-size: 11px;
+    font-size: 13px;
     padding-block: 11px;
   }
   .map {
@@ -606,11 +582,17 @@
     min-height: 250px;
   }
   .feedHeading {
-    padding: 18px 18px 8px;
+    padding: 18px 16px 8px;
+  }
+  .terms,
+  .hotspots,
+  .reports,
+  .feedFooter {
+    padding-inline: 16px;
   }
   .empty {
     min-height: 230px;
-    padding: 30px 24px;
+    padding: 30px 16px;
   }
   .empty p {
     max-width: none;
@@ -623,9 +605,9 @@
   }
   .legend {
     order: 2;
-    gap: 12px;
-    padding: 13px;
-    font-size: 9px;
+    gap: 10px 16px;
+    padding: 14px 16px;
+    font-size: 13px;
   }
   .legend small {
     width: 100%;
@@ -633,7 +615,7 @@
   }
   .footer {
     gap: 14px;
-    font-size: 10px;
+    font-size: 12px;
   }
   .inspector {
     bottom: 36px;

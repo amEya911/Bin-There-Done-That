@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-24T04:32:47.551519Z",
+  "generatedAt": "2026-10-24T22:09:29.840Z",
   "title": "Design System: Bin There Done That",
   "extensions": {
     "colorMeta": {
@@ -8,14 +8,14 @@
         "role": "neutral",
         "displayName": "Bg",
         "tonalRamp": [
-          "#141614",
-          "#1d211c",
-          "#252b22",
-          "#3a4235",
-          "#656c5f",
-          "#afb8a7",
-          "#edf0e8",
-          "#fafaf8"
+          "#1e2e28",
+          "#355146",
+          "#4d7564",
+          "#649882",
+          "#86b09e",
+          "#a9c7ba",
+          "#ccded7",
+          "#f0f5f3"
         ]
       },
       "paper": {
@@ -36,98 +36,98 @@
         "role": "neutral",
         "displayName": "Ink",
         "tonalRamp": [
-          "#141614",
-          "#1d211c",
-          "#252b22",
-          "#3a4235",
-          "#656c5f",
-          "#afb8a7",
-          "#edf0e8",
-          "#fafaf8"
+          "#1e2e28",
+          "#355146",
+          "#4d7564",
+          "#649882",
+          "#86b09e",
+          "#a9c7ba",
+          "#ccded7",
+          "#f0f5f3"
         ]
       },
       "muted": {
         "role": "neutral",
         "displayName": "Muted",
         "tonalRamp": [
-          "#141614",
-          "#1d211c",
-          "#252b22",
-          "#3a4235",
-          "#656c5f",
-          "#afb8a7",
-          "#edf0e8",
-          "#fafaf8"
+          "#1e2e28",
+          "#355146",
+          "#4d7564",
+          "#649882",
+          "#86b09e",
+          "#a9c7ba",
+          "#ccded7",
+          "#f0f5f3"
         ]
       },
       "line": {
         "role": "neutral",
         "displayName": "Line",
         "tonalRamp": [
-          "#141614",
-          "#1d211c",
-          "#252b22",
-          "#3a4235",
-          "#656c5f",
-          "#afb8a7",
-          "#edf0e8",
-          "#fafaf8"
+          "#1e2e28",
+          "#355146",
+          "#4d7564",
+          "#649882",
+          "#86b09e",
+          "#a9c7ba",
+          "#ccded7",
+          "#f0f5f3"
         ]
       },
       "surface-alt": {
         "role": "neutral",
         "displayName": "Surface Alt",
         "tonalRamp": [
-          "#141614",
-          "#1d211c",
-          "#252b22",
-          "#3a4235",
-          "#656c5f",
-          "#afb8a7",
-          "#edf0e8",
-          "#fafaf8"
+          "#1e2e28",
+          "#355146",
+          "#4d7564",
+          "#649882",
+          "#86b09e",
+          "#a9c7ba",
+          "#ccded7",
+          "#f0f5f3"
         ]
       },
       "brand": {
         "role": "primary",
         "displayName": "Brand",
         "tonalRamp": [
-          "#ad3e1c",
-          "#ae4322",
-          "#c74b25",
-          "#c65330",
-          "#f19168",
-          "#f5a17d",
-          "#ffac86",
-          "#f9ece6"
+          "#133a24",
+          "#216540",
+          "#30915b",
+          "#3ebd77",
+          "#68cd95",
+          "#94dcb4",
+          "#c0ead3",
+          "#ecf9f2"
         ]
       },
       "action": {
         "role": "primary",
         "displayName": "Action",
         "tonalRamp": [
-          "#ad3e1c",
-          "#ae4322",
-          "#c74b25",
-          "#c65330",
-          "#f19168",
-          "#f5a17d",
-          "#ffac86",
-          "#f9ece6"
+          "#133a24",
+          "#216540",
+          "#30915b",
+          "#3ebd77",
+          "#68cd95",
+          "#94dcb4",
+          "#c0ead3",
+          "#ecf9f2"
         ]
       },
       "action-hover": {
         "role": "primary",
         "displayName": "Action Hover",
         "tonalRamp": [
-          "#ad3e1c",
-          "#ae4322",
-          "#c74b25",
-          "#c65330",
-          "#f19168",
-          "#f5a17d",
-          "#ffac86",
-          "#f9ece6"
+          "#004d41",
+          "#008772",
+          "#00c1a4",
+          "#00fbd5",
+          "#37ffe1",
+          "#71ffea",
+          "#abfff2",
+          "#e6fffb"
         ]
       },
       "action-ink": {
@@ -138,203 +138,253 @@
         "role": "primary",
         "displayName": "Link",
         "tonalRamp": [
-          "#ad3e1c",
-          "#ae4322",
-          "#c74b25",
-          "#c65330",
-          "#f19168",
-          "#f5a17d",
-          "#ffac86",
-          "#f9ece6"
+          "#0b2a42",
+          "#134a74",
+          "#1b6aa6",
+          "#238ad8",
+          "#53a5e3",
+          "#85bfeb",
+          "#b7d9f3",
+          "#e9f4fb"
         ]
       },
       "orange-soft": {
         "role": "primary",
         "displayName": "Orange Soft",
         "tonalRamp": [
-          "#ad3e1c",
-          "#ae4322",
-          "#c74b25",
-          "#c65330",
-          "#f19168",
-          "#f5a17d",
-          "#ffac86",
-          "#f9ece6"
+          "#3e1e0f",
+          "#6d341a",
+          "#9c4b25",
+          "#cb6131",
+          "#d8845d",
+          "#e4a88c",
+          "#efccbb",
+          "#faefea"
         ]
       },
       "green-soft": {
         "role": "neutral",
-        "displayName": "Green Soft"
+        "displayName": "Green Soft",
+        "tonalRamp": [
+          "#1e2e28",
+          "#355146",
+          "#4d7564",
+          "#649882",
+          "#86b09e",
+          "#a9c7ba",
+          "#ccded7",
+          "#f0f5f3"
+        ]
       },
       "scrim": {
         "role": "neutral",
-        "displayName": "Scrim"
+        "displayName": "Scrim",
+        "tonalRamp": [
+          "#1e2e28",
+          "#355146",
+          "#4d7564",
+          "#649882",
+          "#86b09e",
+          "#a9c7ba",
+          "#ccded7",
+          "#f0f5f3"
+        ]
       },
       "bg-dark": {
         "role": "neutral",
         "displayName": "Bg Dark",
         "tonalRamp": [
-          "#141614",
-          "#1d211c",
-          "#252b22",
-          "#3a4235",
-          "#656c5f",
-          "#afb8a7",
-          "#edf0e8",
-          "#fafaf8"
+          "#1e2e28",
+          "#355146",
+          "#4d7564",
+          "#649882",
+          "#86b09e",
+          "#a9c7ba",
+          "#ccded7",
+          "#f0f5f3"
         ]
       },
       "paper-dark": {
         "role": "neutral",
         "displayName": "Paper Dark",
         "tonalRamp": [
-          "#141614",
-          "#1d211c",
-          "#252b22",
-          "#3a4235",
-          "#656c5f",
-          "#afb8a7",
-          "#edf0e8",
-          "#fafaf8"
+          "#1e2e28",
+          "#355146",
+          "#4d7564",
+          "#649882",
+          "#86b09e",
+          "#a9c7ba",
+          "#ccded7",
+          "#f0f5f3"
         ]
       },
       "ink-dark": {
         "role": "neutral",
         "displayName": "Ink Dark",
         "tonalRamp": [
-          "#141614",
-          "#1d211c",
-          "#252b22",
-          "#3a4235",
-          "#656c5f",
-          "#afb8a7",
-          "#edf0e8",
-          "#fafaf8"
+          "#1e2e28",
+          "#355146",
+          "#4d7564",
+          "#649882",
+          "#86b09e",
+          "#a9c7ba",
+          "#ccded7",
+          "#f0f5f3"
         ]
       },
       "muted-dark": {
         "role": "neutral",
         "displayName": "Muted Dark",
         "tonalRamp": [
-          "#141614",
-          "#1d211c",
-          "#252b22",
-          "#3a4235",
-          "#656c5f",
-          "#afb8a7",
-          "#edf0e8",
-          "#fafaf8"
+          "#1e2e28",
+          "#355146",
+          "#4d7564",
+          "#649882",
+          "#86b09e",
+          "#a9c7ba",
+          "#ccded7",
+          "#f0f5f3"
         ]
       },
       "line-dark": {
         "role": "neutral",
         "displayName": "Line Dark",
         "tonalRamp": [
-          "#141614",
-          "#1d211c",
-          "#252b22",
-          "#3a4235",
-          "#656c5f",
-          "#afb8a7",
-          "#edf0e8",
-          "#fafaf8"
+          "#1e2e28",
+          "#355146",
+          "#4d7564",
+          "#649882",
+          "#86b09e",
+          "#a9c7ba",
+          "#ccded7",
+          "#f0f5f3"
         ]
       },
       "surface-alt-dark": {
         "role": "neutral",
         "displayName": "Surface Alt Dark",
         "tonalRamp": [
-          "#141614",
-          "#1d211c",
-          "#252b22",
-          "#3a4235",
-          "#656c5f",
-          "#afb8a7",
-          "#edf0e8",
-          "#fafaf8"
+          "#1e2e28",
+          "#355146",
+          "#4d7564",
+          "#649882",
+          "#86b09e",
+          "#a9c7ba",
+          "#ccded7",
+          "#f0f5f3"
         ]
       },
       "brand-dark": {
         "role": "primary",
         "displayName": "Brand Dark",
         "tonalRamp": [
-          "#ad3e1c",
-          "#ae4322",
-          "#c74b25",
-          "#c65330",
-          "#f19168",
-          "#f5a17d",
-          "#ffac86",
-          "#f9ece6"
+          "#243716",
+          "#406126",
+          "#5b8b36",
+          "#77b447",
+          "#95c66f",
+          "#b4d799",
+          "#d3e7c3",
+          "#f2f8ed"
         ]
       },
       "action-dark": {
         "role": "primary",
         "displayName": "Action Dark",
         "tonalRamp": [
-          "#ad3e1c",
-          "#ae4322",
-          "#c74b25",
-          "#c65330",
-          "#f19168",
-          "#f5a17d",
-          "#ffac86",
-          "#f9ece6"
+          "#263c10",
+          "#436a1d",
+          "#5f9829",
+          "#7cc635",
+          "#9ad561",
+          "#b7e18f",
+          "#d5edbd",
+          "#f2faeb"
         ]
       },
       "action-hover-dark": {
         "role": "primary",
         "displayName": "Action Hover Dark",
         "tonalRamp": [
-          "#ad3e1c",
-          "#ae4322",
-          "#c74b25",
-          "#c65330",
-          "#f19168",
-          "#f5a17d",
-          "#ffac86",
-          "#f9ece6"
+          "#253d10",
+          "#426b1c",
+          "#5f9a27",
+          "#7bc833",
+          "#99d660",
+          "#b7e28e",
+          "#d4eebc",
+          "#f2faeb"
         ]
       },
       "action-ink-dark": {
         "role": "neutral",
-        "displayName": "Action Ink Dark"
+        "displayName": "Action Ink Dark",
+        "tonalRamp": [
+          "#1e2e28",
+          "#355146",
+          "#4d7564",
+          "#649882",
+          "#86b09e",
+          "#a9c7ba",
+          "#ccded7",
+          "#f0f5f3"
+        ]
       },
       "link-dark": {
         "role": "primary",
         "displayName": "Link Dark",
         "tonalRamp": [
-          "#ad3e1c",
-          "#ae4322",
-          "#c74b25",
-          "#c65330",
-          "#f19168",
-          "#f5a17d",
-          "#ffac86",
-          "#f9ece6"
+          "#0b2942",
+          "#134774",
+          "#1b66a6",
+          "#2485d8",
+          "#53a1e3",
+          "#85bceb",
+          "#b7d8f3",
+          "#e9f3fb"
         ]
       },
       "orange-soft-dark": {
         "role": "primary",
         "displayName": "Orange Soft Dark",
         "tonalRamp": [
-          "#ad3e1c",
-          "#ae4322",
-          "#c74b25",
-          "#c65330",
-          "#f19168",
-          "#f5a17d",
-          "#ffac86",
-          "#f9ece6"
+          "#30251d",
+          "#544233",
+          "#785e49",
+          "#9c7b5f",
+          "#b39882",
+          "#c9b6a7",
+          "#dfd4cb",
+          "#f5f2ef"
         ]
       },
       "green-soft-dark": {
         "role": "neutral",
-        "displayName": "Green Soft Dark"
+        "displayName": "Green Soft Dark",
+        "tonalRamp": [
+          "#1e2e28",
+          "#355146",
+          "#4d7564",
+          "#649882",
+          "#86b09e",
+          "#a9c7ba",
+          "#ccded7",
+          "#f0f5f3"
+        ]
       },
       "scrim-dark": {
         "role": "neutral",
-        "displayName": "Scrim Dark"
+        "displayName": "Scrim Dark",
+        "tonalRamp": [
+          "#1e2e28",
+          "#355146",
+          "#4d7564",
+          "#649882",
+          "#86b09e",
+          "#a9c7ba",
+          "#ccded7",
+          "#f0f5f3"
+        ]
       },
       "camera-video": {
         "role": "neutral",
@@ -350,27 +400,87 @@
       },
       "city-bin": {
         "role": "secondary",
-        "displayName": "City Bin"
+        "displayName": "City Bin",
+        "tonalRamp": [
+          "#133a24",
+          "#216540",
+          "#30915b",
+          "#3ebd77",
+          "#68cd95",
+          "#94dcb4",
+          "#c0ead3",
+          "#ecf9f2"
+        ]
       },
       "city-bin-dark": {
         "role": "secondary",
-        "displayName": "City Bin Dark"
+        "displayName": "City Bin Dark",
+        "tonalRamp": [
+          "#243716",
+          "#406126",
+          "#5b8b36",
+          "#77b447",
+          "#95c66f",
+          "#b4d799",
+          "#d3e7c3",
+          "#f2f8ed"
+        ]
       },
       "community-bin": {
         "role": "secondary",
-        "displayName": "Community Bin"
+        "displayName": "Community Bin",
+        "tonalRamp": [
+          "#0b2a42",
+          "#134a74",
+          "#1b6aa6",
+          "#238ad8",
+          "#53a5e3",
+          "#85bfeb",
+          "#b7d9f3",
+          "#e9f4fb"
+        ]
       },
       "issue": {
         "role": "secondary",
-        "displayName": "Issue"
+        "displayName": "Issue",
+        "tonalRamp": [
+          "#42180b",
+          "#742b13",
+          "#a63d1b",
+          "#d95023",
+          "#e37652",
+          "#eb9e85",
+          "#f3c6b7",
+          "#fbeee9"
+        ]
       },
       "map-issue": {
         "role": "secondary",
-        "displayName": "Map Issue"
+        "displayName": "Map Issue",
+        "tonalRamp": [
+          "#481204",
+          "#7f2007",
+          "#b62e0b",
+          "#ee3c0e",
+          "#f46642",
+          "#f79379",
+          "#fabfb0",
+          "#feece7"
+        ]
       },
       "map-selection": {
         "role": "secondary",
-        "displayName": "Map Selection"
+        "displayName": "Map Selection",
+        "tonalRamp": [
+          "#491204",
+          "#802007",
+          "#b72e0a",
+          "#ee3b0d",
+          "#f56641",
+          "#f89278",
+          "#fbbfb0",
+          "#feece7"
+        ]
       },
       "map-cluster": {
         "role": "secondary",
@@ -390,7 +500,17 @@
       },
       "map-cluster-ink": {
         "role": "secondary",
-        "displayName": "Map Cluster Ink"
+        "displayName": "Map Cluster Ink",
+        "tonalRamp": [
+          "#133a24",
+          "#216540",
+          "#30915b",
+          "#3ebd77",
+          "#68cd95",
+          "#94dcb4",
+          "#c0ead3",
+          "#ecf9f2"
+        ]
       },
       "map-cluster-ink-dark": {
         "role": "secondary",
@@ -406,27 +526,87 @@
       },
       "density-low": {
         "role": "secondary",
-        "displayName": "Density Low"
+        "displayName": "Density Low",
+        "tonalRamp": [
+          "#253616",
+          "#416027",
+          "#5d8938",
+          "#79b349",
+          "#97c570",
+          "#b5d69a",
+          "#d3e7c3",
+          "#f2f8ed"
+        ]
       },
       "density-mid": {
         "role": "secondary",
-        "displayName": "Density Mid"
+        "displayName": "Density Mid",
+        "tonalRamp": [
+          "#243716",
+          "#406126",
+          "#5b8b36",
+          "#77b447",
+          "#95c66f",
+          "#b4d799",
+          "#d3e7c3",
+          "#f2f8ed"
+        ]
       },
       "density-high": {
         "role": "secondary",
-        "displayName": "Density High"
+        "displayName": "Density High",
+        "tonalRamp": [
+          "#183522",
+          "#2a5d3c",
+          "#3d8556",
+          "#4fad71",
+          "#75c090",
+          "#9dd2b1",
+          "#c5e5d1",
+          "#edf7f1"
+        ]
       },
       "density-peak": {
         "role": "secondary",
-        "displayName": "Density Peak"
+        "displayName": "Density Peak",
+        "tonalRamp": [
+          "#133a24",
+          "#216540",
+          "#30915b",
+          "#3ebd77",
+          "#68cd95",
+          "#94dcb4",
+          "#c0ead3",
+          "#ecf9f2"
+        ]
       },
       "report-heat": {
         "role": "secondary",
-        "displayName": "Report Heat"
+        "displayName": "Report Heat",
+        "tonalRamp": [
+          "#4d1a00",
+          "#872e00",
+          "#c14100",
+          "#fb5500",
+          "#ff7b37",
+          "#ffa171",
+          "#ffc8ab",
+          "#ffeee6"
+        ]
       },
       "report-heat-peak": {
         "role": "secondary",
-        "displayName": "Report Heat Peak"
+        "displayName": "Report Heat Peak",
+        "tonalRamp": [
+          "#441409",
+          "#772310",
+          "#ab3316",
+          "#de421d",
+          "#e86b4e",
+          "#ee9681",
+          "#f5c1b5",
+          "#fcece8"
+        ]
       },
       "heat-transparent": {
         "role": "secondary",
@@ -434,15 +614,45 @@
       },
       "annotation-ground": {
         "role": "secondary",
-        "displayName": "Annotation Ground"
+        "displayName": "Annotation Ground",
+        "tonalRamp": [
+          "#4d2a00",
+          "#874a00",
+          "#c16900",
+          "#fb8900",
+          "#ffa437",
+          "#ffbe71",
+          "#ffd9ab",
+          "#fff3e6"
+        ]
       },
       "annotation-line": {
         "role": "secondary",
-        "displayName": "Annotation Line"
+        "displayName": "Annotation Line",
+        "tonalRamp": [
+          "#4d2100",
+          "#873a00",
+          "#c15300",
+          "#fb6c00",
+          "#ff8d37",
+          "#ffae71",
+          "#ffcfab",
+          "#fff0e6"
+        ]
       },
       "annotation-ink": {
         "role": "secondary",
-        "displayName": "Annotation Ink"
+        "displayName": "Annotation Ink",
+        "tonalRamp": [
+          "#3a2113",
+          "#653921",
+          "#915230",
+          "#bd6b3e",
+          "#cd8c68",
+          "#dcad94",
+          "#eacfc0",
+          "#f9f0ec"
+        ]
       },
       "annotation-recycling-ground": {
         "role": "secondary",
@@ -467,6 +677,188 @@
       "annotation-check-ink": {
         "role": "secondary",
         "displayName": "Annotation Check Ink"
+      },
+      "community-bin-dark": {
+        "role": "secondary",
+        "displayName": "Community Bin Dark",
+        "tonalRamp": [
+          "#0b2942",
+          "#134774",
+          "#1b66a6",
+          "#2485d8",
+          "#53a1e3",
+          "#85bceb",
+          "#b7d8f3",
+          "#e9f3fb"
+        ]
+      },
+      "logo-frame": {
+        "role": "primary",
+        "displayName": "Logo Frame",
+        "tonalRamp": [
+          "#243715",
+          "#3f6125",
+          "#5b8b36",
+          "#76b546",
+          "#95c76e",
+          "#b4d798",
+          "#d3e8c3",
+          "#f2f8ed"
+        ]
+      },
+      "logo-bin": {
+        "role": "primary",
+        "displayName": "Logo Bin",
+        "tonalRamp": [
+          "#133a24",
+          "#216540",
+          "#30915b",
+          "#3ebd77",
+          "#68cd95",
+          "#94dcb4",
+          "#c0ead3",
+          "#ecf9f2"
+        ]
+      },
+      "logo-mark": {
+        "role": "primary",
+        "displayName": "Logo Mark",
+        "tonalRamp": [
+          "#263c10",
+          "#436a1d",
+          "#5f9829",
+          "#7cc635",
+          "#9ad561",
+          "#b7e18f",
+          "#d5edbd",
+          "#f2faeb"
+        ]
+      },
+      "logo-frame-dark": {
+        "role": "primary",
+        "displayName": "Logo Frame Dark",
+        "tonalRamp": [
+          "#1a3222",
+          "#2e593c",
+          "#427f56",
+          "#56a66f",
+          "#7bbb8f",
+          "#a1cfb0",
+          "#c8e2d0",
+          "#eef6f1"
+        ]
+      },
+      "logo-bin-dark": {
+        "role": "primary",
+        "displayName": "Logo Bin Dark",
+        "tonalRamp": [
+          "#263c10",
+          "#436a1d",
+          "#5f9829",
+          "#7cc635",
+          "#9ad561",
+          "#b7e18f",
+          "#d5edbd",
+          "#f2faeb"
+        ]
+      },
+      "logo-mark-dark": {
+        "role": "primary",
+        "displayName": "Logo Mark Dark",
+        "tonalRamp": [
+          "#004d41",
+          "#008772",
+          "#00c1a4",
+          "#00fbd5",
+          "#37ffe1",
+          "#71ffea",
+          "#abfff2",
+          "#e6fffb"
+        ]
+      },
+      "report": {
+        "role": "primary",
+        "displayName": "Report",
+        "tonalRamp": [
+          "#41180c",
+          "#722b15",
+          "#a33d1e",
+          "#d45027",
+          "#e07656",
+          "#e99e87",
+          "#f2c6b8",
+          "#fbeee9"
+        ]
+      },
+      "report-hover": {
+        "role": "primary",
+        "displayName": "Report Hover",
+        "tonalRamp": [
+          "#42180b",
+          "#742a13",
+          "#a63c1b",
+          "#d84e23",
+          "#e37453",
+          "#eb9d85",
+          "#f3c5b7",
+          "#fbede9"
+        ]
+      },
+      "report-ink": {
+        "role": "primary",
+        "displayName": "Report Ink",
+        "tonalRamp": [
+          "#262626",
+          "#434343",
+          "#616161",
+          "#7e7e7e",
+          "#9b9b9b",
+          "#b8b8b8",
+          "#d5d5d5",
+          "#f2f2f2"
+        ]
+      },
+      "report-dark": {
+        "role": "primary",
+        "displayName": "Report Dark",
+        "tonalRamp": [
+          "#461a06",
+          "#7b2d0b",
+          "#b14010",
+          "#e65415",
+          "#ee7948",
+          "#f3a07d",
+          "#f8c7b2",
+          "#fdeee8"
+        ]
+      },
+      "report-hover-dark": {
+        "role": "primary",
+        "displayName": "Report Hover Dark",
+        "tonalRamp": [
+          "#4d1800",
+          "#872a00",
+          "#c13d00",
+          "#fb4f00",
+          "#ff7637",
+          "#ff9e71",
+          "#ffc6ab",
+          "#ffeee6"
+        ]
+      },
+      "report-ink-dark": {
+        "role": "primary",
+        "displayName": "Report Ink Dark",
+        "tonalRamp": [
+          "#352318",
+          "#5d3e2a",
+          "#85593c",
+          "#ad734e",
+          "#c19375",
+          "#d3b29d",
+          "#e5d2c5",
+          "#f7f1ed"
+        ]
       }
     },
     "typographyMeta": {

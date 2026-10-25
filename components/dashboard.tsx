@@ -7,14 +7,13 @@ import {
   ArrowRight,
   Check,
   ChevronDown,
-  Search,
-  MapPin,
+  Info,
   RefreshCw,
   X,
   Plus,
   Layers,
 } from "lucide-react";
-import { Shell, ErrorNote } from "./ui";
+import { Shell, ErrorNote, REPORT_WINDOWS } from "./ui";
 import { api, scoped, relative, shortId } from "@/lib/client";
 import type { Bin, Summary, Point } from "@/lib/types";
 import { isCaseOpen } from "@/lib/cases";
@@ -31,19 +30,20 @@ type Data = Summary & {
 export default function Dashboard({
   scope = "public",
   demoTitle,
+  timeWindow,
 }: {
   scope?: string;
   demoTitle?: string;
+  timeWindow?: string;
 }) {
   const [data, setData] = useState<Data | null>(null);
   const [error, setError] = useState("");
-  const [window, setWindow] = useState("24h");
+  const window = REPORT_WINDOWS.some((w) => w.value === timeWindow)
+    ? timeWindow!
+    : "24h";
   const [layer, setLayer] = useState<"bins" | "density" | "reports">("bins");
   const [selected, setSelected] = useState<Bin | null>(null);
   const [pin, setPin] = useState<Point | null>(null);
-  const [query, setQuery] = useState("");
-  const [results, setResults] = useState<Bin[]>([]);
-  const [searching, setSearching] = useState(false);
   const [tab, setTab] = useState("all");
   const [lastUpdated, setLastUpdated] = useState("");
   const refreshVersion = useRef(0);
@@ -89,35 +89,6 @@ export default function Dashboard({
       globalThis.removeEventListener("online", online);
     };
   }, [scope, window]);
-  useEffect(() => {
-    if (query.trim().length < 2) {
-      setResults([]);
-      setSearching(false);
-      return;
-    }
-    let cancelled = false;
-    setSearching(true);
-    const t = setTimeout(
-      () =>
-        api<{ bins: Bin[] }>(
-          scoped(`/api/bins?q=${encodeURIComponent(query)}&limit=7`, scope),
-        )
-          .then((r) => {
-            if (!cancelled) setResults(r.bins);
-          })
-          .catch(() => {
-            if (!cancelled) setResults([]);
-          })
-          .finally(() => {
-            if (!cancelled) setSearching(false);
-          }),
-      220,
-    );
-    return () => {
-      cancelled = true;
-      clearTimeout(t);
-    };
-  }, [query, scope]);
   async function choose(id: string) {
     const version = ++selectionVersion.current;
     try {
@@ -125,8 +96,6 @@ export default function Dashboard({
       if (version !== selectionVersion.current) return;
       setSelected(d.bin);
       setPin(null);
-      setQuery("");
-      setResults([]);
       revealMap();
     } catch (e) {
       if (version === selectionVersion.current) setError((e as Error).message);
@@ -152,7 +121,7 @@ export default function Dashboard({
       cases: data?.cases.filter((c) => c.binId === id).length || 0,
     }));
   return (
-    <Shell wide scanHref={scanner}>
+    <Shell wide scanHref={scanner} timeWindow={window}>
       {scope !== "public" && (
         <div className="notice demo-notice">
           <strong>Demo session</strong> {demoTitle || "Camera demonstration"} ·
@@ -170,13 +139,25 @@ export default function Dashboard({
           <h1>
             Toronto<span>.</span>
           </h1>
-          <p>Your city, a little clearer.</p>
+          <p>Your city, a little cleaner.</p>
         </div>
         <dl className={styles.summary} aria-label="City overview counts">
-          <Metric label="Bin locations" value={data?.inventory.active} />
-          <Metric label="Open reports" value={data?.totalReports} accent />
-          <Metric label="Open cases" value={data?.activeCases} />
-          <Metric label="Affected bins" value={data?.affectedBins} />
+          <Metric
+            label="Bin locations"
+            value={data?.inventory.active}
+            hint="Bins in service on the map, from the City of Toronto list and community additions."
+          />
+          <Metric
+            label="Open reports"
+            value={data?.totalReports}
+            accent
+            hint="Individual sightings sent by people or the camera in this time period."
+          />
+          <Metric
+            label="Open cases"
+            value={data?.activeCases}
+            hint="Open reports grouped together when they describe the same problem at the same bin."
+          />
         </dl>
       </section>
       {error && (
@@ -189,49 +170,6 @@ export default function Dashboard({
         aria-label="Toronto bins and reports"
       >
         <div className={styles.toolbar}>
-          <div className={styles.search}>
-            <Search size={17} aria-hidden="true" />
-            <input
-              aria-label="Search bins by address or City ID"
-              placeholder="Search a street or bin"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-            />
-            {query && (
-              <button aria-label="Clear search" onClick={() => setQuery("")}>
-                <X size={15} />
-              </button>
-            )}
-            {query.trim().length >= 2 && (
-              <div
-                className={styles.results}
-                role="region"
-                aria-label="Bin search results"
-              >
-                {searching ? (
-                  <p>Searching…</p>
-                ) : results.length ? (
-                  results.map((b) => (
-                    <button key={b.id} onClick={() => choose(b.id)}>
-                      <MapPin size={15} />
-                      <span>
-                        <strong>{b.name}</strong>
-                        <small>
-                          {b.sourceId || "Community-added"} ·{" "}
-                          {b.status === "Existing"
-                            ? b.side || "Toronto"
-                            : "Temporarily removed"}
-                        </small>
-                      </span>
-                      <ArrowUpRight size={14} />
-                    </button>
-                  ))
-                ) : (
-                  <p>No bins found. Try a nearby street.</p>
-                )}
-              </div>
-            )}
-          </div>
           <div className={styles.filters}>
             <label className={styles.select}>
               <Layers size={15} aria-hidden="true" />
@@ -244,19 +182,6 @@ export default function Dashboard({
                 <option value="bins">Bin locations</option>
                 <option value="density">Bin density</option>
                 <option value="reports">Report heatmap</option>
-              </select>
-              <ChevronDown size={13} aria-hidden="true" />
-            </label>
-            <label className={styles.select}>
-              <span className="sr-only">Report time window</span>
-              <select
-                aria-label="Report time window"
-                value={window}
-                onChange={(e) => setWindow(e.target.value)}
-              >
-                <option value="24h">Last 24 hours</option>
-                <option value="7d">Last 7 days</option>
-                <option value="all">All time</option>
               </select>
               <ChevronDown size={13} aria-hidden="true" />
             </label>
@@ -327,6 +252,10 @@ export default function Dashboard({
               </select>
             </label>
           </div>
+          <p className={styles.terms}>
+            A <strong>report</strong> is one sighting. Reports about the same
+            problem at one bin are grouped into a <strong>case</strong>.
+          </p>
           <div className={styles.feedBody}>
             {hotspots.length > 0 && (
               <section
@@ -459,15 +388,31 @@ export default function Dashboard({
 function Metric({
   label,
   value,
+  hint,
   accent = false,
 }: {
   label: string;
   value?: number;
+  hint: string;
   accent?: boolean;
 }) {
+  const id = "hint-" + label.toLowerCase().replace(/s+/g, "-");
   return (
     <div className={accent ? styles.accentMetric : ""}>
-      <dt>{label}</dt>
+      <dt>
+        {label}
+        <button
+          type="button"
+          className={styles.hint}
+          aria-label={`What ${label.toLowerCase()} means`}
+          aria-describedby={id}
+        >
+          <Info size={14} aria-hidden="true" />
+        </button>
+        <span role="tooltip" id={id} className={styles.tip}>
+          {hint}
+        </span>
+      </dt>
       <dd>{value === undefined ? "—" : value.toLocaleString()}</dd>
     </div>
   );

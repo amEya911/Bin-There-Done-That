@@ -155,19 +155,19 @@ export default function BinMap({
                 0,
                 "rgba(255,255,255,0)",
                 0.15,
-                "#e9ebcd",
+                source !== "reports" ? "#e5ede1" : "#f9ece6",
                 0.4,
-                "#bbcf8f",
+                source !== "reports" ? "#8fae93" : "#f19168",
                 0.65,
                 color,
                 1,
-                source !== "reports" ? "#4b633a" : "#e45432",
+                source !== "reports" ? "#1f5e3b" : "#ad3e1c",
               ],
             },
           });
-        heat("density-heat", "density", "#71894d");
-        heat("manual-density", "manual", "#71894d");
-        heat("reports-heat", "reports", "#ff8c51");
+        heat("density-heat", "density", "#4a6f50");
+        heat("manual-density", "manual", "#4a6f50");
+        heat("reports-heat", "reports", "#c74b25");
         m.setPaintProperty("reports-heat", "heatmap-weight", ["get", "count"]);
         m.addLayer({
           id: "clusters",
@@ -196,10 +196,10 @@ export default function BinMap({
           filter: ["has", "point_count"],
           layout: {
             "text-field": ["get", "point_count_abbreviated"],
-            "text-size": 12,
+            "text-size": 14,
             "text-font": ["Noto Sans Regular"],
           },
-          paint: { "text-color": dark ? "#d3dfd0" : "#3c5d50" },
+          paint: { "text-color": dark ? "#d3dfd0" : "#1f5e3b" },
         });
         m.addLayer({
           id: "bin-points",
@@ -207,7 +207,7 @@ export default function BinMap({
           source: "inventory",
           filter: ["!", ["has", "point_count"]],
           paint: {
-            "circle-color": dark ? "#93ad9f" : "#6b8278",
+            "circle-color": dark ? "#a3c7a8" : "#1f5e3b",
             "circle-radius": 4,
             "circle-stroke-color": dark ? "#1d211c" : "#ffffff",
             "circle-stroke-width": 1,
@@ -218,7 +218,7 @@ export default function BinMap({
           type: "circle",
           source: "manual",
           paint: {
-            "circle-color": "#607e9a",
+            "circle-color": dark ? "#8cc0ec" : "#165788",
             "circle-radius": 6,
             "circle-stroke-color": dark ? "#1d211c" : "#ffffff",
             "circle-stroke-width": 2,
@@ -229,7 +229,7 @@ export default function BinMap({
           type: "circle",
           source: "reports",
           paint: {
-            "circle-color": "#f35931",
+            "circle-color": dark ? "#f19168" : "#c74b25",
             "circle-radius": 12,
             "circle-stroke-color": "#fff",
             "circle-stroke-width": 3,
@@ -241,7 +241,7 @@ export default function BinMap({
           source: "reports",
           layout: {
             "text-field": ["to-string", ["get", "count"]],
-            "text-size": 10,
+            "text-size": 12,
             "text-font": ["Noto Sans Bold"],
             "text-allow-overlap": true,
           },
@@ -389,7 +389,7 @@ export default function BinMap({
     const p =
       pin || (selected ? ([selected.lng, selected.lat] as Point) : null);
     if (p) {
-      marker.current = new maplibregl.Marker({ color: "#f45d36" })
+      marker.current = new maplibregl.Marker({ color: "#c74b25" })
         .setLngLat(p)
         .addTo(m);
       m.easeTo({

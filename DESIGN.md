@@ -1,58 +1,86 @@
 ---
-name: "Bin There Done That"
+name: "Bin There, Done That"
 description: "Quiet Toronto cartography and a neutral camera workspace that follow the system theme."
 colors:
-  bg: "#fafaf8"
+  bg: "#f5f1e8"
   paper: "#ffffff"
-  ink: "#252820"
-  muted: "#656c5f"
-  line: "#dfe3da"
-  surface-alt: "#f0f2ed"
-  brand: "#c65330"
+  ink: "#17231e"
+  muted: "#47524c"
+  line: "#ddd6c6"
+  surface-alt: "#ece7da"
+  brand: "#1f5e3b"
   action: "#c74b25"
   action-hover: "#ad3e1c"
   action-ink: "#ffffff"
-  link: "#ae4322"
+  support: "#4a6f50"
+  support-hover: "#3b5a40"
+  support-ink: "#ffffff"
+  support-soft: "#e5ede1"
+  support-text: "#3f5f45"
+  focus: "#165788"
+  logo-frame: "#4a6f50"
+  logo-bin: "#1f5e3b"
+  logo-mark: "#f5f1e8"
+  link: "#165788"
+  report: "#c74b25"
+  report-hover: "#ad3e1c"
+  report-ink: "#ffffff"
   orange-soft: "#f9ece6"
-  green-soft: "#eef2e9"
-  scrim: "#10140f66"
-  bg-dark: "#141614"
-  paper-dark: "#1d211c"
-  ink-dark: "#edf0e8"
-  muted-dark: "#afb8a7"
-  line-dark: "#3a4235"
-  surface-alt-dark: "#252b22"
-  brand-dark: "#f19168"
+  green-soft: "#e5ede1"
+  scrim: "#00261f66"
+  bg-dark: "#0e1a16"
+  paper-dark: "#15241f"
+  ink-dark: "#eaf1ec"
+  muted-dark: "#c2cfc7"
+  line-dark: "#2d4038"
+  surface-alt-dark: "#1c2e27"
+  brand-dark: "#a3c7a8"
   action-dark: "#f19168"
   action-hover-dark: "#ffac86"
   action-ink-dark: "#2a1c13"
-  link-dark: "#f5a17d"
+  support-dark: "#a3c7a8"
+  support-hover-dark: "#b9d6bd"
+  support-ink-dark: "#10241a"
+  support-soft-dark: "#1d3326"
+  support-text-dark: "#b9d6bd"
+  focus-dark: "#8cc0ec"
+  logo-frame-dark: "#7fa886"
+  logo-bin-dark: "#c9dfcc"
+  logo-mark-dark: "#0e1a16"
+  link-dark: "#8cc0ec"
+  report-dark: "#f19168"
+  report-hover-dark: "#ffac86"
+  report-ink-dark: "#2a1c13"
   orange-soft-dark: "#33281f"
-  green-soft-dark: "#263021"
+  green-soft-dark: "#1d3326"
   scrim-dark: "#00000099"
   camera-video: "#101310"
   camera-hint: "#101310cc"
   video-ink: "#ffffff"
-  city-bin: "#6b8278"
-  city-bin-dark: "#93ad9f"
-  community-bin: "#607e9a"
-  issue: "#de5c31"
-  map-issue: "#f35931"
-  map-selection: "#f45d36"
+  city-bin: "#1f5e3b"
+  city-bin-dark: "#a3c7a8"
+  community-bin: "#165788"
+  community-bin-dark: "#8cc0ec"
+  issue: "#c74b25"
+  map-issue: "#c74b25"
+  map-issue-dark: "#f19168"
+  map-selection: "#c74b25"
   map-cluster: "#f8faf8"
   map-cluster-dark: "#283127"
   map-cluster-line: "#a8b9ae"
   map-cluster-line-dark: "#657861"
-  map-cluster-ink: "#3c5d50"
+  map-cluster-ink: "#1f5e3b"
   map-cluster-ink-dark: "#d3dfd0"
   area-fill: "#80894e"
   area-line: "#62723e"
-  density-low: "#e9ebcd"
-  density-mid: "#bbcf8f"
-  density-high: "#71894d"
-  density-peak: "#4b633a"
-  report-heat: "#ff8c51"
-  report-heat-peak: "#e45432"
+  density-low: "#e5ede1"
+  density-mid: "#8fae93"
+  density-high: "#4a6f50"
+  density-peak: "#1f5e3b"
+  report-heat-low: "#f9ece6"
+  report-heat-mid: "#f19168"
+  report-heat: "#c74b25"
+  report-heat-peak: "#ad3e1c"
   heat-transparent: "rgba(255,255,255,0)"
   annotation-ground: "#fff0def5"
   annotation-line: "#ffc79d"
@@ -66,157 +94,157 @@ colors:
 typography:
   headline:
     fontFamily: "\"Space Grotesk Variable\", Arial, sans-serif"
-    fontSize: "34px"
+    fontSize: "37px"
     fontWeight: 600
     lineHeight: 1.1
     letterSpacing: "-0.04em"
   headline-compact:
     fontFamily: "\"Space Grotesk Variable\", Arial, sans-serif"
-    fontSize: "30px"
+    fontSize: "33px"
     fontWeight: 600
     lineHeight: 1.1
     letterSpacing: "-0.04em"
   headline-mobile:
     fontFamily: "\"Space Grotesk Variable\", Arial, sans-serif"
-    fontSize: "29px"
+    fontSize: "32px"
     fontWeight: 600
     lineHeight: 1.1
     letterSpacing: "-0.04em"
   form-headline:
     fontFamily: "\"Space Grotesk Variable\", Arial, sans-serif"
-    fontSize: "clamp(30px, 4vw, 40px)"
+    fontSize: "clamp(33px, 4vw, 44px)"
     fontWeight: 500
     letterSpacing: "-0.045em"
   bin-detail-headline:
     fontFamily: "\"Space Grotesk Variable\", Arial, sans-serif"
-    fontSize: "clamp(28px, 3vw, 38px)"
+    fontSize: "clamp(31px, 3vw, 42px)"
     fontWeight: 500
     letterSpacing: "-0.035em"
   bin-detail-section:
     fontFamily: "\"Space Grotesk Variable\", Arial, sans-serif"
-    fontSize: "22px"
+    fontSize: "24px"
     fontWeight: 500
     letterSpacing: "-0.025em"
   camera-headline:
     fontFamily: "\"Space Grotesk Variable\", Arial, sans-serif"
-    fontSize: "28px"
+    fontSize: "31px"
     fontWeight: 500
     lineHeight: 1.15
     letterSpacing: "-0.035em"
   camera-headline-mobile:
     fontFamily: "\"Space Grotesk Variable\", Arial, sans-serif"
-    fontSize: "25px"
+    fontSize: "28px"
     fontWeight: 500
     lineHeight: 1.15
     letterSpacing: "-0.035em"
   modal-headline:
     fontFamily: "\"Space Grotesk Variable\", Arial, sans-serif"
-    fontSize: "31px"
+    fontSize: "34px"
     fontWeight: 600
     letterSpacing: "-0.035em"
   modal-headline-mobile:
     fontFamily: "\"Space Grotesk Variable\", Arial, sans-serif"
-    fontSize: "30px"
+    fontSize: "33px"
     fontWeight: 600
     letterSpacing: "-0.035em"
   inspector-title:
     fontFamily: "\"Space Grotesk Variable\", Arial, sans-serif"
-    fontSize: "18px"
+    fontSize: "21px"
     fontWeight: 600
     lineHeight: 1.3
     letterSpacing: "-0.03em"
   case-empty-title:
     fontFamily: "\"Space Grotesk Variable\", Arial, sans-serif"
-    fontSize: "24px"
+    fontSize: "26px"
     fontWeight: 500
     letterSpacing: "-0.025em"
   empty-title:
     fontFamily: "\"Space Grotesk Variable\", Arial, sans-serif"
-    fontSize: "17px"
+    fontSize: "20px"
     fontWeight: 600
     letterSpacing: "-0.03em"
   feed-title:
     fontFamily: "\"Space Grotesk Variable\", Arial, sans-serif"
-    fontSize: "15px"
+    fontSize: "17px"
     fontWeight: 600
     letterSpacing: "-0.025em"
   body:
     fontFamily: "\"DM Sans Variable\", Arial, sans-serif"
-    fontSize: "14px"
+    fontSize: "16px"
     fontWeight: 400
     lineHeight: 1.65
   form-intro:
     fontFamily: "\"DM Sans Variable\", Arial, sans-serif"
-    fontSize: "15px"
+    fontSize: "17px"
     fontWeight: 400
     lineHeight: 1.6
   photo-label:
     fontFamily: "\"DM Sans Variable\", Arial, sans-serif"
-    fontSize: "16px"
+    fontSize: "18px"
     fontWeight: 500
   control:
     fontFamily: "\"DM Sans Variable\", Arial, sans-serif"
-    fontSize: "13px"
+    fontSize: "15px"
     fontWeight: 600
   manual-action:
     fontFamily: "\"DM Sans Variable\", Arial, sans-serif"
-    fontSize: "13px"
+    fontSize: "15px"
     fontWeight: 550
     lineHeight: 1.3
   button:
     fontFamily: "\"DM Sans Variable\", Arial, sans-serif"
-    fontSize: "12px"
+    fontSize: "14px"
     fontWeight: 550
     lineHeight: 1.3
   submit:
     fontFamily: "\"DM Sans Variable\", Arial, sans-serif"
-    fontSize: "14px"
+    fontSize: "16px"
     fontWeight: 600
   report-title:
     fontFamily: "\"DM Sans Variable\", Arial, sans-serif"
-    fontSize: "12px"
+    fontSize: "14px"
     fontWeight: 550
   label:
     fontFamily: "\"DM Sans Variable\", Arial, sans-serif"
-    fontSize: "12px"
+    fontSize: "14px"
     fontWeight: 500
   metadata:
     fontFamily: "\"DM Sans Variable\", Arial, sans-serif"
-    fontSize: "11px"
+    fontSize: "13px"
     fontWeight: 400
   small:
     fontFamily: "\"DM Sans Variable\", Arial, sans-serif"
-    fontSize: "10px"
+    fontSize: "12px"
     fontWeight: 400
   legend-mobile:
     fontFamily: "\"DM Sans Variable\", Arial, sans-serif"
-    fontSize: "9px"
+    fontSize: "11px"
     fontWeight: 400
   mobile-field:
     fontFamily: "\"DM Sans Variable\", Arial, sans-serif"
-    fontSize: "16px"
+    fontSize: "18px"
     fontWeight: 400
   wordmark:
     fontFamily: "\"Space Grotesk Variable\", Arial, sans-serif"
-    fontSize: "17px"
+    fontSize: "20px"
     fontWeight: 650
     lineHeight: 1.05
     letterSpacing: "-0.035em"
   wordmark-mobile:
     fontFamily: "\"Space Grotesk Variable\", Arial, sans-serif"
-    fontSize: "15px"
+    fontSize: "17px"
     fontWeight: 650
     lineHeight: 1.05
     letterSpacing: "-0.035em"
   metric:
     fontFamily: "\"DM Sans Variable\", Arial, sans-serif"
-    fontSize: "28px"
+    fontSize: "31px"
     fontWeight: 550
     lineHeight: 1.1
     letterSpacing: "-0.035em"
   metric-mobile:
     fontFamily: "\"DM Sans Variable\", Arial, sans-serif"
-    fontSize: "23px"
+    fontSize: "25px"
     fontWeight: 550
     lineHeight: 1.1
     letterSpacing: "-0.035em"
@@ -337,13 +365,13 @@ components:
     padding: "8px 12px"
 ---
 
-# Design System: Bin There Done That
+# Design System: Bin There, Done That
 
 ## Overview
 
 **Creative North Star: "Quiet City Cartography"**
 
-Transit-cartography precision becomes a quiet, working web application. System-selected near-white or charcoal grounds, contrasting neutral text and restrained borders let the Toronto map, camera image and community information hold attention. Orange identifies the brand, meaningful actions and issue states. The two-line wordmark and simple line icons remain clear at phone size.
+Transit-cartography precision becomes a quiet, working web application. System-selected warm cream or deep green-black grounds, contrasting neutral text and restrained borders let the Toronto map, camera image and community information hold attention. Forest green identifies the brand, muted green marks supporting accents and positive states, the original action orange marks every primary action and reported issues, and City of Toronto blue carries links, community data and keyboard focus. The framed-bin logo, two-line wordmark and simple line icons remain clear at phone size.
 
 The dashboard, automatic scanner, public add-bin form, bin details, shared manual report form and public case review share one neutral light/dark system, including dialogs, fields, metadata and browser safe areas. The idle scanner centers one enablement action in a dominant neutral viewing area. Operational feedback appears when relevant; the manual fallback remains compact. Photos and live video are task evidence rather than decorative imagery.
 
@@ -359,31 +387,34 @@ This is an Operate reconciliation of the approved, restrained transit/cartograph
 
 ## Colors
 
-The palette is neutral and quiet in both system modes. Frontmatter primitives are normative: unsuffixed theme entries describe light mode; the `-dark` entries supply their system-dark counterparts. CSS components bind to the corresponding semantic variable rather than choosing a fixed mode. The source alias `--orange` follows `--action`.
+The palette is neutral and quiet in both system modes. Frontmatter primitives are normative: unsuffixed theme entries describe light mode; the `-dark` entries supply their system-dark counterparts. CSS components bind to the corresponding semantic variable rather than choosing a fixed mode. The palette merges the framed-bin logo's forest and muted greens, a deep civic green and warm cream, the City of Toronto's blue, and the product's original action orange. The source alias `--orange` equals `report` and is used for issue emphasis and camera text links.
 
 ### Primary
 
-- **Action Orange / Soft Peach:** primary actions use `action`, `action-hover` and `action-ink`, with the dark counterparts switching the fill and label together. A dark mode primary action has dark text, not a white label.
-- **Brand / Link:** `brand` marks the identity and current-navigation underline; `link` carries text actions and issue emphasis. The light brand is deeper than the former bright scanner trim.
-- **Orange Soft:** selection and quiet emphasis use the paired soft grounds rather than an orange page plane.
+- **Orange Action:** primary actions (camera, reporting, Add a bin submit and other main buttons) and the current-page underline use `action`, `action-hover` and `action-ink`, the same orange as `report`. The fill and label switch together.
+- **Muted Green Support:** `support`, `support-hover`, `support-ink`, `support-soft` and `support-text` mark positive states only: Confirm resolved, success notices and resolved checks. They never fill a primary action.
+- **Brand / Link / Focus:** `brand` marks the identity and the title period; `link` is City of Toronto blue for text actions and inline navigation; `focus` draws the 3px keyboard focus outline.
+- **Logo:** `logo-frame`, `logo-bin` and `logo-mark` color the framed-bin mark: a muted-green frame, forest-green bin and cream check in light mode; a lighter muted-green frame, pale-green bin and green-black check in dark mode. The orange camera button stays the only orange in the header. The wordmark reads "Bin There, Done That." The header mark is 54px, 46px below 760px and 38px below 380px.
+- **Report Orange:** `report`, `report-hover` and `report-ink` are the original action orange. They fill every camera and reporting action: the header Open camera control, scanner camera and overflow-step controls, the bin details Report an issue button and the shared manual-report submit. Camera text links use `--orange`. Resolving uses muted green support.
+- **Orange Soft:** selection and quiet emphasis use the paired soft grounds rather than a colored page plane.
 
 ### Secondary
 
-- **City Bin / Community Bin:** muted green-gray City inventory and blue community locations remain distinct. City dots brighten in dark mode; the small dashboard legend retains its labeled categorical keys.
-- **Issue / Map Issue / Map Selection:** issue legend keys, count-labeled reported circles and the selected-location pin use distinct existing orange literals for their data roles.
-- **Map clusters and density:** light/dark cluster grounds, outlines and count text follow their named primitives. Inventory density uses the observed low/mid/high/peak greens; report heat adds its existing orange high/peak values. Area fill and dashed outline remain subdued green. These are map data materials, not new UI accents.
+- **City Bin / Community Bin:** forest-green City inventory and Toronto-blue community locations stay distinct. Both lighten in dark mode; the small dashboard legend retains its labeled categorical keys.
+- **Issue / Map Issue / Map Selection:** issue legend keys, count-labeled reported circles and the selected-location pin use the distinct original orange literals for their data roles.
+- **Map clusters and density:** light/dark cluster grounds, outlines and count text follow their named primitives. Inventory density uses low/mid/high/peak greens that end at the logo green; report heat runs pale orange to deep orange. Area fill and dashed outline remain subdued green. These are map data materials, not new UI accents.
 
 ### Neutral
 
 - **Ground / Paper / Ink:** `bg`, `paper` and `ink` form the shell, working surfaces and primary information. The scanner header and margins use the same ground as the dashboard.
-- **Muted / Line / Alternate Surface:** metadata, placeholders and secondary actions use `muted`; thin boundaries use `line`; idle camera and quiet state fills use `surface-alt`. Green Soft remains a subdued supporting ground.
+- **Muted / Line / Alternate Surface:** metadata, placeholders and secondary actions use `muted`, darkened for contrast; thin boundaries use `line`; idle camera and quiet state fills use `surface-alt`. Green Soft remains a subdued supporting ground.
 - **Scrim:** the mode-specific scrim separates dialogs from the page without backdrop blur.
 - **Video materials:** `camera-video`, `camera-hint` and `video-ink` stay dark/translucent with white labels so hints remain readable over variable footage. They do not set the idle page theme.
 - **Image annotations:** the existing pale warm, blue recycling and amber check annotation boxes retain their scoped ground/line/ink triples over live imagery. Their contrast role does not prescribe colored assistant panels.
 
 ### Named Rules
 
-**The Action and Evidence Rule.** Use orange for identity, meaningful actions and observed issue states; keep inventory markers quieter and explain map colors in text.
+**The Action and Evidence Rule.** Use forest green for identity, orange for every primary action and observed issue states, and muted green only for positive states; keep inventory markers quieter and explain map colors in text. No lime or other high-chroma accent joins the palette.
 
 **The Shared Theme Rule.** Use the semantic theme variables for page grounds, surfaces, text, metadata, fields and dialogs. Their light and dark values change together under the system preference; video and data-layer literals remain scoped to their materials.
 
@@ -393,7 +424,7 @@ The palette is neutral and quiet in both system modes. Frontmatter primitives ar
 
 **Body Font:** DM Sans Variable, with Arial and sans-serif fallbacks.
 
-Both variable families are loaded locally in the root layout. Geometric headings give short titles a recognizable voice; the softer body face carries controls, metadata and dense report information. Sentence-case labels remain the default.
+Both variable families are loaded locally in the root layout. Text was enlarged across the app for legibility: sizes under 20px grew about 15% with an 11px floor, and larger sizes about 10%; the root body is 16px. Geometric headings give short titles a recognizable voice; the softer body face carries controls, metadata and dense report information. Sentence-case labels remain the default.
 
 ### Hierarchy
 
@@ -401,9 +432,9 @@ Both variable families are loaded locally in the root layout. Geometric headings
 - **Form headline:** the public photo form uses its fluid headline token. The camera uses its own modest headline, reducing on mobile; it is no longer a large promotional assistant heading.
 - **Bin details:** the location name uses the scoped fluid bin-detail-headline role, with wrapping for long inventory names. Report and case history share bin-detail-section; the inline action heading uses case-empty-title on desktop and bin-detail-section below 760px. These medium-weight information roles preserve the existing font families and hierarchy.
 - **Modal headline:** manual reporting and bin confirmation use the modal token and its mobile variant. The saved receipt shares the desktop size and uses the mobile dashboard size on phones.
-- **Titles:** the inspector, report panel and dashboard empty state have separate compact title roles. Public case-review empty states use the observed case-empty-title step, with medium weight and slightly relaxed tracking; case details use the existing 25px step. These are information headings rather than a new display hierarchy.
+- **Titles:** the inspector, report panel and dashboard empty state have separate compact title roles. Public case-review empty states use the observed case-empty-title step, with medium weight and slightly relaxed tracking; case details use the existing 28px step. These are information headings rather than a new display hierarchy.
 - **Body and controls:** the root body is the base token; form intro and live feedback use the observed larger body step. Camera controls and report rows retain their medium button/report weights. Form photo labels and mobile fields have their observed larger step.
-- **Metadata:** the 11px metadata and 10px small steps support timestamps, receipts and privacy copy. The 9px mobile legend is a dense map label, not a decorative headline tier. Guidance/evidence states still contain smaller legacy labels; they are not a reusable type role.
+- **Metadata:** the 13px metadata and 12px small steps support timestamps, receipts and privacy copy. The 11px mobile legend is a dense map label, not a decorative headline tier. No text in the app is smaller than 11px.
 - **Wordmark and metrics:** the two-line wordmark uses its desktop/mobile roles. Overview values use metric tokens with tabular numerals and reduce on phones; changing report totals also stay tabular.
 
 ### Named Rules
@@ -414,7 +445,7 @@ Both variable families are loaded locally in the root layout. Geometric headings
 
 The shared shell has a horizontal header, 88px tall on desktop and 76px below 760px, with the top safe-area inset added. Side padding is `clamp(22px, 4vw, 64px)`. Normal content is capped at 1640px; the dashboard uses 1800px. Main content begins 36px below the header. Mobile uses 20px gutters and 26px top padding; shell gutters reduce to 14px below 380px. The document and browser theme colors follow the system preference, and the body includes the bottom safe-area inset.
 
-The dashboard places a short city title and four plain counts before one continuous workspace. Desktop uses a flexible map column beside a 310px report panel, narrowing to 275px below 1050px. The toolbar has a 62px minimum height. Map height is `clamp(450px, calc(100dvh - 310px), 690px)`; the feed shares that maximum. The feed body scrolls while its title and refresh remain available. Below 760px the four compact count columns remain, followed by search, filters, a 410px map, reports and legend. The mobile feed is 250–480px high. A compact Add a missing bin link remains below the workspace; the former source-disclosure footer does not.
+The dashboard places a short city title and four plain counts before one continuous workspace. Desktop uses a flexible map column beside a 310px report panel, narrowing to 275px below 1050px. The toolbar has a 62px minimum height. Map height is `clamp(450px, calc(100dvh - 310px), 690px)`; the feed shares that maximum. The feed body scrolls while its title and refresh remain available. Below 760px the four compact count columns remain, followed by the map-layer filter, a 410px map, reports and legend. The mobile feed is 250–480px high. A compact Add a missing bin link remains below the workspace; the former source-disclosure footer does not.
 
 The scanner starts as one dominant camera region within a 1560px maximum and `clamp(16px, 3vw, 40px)` side padding. Its brand-only header has a 76px minimum desktop height and 72px mobile height, plus safe area. The camera begins 24px below the header; its height is `calc(100svh - 186px)`, bounded by 360px and 1000px. Feedback stays below the camera at every width, capped at 900px and centered on desktop. It does not add a side column or change camera dimensions. The assistant has no independent colored panel at rest.
 
@@ -430,7 +461,7 @@ Spacing follows the frontmatter's observed steps: compact related details, 18–
 
 ## Elevation & Depth
 
-The workspace is flat at rest. Thin boundaries and neutral tonal shifts separate regions. Menus, search results, the selected-bin inspector and photo replacement affordance receive ambient shadows. Image callouts use a compact shadow over variable footage. Dialogs use a mode-specific translucent scrim with no backdrop blur.
+The workspace is flat at rest. Thin boundaries and neutral tonal shifts separate regions. Menus, count tooltips, the selected-bin inspector and photo replacement affordance receive ambient shadows. Image callouts use a compact shadow over variable footage. Dialogs use a mode-specific translucent scrim with no backdrop blur.
 
 ### Shadow Vocabulary
 
@@ -497,7 +528,7 @@ Anonymous case detail is a read-only public redaction. Private notes, photos, ow
 
 ### Manual Reporting and Bin Details
 
-One shared manual form appears in the scanner dialog and inline on bin details. A thin-divided location row remains an editable button, with street/City ID search immediately below. GPS names its nearest suggestion and distance independently of the selected location; a pending lookup preserves an edited choice. Location loading, denial and failure use compact muted status text with a retry action while street search remains available. Matching rows have 64px minimum targets, thin divisions, secondary metadata and surface-alt hover. A selected bin, issue and optional detail lead to the semantic orange submit action and an honest saving or retryable error state.
+One shared manual form appears in the scanner dialog and inline on bin details. A thin-divided location row remains an editable button, with street/City ID search immediately below. GPS names its nearest suggestion and distance independently of the selected location; a pending lookup preserves an edited choice. Location loading, denial and failure use compact muted status text with a retry action while street search remains available. Matching rows have 64px minimum targets, thin divisions, secondary metadata and surface-alt hover. A selected bin, issue and optional detail lead to the semantic orange report submit action and an honest saving or retryable error state.
 
 Bin details show real inventory location, side, ward and status in a plain definition list, followed by Report an issue and the conditional Mark resolved action. Reporting starts with that bin selected. Resolution opens an inline section naming the exact displayed cases and requires an explicit checkbox confirmation before saving. Community-update labeling and retained report/case history distinguish the action from City verification. Active map highlights and open counts clear for those cases; later observations start a new case episode. A reporter's own withdrawal uses a separate inline confirmation within history. These are information and confirmation states within the incumbent flat surface language.
 
@@ -523,12 +554,12 @@ Photo selection is the first interaction. A camera line icon, short label and mu
 
 ### Don't:
 
-- **Don't** restore orange scanner trim, brown page planes, a provider/billing card, persistent location controls, idle/control strips or a persistent 311 footer sentence.
+- **Don't** restore orange scanner trim, use orange for non-reporting actions, add lime accents, brown page planes, a provider/billing card, persistent location controls, idle/control strips or a persistent 311 footer sentence.
 - **Don't** add a scanner power control or Dashboard link; the brand is its home navigation and leaving the scanner releases active hardware.
 - **Don't** restore the provider-unavailable idle sentence or make feedback resize the camera.
 - **Don't** gate public case review on setup or display private management evidence in the public queue.
 - **Don't** restore a dashboard data-disclosure footer or Live demo/Connection setup items in More.
-- **Don't** fill information surfaces with orange, add shadows to every panel or introduce promotional scaffolding.
+- **Don't** fill information surfaces with green or orange, add shadows to every panel or introduce promotional scaffolding.
 - **Don't** turn compact information labels into decorative all-caps kickers or introduce a system-font display hierarchy.
 - **Don't** show demo/QA activity as public reports or imply that untested camera, AI or GPS flows succeeded.
 

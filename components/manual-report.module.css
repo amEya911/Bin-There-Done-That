@@ -4,7 +4,7 @@
 }
 .form label {
   margin: 0;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
   color: var(--ink);
 }
@@ -13,7 +13,7 @@
 .form textarea {
   width: 100%;
   margin: 8px 0 0;
-  font-size: 16px;
+  font-size: 18px;
   color: var(--ink);
   background: var(--paper);
 }
@@ -38,13 +38,13 @@
   text-align: left;
   background: transparent;
   color: var(--ink);
-  font-size: 15px;
+  font-size: 17px;
   overflow-wrap: anywhere;
 }
 .location span {
   display: block;
   margin-top: 5px;
-  font-size: 12px;
+  font-size: 14px;
   color: var(--muted);
 }
 .gps {
@@ -54,7 +54,7 @@
   flex-wrap: wrap;
   gap: 8px;
   margin-top: -10px;
-  font-size: 12px;
+  font-size: 14px;
   color: var(--muted);
   line-height: 1.6;
 }
@@ -66,7 +66,7 @@
   padding: 0;
   background: transparent;
   color: var(--link);
-  font-size: 12px;
+  font-size: 14px;
 }
 .options {
   max-height: 220px;
@@ -93,7 +93,7 @@
 }
 .options strong {
   display: block;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
   overflow-wrap: anywhere;
 }
@@ -101,7 +101,7 @@
   display: block;
   margin-top: 6px;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 14px;
 }
 .options svg {
   flex-shrink: 0;
@@ -109,7 +109,7 @@
 .options p {
   padding: 10px 0;
   color: var(--muted);
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.6;
 }
 .optional {
@@ -123,14 +123,14 @@
   gap: 12px;
   min-height: 48px;
   padding: 12px 20px;
-  color: var(--action-ink);
-  background: var(--action);
+  color: var(--report-ink);
+  background: var(--report);
   border-radius: 8px;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
 }
 .submit:hover:enabled {
-  background: var(--action-hover);
+  background: var(--report-hover);
 }
 .form button:disabled {
   opacity: 0.5;
@@ -141,11 +141,11 @@
   align-items: center;
   min-height: 44px;
   color: var(--link);
-  font-size: 13px;
+  font-size: 15px;
 }
 .error {
   margin: 0;
   color: var(--link);
   line-height: 1.6;
-  font-size: 14px;
+  font-size: 16px;
 }

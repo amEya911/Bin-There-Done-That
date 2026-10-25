@@ -202,7 +202,7 @@ export default function BinDetail({
               </dl>
               <div className={styles.actions}>
                 <button
-                  className={styles.primary}
+                  className={`${styles.primary} ${styles.report}`}
                   disabled={saving || data.bin.status !== "Existing"}
                   onClick={() => {
                     setAction("report");
@@ -311,7 +311,7 @@ export default function BinDetail({
                     </span>
                   </label>
                   <button
-                    className={styles.primary}
+                    className={`${styles.primary} ${styles.resolve}`}
                     disabled={!confirmed || saving}
                     onClick={resolve}
                   >

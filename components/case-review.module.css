@@ -7,14 +7,14 @@
 }
 .heading h1 {
   margin: 0 0 10px;
-  font-size: clamp(29px, 3vw, 34px);
+  font-size: clamp(32px, 3vw, 37px);
   font-weight: 600;
   letter-spacing: -0.035em;
 }
 .heading p {
   margin: 0;
   color: var(--muted);
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.6;
 }
 .manage,
@@ -26,7 +26,7 @@
   padding: 0;
   color: var(--link);
   background: transparent;
-  font-size: 13px;
+  font-size: 15px;
 }
 .toolbar {
   display: flex;
@@ -36,7 +36,7 @@
   padding-block: 14px;
   border-block: 1px solid var(--line);
   color: var(--muted);
-  font-size: 13px;
+  font-size: 15px;
 }
 .toolbar select {
   width: auto;
@@ -44,13 +44,13 @@
   min-height: 44px;
   padding: 10px 36px 10px 14px;
   color: var(--ink);
-  font-size: 13px;
+  font-size: 15px;
 }
 .empty {
   padding: 80px 0;
 }
 .empty h2 {
-  font-size: 24px;
+  font-size: 26px;
   font-weight: 500;
   margin: 0 0 12px;
   letter-spacing: -0.025em;
@@ -66,7 +66,7 @@
   gap: 10px;
   min-height: 44px;
   color: var(--link);
-  font-size: 14px;
+  font-size: 16px;
 }
 .layout {
   display: grid;
@@ -95,14 +95,14 @@
   background: var(--surface-alt);
 }
 .list strong {
-  font-size: 15px;
+  font-size: 17px;
   font-weight: 500;
 }
 .list span {
-  font-size: 13px;
+  font-size: 15px;
 }
 .list small {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--muted);
 }
 .detail {
@@ -111,19 +111,19 @@
 }
 .detail h2 {
   margin: 20px 0 10px;
-  font-size: 25px;
+  font-size: 28px;
   font-weight: 500;
   letter-spacing: -0.025em;
 }
 .detail h3 {
-  font-size: 17px;
+  font-size: 20px;
   font-weight: 500;
   margin: 32px 0 12px;
 }
 .reference,
 .prompt {
   color: var(--muted);
-  font-size: 13px;
+  font-size: 15px;
   line-height: 1.6;
 }
 .facts {
@@ -135,13 +135,13 @@
   border-block: 1px solid var(--line);
 }
 .facts dt {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--muted);
   margin-bottom: 10px;
 }
 .facts dd {
   margin: 0;
-  font-size: 14px;
+  font-size: 16px;
 }
 .reports {
   list-style: none;
@@ -156,17 +156,17 @@
   border-bottom: 1px solid var(--line);
 }
 .reports strong {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
 }
 .reports span {
   color: var(--muted);
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.6;
 }
 .error {
   color: var(--link);
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.6;
 }
 .error button {

@@ -54,32 +54,32 @@
 }
 .scanner-automatic .camera-placeholder h1 {
   margin: 0 0 12px;
-  font-size: 28px;
+  font-size: 31px;
   letter-spacing: -0.035em;
   font-weight: 500;
   color: var(--ink);
 }
 .scanner-automatic .camera-placeholder p {
   color: var(--muted);
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.65;
   max-width: 32ch;
 }
 .scanner-automatic .camera-placeholder .button.orange {
   margin-top: 24px;
   min-height: 44px;
-  background: var(--action);
-  color: var(--action-ink);
+  background: var(--report);
+  color: var(--report-ink);
   border: 0;
   box-shadow: none;
   border-radius: 8px;
 }
 .scanner-automatic .camera-placeholder .button.orange:hover {
-  background: var(--action-hover);
+  background: var(--report-hover);
 }
 .scanner-automatic .camera-privacy {
   margin: 10px 0 0;
-  font-size: 11px;
+  font-size: 13px;
   color: var(--muted);
 }
 .scanner-automatic .scanner-assistant {
@@ -100,7 +100,7 @@
   border: 0;
   background: transparent;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 15px;
 }
 .scanner-automatic .scanner-assistant > .button.outlined:hover {
   background: var(--surface-alt);
@@ -108,12 +108,12 @@
 }
 .scanner-automatic .scanner-status {
   color: var(--muted);
-  font-size: 13px;
+  font-size: 15px;
   margin: 0 0 14px;
   text-align: center;
 }
 .scanner-automatic .camera-frame-hint {
-  font-size: 12px;
+  font-size: 14px;
   color: #fff;
   background: #101310cc;
   padding: 8px 12px;
@@ -137,16 +137,16 @@
 .scanner-automatic .scan-feedback .eyebrow {
   color: var(--muted);
   letter-spacing: 0;
-  font-size: 12px;
+  font-size: 14px;
   text-transform: none;
 }
 .scanner-automatic .scan-feedback p {
   color: var(--ink);
-  font-size: 15px;
+  font-size: 17px;
 }
 .scanner-automatic .scan-feedback small {
   color: var(--muted);
-  font-size: 11px;
+  font-size: 13px;
 }
 .scanner-automatic .feedback-icon {
   background: var(--surface-alt);
@@ -195,7 +195,7 @@
 }
 .scanner-automatic .overflow-progress-heading .eyebrow {
   color: var(--muted);
-  font-size: 11px;
+  font-size: 13px;
   letter-spacing: 0;
   text-transform: none;
 }
@@ -207,9 +207,9 @@
 }
 .scanner-automatic .overflow-progress li.complete > span,
 .scanner-automatic .guidance-number {
-  color: var(--action-ink);
-  background: var(--action);
-  border-color: var(--action);
+  color: var(--report-ink);
+  background: var(--report);
+  border-color: var(--report);
 }
 .scanner-automatic .overflow-progress li.active > span {
   color: var(--link);
@@ -261,10 +261,10 @@
     border-radius: 12px;
   }
   .scanner-automatic .camera-placeholder h1 {
-    font-size: 25px;
+    font-size: 28px;
   }
   .scanner-automatic .camera-privacy {
-    font-size: 10px;
+    font-size: 12px;
     line-height: 1.5;
   }
   .scanner-automatic .scanner-assistant {

@@ -1,9 +1,12 @@
 import Dashboard from "@/components/dashboard";
 export default async function Page({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ window?: string }>;
 }) {
   const { id } = await params;
-  return <Dashboard scope={"demo:" + id} />;
+  const { window } = await searchParams;
+  return <Dashboard scope={"demo:" + id} timeWindow={window} />;
 }
