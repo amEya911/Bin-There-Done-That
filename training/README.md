@@ -1,6 +1,6 @@
 # Waste dataset and recognition definitions
 
-The versioned catalog defines forty object/part classes and three separate bin-condition classes. The website's main scanner still uses its Gemini adapter; `/scan/test` compares pretrained on-device models. Dataset preparation does not activate new runtime recognition or reporting.
+The versioned catalog defines forty object/part classes and three separate bin-condition classes. The website's main scanner still uses its Gemini adapter; `/scan/test` compares pretrained on-device models with the first experimental trained detector and its AR location preview. Training does not activate public reporting.
 
 The current collection target is **3,500 unique source photos**, within the requested3,000–4,000 range. Images, annotations, source archives, local login credentials and review events live under ignored `.data/`, never in the public app or Git. The code and label definitions in this directory reproduce the preparation workflow.
 
@@ -89,3 +89,33 @@ Reviewed exports contain YOLO zero-based IDs, RF-DETR-compatible COCO `train/val
 ```
 
 These tests exercise leakage, invalid boxes/materials, unreviewed negatives, benchmark reservations, prediction-only imports, ID mappings, immutable exports and bin-crop lineage. Phone latency and held-out waste-recognition accuracy must be remeasured after actual training. The source collection still needs more representative Toronto bins and sufficient reviewed examples of rare classes before full40-class coverage can be claimed.
+
+## First local training experiments — 24 October 2026
+
+The full 3,500-photo collection has local Florence-2 object proposals. The pinned teacher is `florence-community/Florence-2-base` at revision `00921df66db728a9ceb750f5eca43e5c203a2051`, through native Transformers; it is an offline annotation aid, not the deployed camera model. Proposals remain separate from explicit visual review. Forty-eight images have a recorded Codex visual review, identified as a single AI reviewer, with no claim of independent human verification. Source photo hashes, viewed contact sheets, decisions, previous records and corrections are retained locally. In particular, printed pictures on paper are not physical objects to annotate, and a bicycle pump or portable toilet is not a bin.
+
+Two experiments use each source's actual annotation type:
+
+- **Detector:** original TACO annotations retain their original 60-category vocabulary, plus six explicitly identified app categories from reviewed supplements. This frozen experiment has 1,028 photos: 753 train, 79 validation and 196 test. It completed 30 epochs at512 pixels using YOLO26 Nano on this Mac's MPS GPU. Source annotations are not silently promoted into approved annotations for our complete40-class catalog. Ambiguous source names retain their meanings, and canonical suggestions do not establish disposal or material.
+- **Auxiliary item-group classifier:** all category-only TrashNet photos except the two unresolved user-query examples train a separate classifier. It uses 2,442 original TrashNet photos and660 TACO training crops, with85 validation and375 test crops from their frozen parent groups. Crops are derived examples, not extra source photographs. The six appearance/source groups are cardboard, glass, metal, paper, plastic and trash. TACO transfer labels are explicit source-category mappings; neither these labels nor model confidence prove composition or a Toronto disposal stream. The classifier completed20 epochs at224 pixels.
+
+Together the experiments account for3,470 unique photos across learning, validation and testing;30 unresolved photos remain held. The two user-query photos `trashnet-trash14` and `trashnet-trash89` are excluded from the final classifier run. An earlier partial classifier run is superseded and is not the final checkpoint. The other held images need annotation/scope clarification. Testing photos are never added to training to increase the count.
+
+The detector's held-out mAP50 is **0.0493**, with recall **0.0990**. The auxiliary classifier's top1 result is **0.6613** on transferred source-group crop labels. These are poor-to-moderate experimental results, not field-ready recognition, verified-material accuracy or Toronto sorting accuracy. The detector also misidentified a reserved cup photo as a bin in the browser smoke test. Production activation and automatic reporting remain disabled for these artifacts. A three-condition overflow classifier has not been trained; the29 initial bin crops do not provide enough verified condition data.
+
+```sh
+# Original-source detector experiment; prepare creates an immutable snapshot once.
+.data/vision-tools/bin/python scripts/propose-waste-labels.py propose
+.data/vision-tools/bin/python scripts/train-waste.py prepare
+.data/vision-tools/bin/python scripts/train-waste.py train --epochs 30
+.data/vision-tools/bin/python scripts/train-waste.py evaluate
+.data/vision-tools/bin/python scripts/train-waste.py export-model
+# Category-only source photos retain image-level supervision.
+.data/vision-tools/bin/python scripts/train-waste-classifier.py prepare
+.data/vision-tools/bin/python scripts/train-waste-classifier.py train --epochs 20
+.data/vision-tools/bin/python scripts/train-waste-classifier.py evaluate
+.data/vision-tools/bin/python scripts/train-waste-classifier.py export-model
+.data/vision-tools/bin/python scripts/sync-waste-labels.py
+```
+
+Checkpoints, model cards, grouped manifests and evaluation evidence are under ignored `.data/waste-training/`. Select **Trained waste detector · experimental** at `/scan/test` to inspect actual boxes and numbered AR arrows. Its callouts require material checks and never report a bin. This is a separate test route; the main scanner has not switched away from Gemini. The final run report and browser screenshots are in ignored `output/training/`.

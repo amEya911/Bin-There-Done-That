@@ -7,8 +7,46 @@ import {
   liveResultUsable,
   sceneDifference,
   LIVE_FRAME_MAX_AGE_MS,
+  guidanceLabel,
 } from "../lib/ar";
 import type { Guidance } from "../lib/types";
+
+test("AR labels give direct sorting destinations while preserving reuse and unidentified items", () => {
+  const item: Guidance = {
+    label: "Cup",
+    stream: "recycling",
+    instruction: "Empty it.",
+    source: "https://www.toronto.ca/",
+    reviewed: "2026-10-24",
+  };
+  assert.equal(guidanceLabel({ ...item, estimated: true }), "Recycling");
+  assert.equal(guidanceLabel(item), "Recycling");
+  assert.equal(
+    guidanceLabel({ ...item, stream: "check", action: "reuse" }),
+    "Keep & reuse",
+  );
+  assert.equal(
+    guidanceLabel({ ...item, stream: "organics", estimated: true }),
+    "Organics",
+  );
+  assert.equal(guidanceLabel({ ...item, stream: "check" }), "Not identified");
+  assert.equal(
+    guidanceLabel({ ...item, material: "paper with plastic lining" }),
+    "Paper · recycling",
+  );
+  assert.equal(
+    guidanceLabel({ ...item, material: "glass with paper label" }),
+    "Recycling",
+  );
+  assert.equal(
+    guidanceLabel({ ...item, stream: "garbage" }),
+    "Garbage / litter",
+  );
+  assert.equal(
+    guidanceLabel({ ...item, stream: "check", material: "lithium battery" }),
+    "Special collection",
+  );
+});
 
 test("camera boxes map to the contained image in portrait and landscape, excluding bars", () => {
   assert.deepEqual(containedFrame(390, 520, 1280, 960), {

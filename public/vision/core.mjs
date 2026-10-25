@@ -31,18 +31,19 @@ export function nms(candidates, threshold = .5, limit = 15) {
   return keep;
 }
 
-export function decodeYolo(tensor, sourceWidth, sourceHeight, size, threshold = .4) {
-  if (tensor.dims.length !== 3 || tensor.dims[1] !== 84) throw new Error("Unexpected YOLO output. Expected [1,84,N].");
+export function decodeYolo(tensor, sourceWidth, sourceHeight, size, threshold = .4, names = COCO_NAMES) {
+  if (!Array.isArray(names) || !names.length || names.some(name => typeof name !== "string" || !name) || new Set(names).size !== names.length) throw new Error("Invalid model class names.");
+  if (tensor.dims.length !== 3 || tensor.dims[0] !== 1 || tensor.dims[1] !== names.length + 4) throw new Error("YOLO output does not match its model class names.");
   const count = tensor.dims[2], values = tensor.data, pad = letterbox(sourceWidth, sourceHeight, size), found = [];
   for (let i = 0; i < count; i++) {
     let score = threshold, cls = -1;
-    for (let c = 0; c < 80; c++) {
+    for (let c = 0; c < names.length; c++) {
       const value = Number(values[(c + 4) * count + i]);
       if (value > score) { score = value; cls = c; }
     }
     if (cls < 0) continue;
     const cx = Number(values[i]), cy = Number(values[count + i]), w = Number(values[count * 2 + i]), h = Number(values[count * 3 + i]);
-    const d = detection(COCO_NAMES[cls], score, (cx - w / 2 - pad.left) / pad.width, (cy - h / 2 - pad.top) / pad.height, (cx + w / 2 - pad.left) / pad.width, (cy + h / 2 - pad.top) / pad.height);
+    const d = detection(names[cls], score, (cx - w / 2 - pad.left) / pad.width, (cy - h / 2 - pad.top) / pad.height, (cx + w / 2 - pad.left) / pad.width, (cy + h / 2 - pad.top) / pad.height);
     if (d) found.push(d);
   }
   return nms(found);

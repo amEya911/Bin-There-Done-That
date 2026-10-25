@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Camera,
   LocateFixed,
@@ -10,26 +11,21 @@ import {
   ArrowUpRight,
   ArrowRight,
   ScanLine,
-  ShieldCheck,
   TriangleAlert,
   Trash2,
   Recycle,
   Leaf,
+  RotateCcw,
 } from "lucide-react";
-import { Brand, ErrorNote } from "./ui";
+import { Brand } from "./ui";
 import AROverlay from "./ar-overlay";
 import ManualReport from "./manual-report";
-import {
-  cameraCrop,
-  liveResultUsable,
-  sceneDifference,
-  SCENE_CHANGE_THRESHOLD,
-  LIVE_FRAME_MAX_AGE_MS,
-  OVERLAY_LIFETIME_MS,
-} from "@/lib/ar";
+import { cameraCrop, containedFrame, guidanceLabel } from "@/lib/ar";
 import { api, post, scoped, shortId } from "@/lib/client";
-import { autoMatch, overlap } from "@/lib/geo";
+import { autoMatch } from "@/lib/geo";
+import { createReportDraft } from "@/lib/report-draft";
 import type { Bin, Detection, Guidance, Point } from "@/lib/types";
+
 type Result = {
   id: string;
   detection: Detection;
@@ -38,14 +34,14 @@ type Result = {
   latencyMs: number;
   width: number;
   height: number;
-  binIdAtCapture?: string | null;
 };
 type Capture = {
   image: string;
   capturedAt: number;
-  sample?: Uint8ClampedArray;
+  width: number;
+  height: number;
 };
-type ReportPhase = "idle" | "first" | "choose_bin" | "saving" | "saved";
+
 export default function Scanner({
   scope = "public",
   demoId,
@@ -55,63 +51,81 @@ export default function Scanner({
   demoId?: string;
   cameraOff?: boolean;
 }) {
+  const router = useRouter();
   const video = useRef<HTMLVideoElement>(null),
     canvas = useRef<HTMLCanvasElement>(null),
-    stream = useRef<MediaStream | null>(null),
-    generation = useRef(0),
-    prior = useRef<Result | null>(null),
-    saving = useRef(false),
-    lastReported = useRef(""),
-    busy = useRef(false),
-    captureAbort = useRef<AbortController | null>(null),
-    frameAt = useRef(0),
-    surface = useRef<HTMLDivElement>(null),
+    stream = useRef<MediaStream | null>(null);
+  const generation = useRef(0),
     cameraRequest = useRef(0),
+    captureAbort = useRef<AbortController | null>(null);
+  const surface = useRef<HTMLDivElement>(null),
     watchId = useRef<number | null>(null),
-    motionSample = useRef<Uint8ClampedArray | null>(null),
-    overlaySample = useRef<Uint8ClampedArray | null>(null);
-  const sampleCanvas = useRef<HTMLCanvasElement | null>(null),
-    pendingSample = useRef<Uint8ClampedArray | null>(null),
-    pendingMoved = useRef(false),
     locationWatch = useRef(0),
     locationRequest = useRef(0);
+  const capturedRef = useRef<Capture | null>(null),
+    captureTaken = useRef(false),
+    busy = useRef(false);
+  const captureTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [captureHint, setCaptureHint] = useState(
+    "Taking a photo in 2 seconds…",
+  );
   const [camera, setCamera] = useState<
-      "opening" | "ready" | "denied" | "unsupported" | "off"
-    >(cameraOff ? "off" : "opening"),
-    [status, setStatus] = useState<any>(null),
-    [running, setRunning] = useState(true),
-    [visible, setVisible] = useState(true),
-    [result, setResult] = useState<Result | null>(null),
-    [error, setError] = useState(""),
+    "opening" | "ready" | "captured" | "denied" | "unsupported" | "off"
+  >(cameraOff ? "off" : "opening");
+  const [visible, setVisible] = useState(true),
+    [captured, setCaptured] = useState<Capture | null>(null),
+    [result, setResult] = useState<Result | null>(null);
+  const [error, setError] = useState(""),
     [message, setMessage] = useState("Hold an item or a bin in view."),
-    [analyzing, setAnalyzing] = useState(false),
-    [reportPhase, setReportPhase] = useState<ReportPhase>("idle"),
-    [gps, setGps] = useState<{
-      point: Point;
-      accuracy: number;
-      locatedAt: string;
-    } | null>(null),
-    [gpsMessage, setGpsMessage] = useState("Location starts with the camera"),
-    [bin, setBin] = useState<Bin | null>(null),
-    [match, setMatch] = useState<"auto" | "selected" | "demo">("auto"),
-    [locationOpen, setLocationOpen] = useState(false),
-    [search, setSearch] = useState(""),
-    [options, setOptions] = useState<(Bin & { distance?: number })[]>([]),
-    [receipt, setReceipt] = useState<any>(null),
+    [analyzing, setAnalyzing] = useState(false);
+  const [gps, setGps] = useState<{
+    point: Point;
+    accuracy: number;
+    locatedAt: string;
+  } | null>(null);
+  const [gpsMessage, setGpsMessage] = useState(
+      "Location starts with the camera",
+    ),
+    [bin, setBin] = useState<Bin | null>(null);
+  const [match, setMatch] = useState<"auto" | "selected" | "demo">("auto"),
+    [locationOpen, setLocationOpen] = useState(false);
+  const [search, setSearch] = useState(""),
+    [options, setOptions] = useState<(Bin & { distance?: number })[]>([]);
+  const [receipt, setReceipt] = useState<any>(null),
     [manualOpen, setManualOpen] = useState(false),
-    [joined, setJoined] = useState(!demoId),
-    [overlay, setOverlay] = useState(false),
-    [frameStyle, setFrameStyle] = useState({
-      left: 0,
-      top: 0,
-      width: 0,
-      height: 0,
-    });
+    [joined, setJoined] = useState(!demoId);
+  const [frameStyle, setFrameStyle] = useState({
+    left: 0,
+    top: 0,
+    width: 0,
+    height: 0,
+  });
   const binRef = useRef(bin),
     gpsRef = useRef(gps),
     matchRef = useRef(match);
-  const dialog = useRef<HTMLDivElement>(null);
-  const dialogTrigger = useRef<HTMLElement | null>(null);
+  const dialog = useRef<HTMLDivElement>(null),
+    dialogTrigger = useRef<HTMLElement | null>(null);
+  const locationActive = camera === "ready" || camera === "captured";
+  binRef.current = bin;
+  gpsRef.current = gps;
+  matchRef.current = match;
+
+  function stopTracks() {
+    if (captureTimer.current) clearTimeout(captureTimer.current);
+    captureTimer.current = null;
+    stream.current?.getTracks().forEach((track) => track.stop());
+    stream.current = null;
+    if (video.current) video.current.srcObject = null;
+  }
+  function cancelAttempt() {
+    generation.current++;
+    cameraRequest.current++;
+    captureAbort.current?.abort();
+    captureAbort.current = null;
+    busy.current = false;
+    setAnalyzing(false);
+    stopTracks();
+  }
   useEffect(() => {
     if (!locationOpen && !manualOpen) return;
     const root = dialog.current;
@@ -122,7 +136,6 @@ export default function Scanner({
       if (event.key === "Escape") {
         setLocationOpen(false);
         setManualOpen(false);
-        if (camera === "ready") setRunning(true);
       }
       if (event.key !== "Tab" || !root) return;
       const controls = Array.from(
@@ -145,14 +158,8 @@ export default function Scanner({
       document.removeEventListener("keydown", onKey);
       dialogTrigger.current?.focus();
     };
-  }, [locationOpen, manualOpen, camera]);
-  binRef.current = bin;
-  gpsRef.current = gps;
-  matchRef.current = match;
+  }, [locationOpen, manualOpen]);
   useEffect(() => {
-    api("/api/status")
-      .then(setStatus)
-      .catch((e) => setError(e.message));
     if (demoId) {
       const key = new URLSearchParams(window.location.hash.slice(1)).get("key");
       const join = key
@@ -167,7 +174,11 @@ export default function Scanner({
           setJoined(true);
           if (key) history.replaceState(null, "", location.pathname);
         })
-        .catch((e) => setError(e.message));
+        .catch((e) => {
+          setError(e.message);
+          cancelAttempt();
+          setCamera("off");
+        });
     }
     return () => {
       generation.current++;
@@ -175,26 +186,33 @@ export default function Scanner({
       locationRequest.current++;
       cameraRequest.current++;
       captureAbort.current?.abort();
-      stream.current?.getTracks().forEach((t) => t.stop());
+      stream.current?.getTracks().forEach((track) => track.stop());
       if (watchId.current !== null)
         navigator.geolocation?.clearWatch(watchId.current);
     };
   }, [demoId]);
   async function openCamera() {
+    cancelAttempt();
     sessionStorage.removeItem("trashme_camera_off");
     const request = ++cameraRequest.current;
-    setCamera("opening");
+    captureTaken.current = false;
+    capturedRef.current = null;
+    setCaptured(null);
+    setResult(null);
+    setReceipt(null);
     setError("");
+    setMessage("Show an item or a bin. A photo will be taken after 2 seconds.");
+    setCaptureHint("Taking a photo in 2 seconds…");
+    setCamera("opening");
     if (!navigator.mediaDevices?.getUserMedia) {
       setCamera("unsupported");
       setError(
-        "Live camera needs HTTPS or localhost. Open this site through a secure address on your phone.",
+        "Camera access needs HTTPS or localhost. Open the secure site on your phone.",
       );
       return;
     }
     try {
-      stream.current?.getTracks().forEach((t) => t.stop());
-      const s = await navigator.mediaDevices.getUserMedia({
+      const media = await navigator.mediaDevices.getUserMedia({
         video: {
           facingMode: { ideal: "environment" },
           width: { ideal: 1280 },
@@ -202,61 +220,78 @@ export default function Scanner({
         },
         audio: false,
       });
-      if (request !== cameraRequest.current) {
-        s.getTracks().forEach((t) => t.stop());
+      if (request !== cameraRequest.current || document.hidden) {
+        media.getTracks().forEach((track) => track.stop());
         return;
       }
-      stream.current = s;
+      stream.current = media;
+      media.getVideoTracks()[0]?.addEventListener(
+        "ended",
+        () => {
+          if (request !== cameraRequest.current || captureTaken.current) return;
+          cancelAttempt();
+          setCamera("off");
+          setError("The camera stopped before taking a photo. Try again.");
+        },
+        { once: true },
+      );
       if (video.current) {
-        video.current.srcObject = s;
-        await video.current.play();
+        video.current.srcObject = media;
+        let playbackTimeout: ReturnType<typeof setTimeout> | undefined;
+        try {
+          await Promise.race([
+            video.current.play(),
+            new Promise<never>((_, reject) => {
+              playbackTimeout = setTimeout(
+                () => reject(new Error("Camera frame timeout")),
+                5000,
+              );
+            }),
+          ]);
+        } finally {
+          if (playbackTimeout) clearTimeout(playbackTimeout);
+        }
+      }
+      if (request !== cameraRequest.current || document.hidden) {
+        media.getTracks().forEach((track) => track.stop());
+        return;
       }
       setCamera("ready");
-      setRunning(true);
     } catch (e) {
       if (request !== cameraRequest.current) return;
+      stopTracks();
       setCamera("denied");
       setError(
         (e as DOMException).name === "NotAllowedError"
-          ? "Camera access is blocked. Allow camera access in your browser’s site settings, then retry."
+          ? "Camera access is blocked. Allow it in browser settings, then retry."
           : "The camera could not start. Close other camera apps and try again.",
       );
     }
   }
   useEffect(() => {
+    let initialCamera: ReturnType<typeof setTimeout> | undefined;
     if (cameraOff) sessionStorage.setItem("trashme_camera_off", "1");
     if (cameraOff || sessionStorage.getItem("trashme_camera_off")) {
       setCamera("off");
-      setRunning(false);
-      setMessage("Camera is off. Turn it on when you’re ready.");
-    } else openCamera();
-    const fn = () => {
+      setMessage("Take a photo when you’re ready.");
+    } else initialCamera = setTimeout(() => void openCamera(), 0);
+    const hide = () => {
       setVisible(!document.hidden);
       if (document.hidden) {
-        generation.current++;
-        captureAbort.current?.abort();
-        prior.current = null;
-        setOverlay(false);
-        setReportPhase("idle");
-        setResult(null);
+        cancelAttempt();
+        setCamera(capturedRef.current ? "captured" : "off");
       }
     };
-    document.addEventListener("visibilitychange", fn);
+    document.addEventListener("visibilitychange", hide);
+    window.addEventListener("pagehide", cancelAttempt);
     return () => {
-      document.removeEventListener("visibilitychange", fn);
-      stream.current?.getTracks().forEach((t) => t.stop());
+      if (initialCamera) clearTimeout(initialCamera);
+      document.removeEventListener("visibilitychange", hide);
+      window.removeEventListener("pagehide", cancelAttempt);
+      stopTracks();
     };
   }, []);
   function selectBin(next: Bin | null, method: "auto" | "selected" | "demo") {
-    if (binRef.current?.id !== next?.id) {
-      generation.current++;
-      captureAbort.current?.abort();
-      prior.current = null;
-      setResult(null);
-      setOverlay(false);
-      setReportPhase("idle");
-      lastReported.current = "";
-    }
     binRef.current = next;
     matchRef.current = method;
     setBin(next);
@@ -338,7 +373,7 @@ export default function Scanner({
     );
   }
   useEffect(() => {
-    if (!joined || demoId || camera !== "ready") return;
+    if (!joined || demoId || !locationActive) return;
     locate();
     return () => {
       locationWatch.current++;
@@ -347,7 +382,7 @@ export default function Scanner({
         navigator.geolocation?.clearWatch(watchId.current);
       watchId.current = null;
     };
-  }, [camera, joined, demoId]);
+  }, [locationActive, joined, demoId]);
   useEffect(() => {
     if (!locationOpen || search.length < 2) return;
     let cancelled = false;
@@ -367,112 +402,33 @@ export default function Scanner({
     };
   }, [search, locationOpen, scope]);
   useEffect(() => {
-    if (!surface.current) return;
-    let previous = "";
+    const root = surface.current;
+    if (!root) return;
     const fit = () => {
-      const root = surface.current,
-        v = video.current;
-      if (!root || !v) return;
-      const signature = [
-        root.clientWidth,
-        root.clientHeight,
-        v.videoWidth,
-        v.videoHeight,
-      ].join(":");
-      if (previous && previous !== signature) {
-        generation.current++;
-        captureAbort.current?.abort();
-        prior.current = null;
-        setOverlay(false);
-        setResult(null);
-        setReportPhase((p) => (p === "saving" || p === "saved" ? p : "idle"));
-      }
-      previous = signature;
-      setFrameStyle({
-        left: 0,
-        top: 0,
-        width: root.clientWidth,
-        height: root.clientHeight,
-      });
+      const image = capturedRef.current;
+      setFrameStyle(
+        image
+          ? containedFrame(
+              root.clientWidth,
+              root.clientHeight,
+              image.width,
+              image.height,
+            )
+          : {
+              left: 0,
+              top: 0,
+              width: root.clientWidth,
+              height: root.clientHeight,
+            },
+      );
     };
     const observer = new ResizeObserver(fit);
-    observer.observe(surface.current);
-    video.current?.addEventListener("loadedmetadata", fit);
-    video.current?.addEventListener("resize", fit);
+    observer.observe(root);
     fit();
-    return () => {
-      observer.disconnect();
-      video.current?.removeEventListener("loadedmetadata", fit);
-      video.current?.removeEventListener("resize", fit);
-    };
-  }, [camera]);
-  useEffect(() => {
-    const timer = setInterval(() => {
-      if (Date.now() - frameAt.current > OVERLAY_LIFETIME_MS) setOverlay(false);
-      if (
-        prior.current &&
-        Date.now() - Date.parse(prior.current.capturedAt) > 20_000
-      ) {
-        prior.current = null;
-        setReportPhase((p) => (p === "first" ? "idle" : p));
-      }
-    }, 500);
-    return () => clearInterval(timer);
-  }, []);
-  useEffect(() => {
-    if (camera !== "ready") return;
-    const t = setInterval(() => {
-      const v = video.current;
-      if (!v || v.readyState < 2 || document.hidden) return;
-      const pixels = sampleFrame(v);
-      motionSample.current = pixels;
-      if (
-        pendingSample.current &&
-        sceneDifference(pendingSample.current, pixels) > SCENE_CHANGE_THRESHOLD
-      )
-        pendingMoved.current = true;
-      const base = overlaySample.current;
-      if (base && sceneDifference(base, pixels) > SCENE_CHANGE_THRESHOLD) {
-        setOverlay(false);
-        prior.current = null;
-        overlaySample.current = null;
-        setResult(null);
-        setReportPhase((p) => (p === "saving" || p === "saved" ? p : "idle"));
-        setMessage("View changed. Hold the new item or bin steady.");
-      }
-    }, 220);
-    return () => clearInterval(t);
-  }, [camera]);
-  function sampleFrame(source: CanvasImageSource) {
-    sampleCanvas.current ??= document.createElement("canvas");
-    const small = sampleCanvas.current;
-    small.width = 16;
-    small.height = 16;
-    const ctx = small.getContext("2d", { willReadFrequently: true })!;
-    const v = video.current,
-      root = surface.current;
-    if (source === v && v && root) {
-      const crop = cameraCrop(
-        root.clientWidth,
-        root.clientHeight,
-        v.videoWidth,
-        v.videoHeight,
-      );
-      ctx.drawImage(
-        source,
-        crop.left,
-        crop.top,
-        crop.width,
-        crop.height,
-        0,
-        0,
-        16,
-        16,
-      );
-    } else ctx.drawImage(source, 0, 0, 16, 16);
-    return ctx.getImageData(0, 0, 16, 16).data;
-  }
-  function capture() {
+    return () => observer.disconnect();
+  }, [captured?.width, captured?.height]);
+
+  function capture(): Capture | null {
     const v = video.current,
       c = canvas.current,
       root = surface.current;
@@ -484,7 +440,7 @@ export default function Scanner({
       v.videoHeight,
     );
     if (!crop.width || !crop.height) return null;
-    const scale = Math.min(1, 1280 / crop.width, 1280 / crop.height);
+    const scale = Math.min(1, 768 / Math.max(crop.width, crop.height));
     c.width = Math.max(1, Math.round(crop.width * scale));
     c.height = Math.max(1, Math.round(crop.height * scale));
     c.getContext("2d")!.drawImage(
@@ -501,180 +457,157 @@ export default function Scanner({
     return {
       image: c.toDataURL("image/jpeg", 0.78),
       capturedAt: Date.now(),
-      sample: sampleFrame(c),
+      width: c.width,
+      height: c.height,
     };
-  }
-  async function saveAutomatic(a: Result, b: Result) {
-    if (saving.current) return;
-    const currentBin = binRef.current,
-      g = gpsRef.current;
-    if (!currentBin) {
-      setReportPhase("choose_bin");
-      setMessage(
-        "Overflow detected. Choose the physical bin to save an automatic report.",
-      );
-      return;
-    }
-    const episodeKey =
-      currentBin?.id || g!.point.map((n) => n.toFixed(4)).join(",");
-    if (lastReported.current === episodeKey) return;
-    saving.current = true;
-    setReportPhase("saving");
-    try {
-      const d = await post(scoped("/api/reports", scope), {
-        binId: currentBin?.id || null,
-        location:
-          matchRef.current === "auto" && g
-            ? g.point
-            : currentBin
-              ? [currentBin.lng, currentBin.lat]
-              : g!.point,
-        accuracy: g?.accuracy ?? null,
-        locatedAt: g?.locatedAt,
-        matchMethod: demoId ? "demo" : currentBin ? matchRef.current : "pin",
-        scanIds: [a.id, b.id],
-        idempotencyKey: `camera:${a.id}:${b.id}`,
-        source: "camera",
-        issue: "overflowing",
-        note: "",
-      });
-      lastReported.current = episodeKey;
-      setReceipt(d);
-      setReportPhase("saved");
-      setMessage(
-        d.duplicate
-          ? "Already reported from this session."
-          : "Overflow report saved in Bin There Done That.",
-      );
-      setRunning(false);
-    } catch (e) {
-      setError((e as Error).message);
-      prior.current = null;
-      setReportPhase("idle");
-    } finally {
-      saving.current = false;
-    }
   }
   async function runAnalysis(frame: Capture) {
     if (busy.current) return;
     busy.current = true;
     setAnalyzing(true);
-    const current = ++generation.current;
-    const sampled = frame.sample;
-    const targetBinId = binRef.current?.id || null;
-    pendingSample.current = sampled || null;
-    pendingMoved.current = false;
-    const abort = new AbortController();
+    const current = ++generation.current,
+      abort = new AbortController();
     captureAbort.current = abort;
     try {
-      const r = await api<Result>(scoped("/api/scan", scope), {
+      const response = await api<Result>(scoped("/api/scan", scope), {
         method: "POST",
+        signal: abort.signal,
         body: JSON.stringify({
           image: frame.image,
           capturedAt: new Date(frame.capturedAt).toISOString(),
           mode: "auto",
           method: "camera",
         }),
-        signal: abort.signal,
       });
-      if (current !== generation.current) return;
-      if (
-        !liveResultUsable(
-          frame.capturedAt,
-          Date.now(),
-          pendingMoved.current,
-          sceneDifference(
-            sampled,
-            video.current ? sampleFrame(video.current) : null,
-          ),
-        )
-      ) {
-        prior.current = null;
-        setResult(null);
-        setOverlay(false);
-        setReportPhase("idle");
-        setMessage("The view changed. Hold steady for a fresh check.");
-        return;
-      }
-      r.binIdAtCapture = targetBinId;
-      setResult(r);
-      overlaySample.current = sampled || null;
-      setOverlay(true);
-      frameAt.current = Math.min(
-        Date.now(),
-        frame.capturedAt + LIVE_FRAME_MAX_AGE_MS - OVERLAY_LIFETIME_MS,
-      );
+      if (current !== generation.current || abort.signal.aborted) return;
+      setResult(response);
       setError("");
-      setMessage(r.detection.message);
-      if (r.detection.scene === "bin" && r.detection.overflow) {
-        const a = prior.current;
-        if (
-          a?.detection.overflow &&
-          a.detection.box &&
-          r.detection.box &&
-          a.binIdAtCapture === targetBinId &&
-          targetBinId === (binRef.current?.id || null) &&
-          Date.parse(r.capturedAt) - Date.parse(a.capturedAt) <= 20_000 &&
-          overlap(a.detection.box, r.detection.box) >= 0.45
-        )
-          await saveAutomatic(a, r);
-        else {
-          setReportPhase("first");
-          setMessage(
-            "First overflow observation. Hold the same bin steady for a second check.",
-          );
-        }
-        prior.current = r;
-      } else {
-        prior.current = null;
-        setReportPhase("idle");
-      }
+      setMessage(
+        response.detection.overflow
+          ? "Confirm this bin’s location to report the overflow."
+          : response.detection.scene === "item"
+            ? "Sort each visible part as shown."
+            : response.detection.scene === "bin"
+              ? "No visible overflow in this photo."
+              : "Retake the photo with the item closer and in focus.",
+      );
+      if (response.detection.scene === "bin" && response.detection.overflow)
+        openOverflowReport(frame, response.detection);
+      // A single captured image is not the two independent observations required
+      // by the automatic reporting endpoint. Residents can explicitly report it.
     } catch (e) {
-      if (current !== generation.current) return;
-      if ((e as Error).name !== "AbortError") {
-        setError(
-          "Scanning is unavailable right now. Try again later or report the issue manually.",
-        );
-        setRunning(false);
-        api("/api/status")
-          .then(setStatus)
-          .catch(() => {});
-        prior.current = null;
-      }
+      if (current !== generation.current || abort.signal.aborted) return;
+      setError(
+        e instanceof Error
+          ? e.message
+          : "The photo could not be analyzed. Retake it and try again.",
+      );
     } finally {
-      pendingSample.current = null;
-      busy.current = false;
-      setAnalyzing(false);
+      if (current === generation.current) {
+        busy.current = false;
+        captureAbort.current = null;
+        setAnalyzing(false);
+      }
     }
   }
-  useEffect(() => {
+  function openOverflowReport(frame: Capture, detection: Detection) {
+    try {
+      const draft = createReportDraft({
+        image: frame.image,
+        capturedAt: new Date(frame.capturedAt).toISOString(),
+        initialBin: binRef.current,
+        note: detection.evidence.join("; "),
+        scope,
+        returnTo: demoId
+          ? `/demo/${demoId}/scan?camera=off`
+          : "/scan?camera=off",
+      });
+      router.push(draft.href);
+      return true;
+    } catch {
+      setError(
+        "The report page could not open. You can still report this bin below.",
+      );
+      return false;
+    }
+  }
+  function takePhoto() {
     if (
-      !running ||
-      !visible ||
+      captureTaken.current ||
+      busy.current ||
       camera !== "ready" ||
-      !status?.aiConnected ||
-      !!status?.aiError ||
+      !visible ||
+      document.hidden ||
       !joined
     )
       return;
-    let disposed = false,
-      t: ReturnType<typeof setTimeout>;
-    async function tick() {
-      if (disposed) return;
-      const image = capture();
-      if (image) await runAnalysis(image);
-      if (!disposed) t = setTimeout(tick, 2200);
+    const frame = capture();
+    if (!frame) {
+      stopTracks();
+      setCamera("off");
+      setError(
+        "The camera could not capture a frame. Try taking the photo again.",
+      );
+      return;
     }
-    t = setTimeout(tick, 700);
+    // Manual and automatic capture share one claim, so simultaneous actions
+    // cannot produce two photos or analysis requests.
+    captureTaken.current = true;
+    capturedRef.current = frame;
+    setCaptured(frame);
+    stopTracks();
+    setCamera("captured");
+    void runAnalysis(frame);
+  }
+  useEffect(() => {
+    if (
+      !visible ||
+      camera !== "ready" ||
+      !joined ||
+      captured ||
+      captureTaken.current
+    )
+      return;
+    let disposed = false;
+    const request = cameraRequest.current;
+    const active = () =>
+      !disposed &&
+      !captureTaken.current &&
+      request === cameraRequest.current &&
+      !document.hidden;
+    setCaptureHint("Taking a photo in 2 seconds…");
+    const countdown = setTimeout(() => {
+      if (active()) setCaptureHint("Taking a photo in 1 second…");
+    }, 1000);
+    // Every ready camera attempt gets a fresh, fixed delay. Motion does not
+    // affect this timer; only the final photo is read from the video.
+    captureTimer.current = setTimeout(() => {
+      captureTimer.current = null;
+      if (active()) takePhoto();
+    }, 2000);
     return () => {
       disposed = true;
-      clearTimeout(t);
+      clearTimeout(countdown);
+      if (captureTimer.current) clearTimeout(captureTimer.current);
+      captureTimer.current = null;
     };
-  }, [running, visible, camera, status?.aiConnected, status?.aiError, joined]);
+  }, [visible, camera, joined, captured]);
+
+  function openManualReport(event?: React.MouseEvent<HTMLButtonElement>) {
+    if (event) dialogTrigger.current = event.currentTarget;
+    if (
+      capturedRef.current &&
+      result?.detection.scene === "bin" &&
+      result.detection.overflow &&
+      openOverflowReport(capturedRef.current, result.detection)
+    )
+      return;
+    cancelAttempt();
+    setCamera(capturedRef.current ? "captured" : "off");
+    setManualOpen(true);
+  }
   const tips = result?.guidance || [];
-  const hasFeedback = Boolean(
-    error || analyzing || result || receipt || reportPhase !== "idle",
-  );
+  const hasFeedback = Boolean(error || analyzing || result || receipt);
   const dashboard = demoId ? `/demo/${demoId}/dashboard` : "/dashboard";
   return (
     <div className="scanner-page scanner-automatic">
@@ -694,10 +627,18 @@ export default function Scanner({
               muted
               playsInline
               autoPlay
-              aria-label="Live rear camera"
+              aria-label="Rear camera before capture"
+              style={{ visibility: captured ? "hidden" : "visible" }}
             />
             <canvas ref={canvas} hidden />
-            {camera !== "ready" && (
+            {captured && (
+              <img
+                src={captured.image}
+                className="uploaded-preview"
+                alt="Captured item or bin"
+              />
+            )}
+            {!captured && camera !== "ready" && (
               <div className="camera-placeholder">
                 <div className="camera-placeholder-icon">
                   <Camera size={42} strokeWidth={1.3} />
@@ -706,45 +647,107 @@ export default function Scanner({
                   {camera === "opening"
                     ? "Opening your camera…"
                     : camera === "off"
-                      ? "Camera is off"
+                      ? "Ready for a photo"
                       : "Camera access needed"}
                 </h1>
                 <p>
                   {camera === "opening"
-                    ? "Allow the rear camera when your browser asks. No microphone needed."
-                    : camera === "off"
-                      ? "Point at an item to sort it, or a bin to check it."
-                      : "Enable camera access to identify waste and spot overflowing bins."}
+                    ? "Allow the rear camera, then aim at your item."
+                    : "Show an item to sort it, or a bin to report an issue."}
                 </p>
                 {camera !== "opening" && (
-                  <button className="button orange" onClick={openCamera}>
+                  <button
+                    type="button"
+                    className="button orange"
+                    onClick={() => void openCamera()}
+                  >
                     <Camera size={16} />
-                    {camera === "off"
-                      ? "Turn camera on"
-                      : "Try the camera again"}
+                    {camera === "off" ? "Take a photo" : "Try the camera again"}
                   </button>
                 )}
               </div>
             )}
-            {camera === "ready" && (
+            {!captured && camera === "ready" && (
               <>
-                <div className="viewfinder">
-                  <span />
-                  <span />
-                  <span />
-                  <span />
-                </div>
-                <div className="camera-frame-hint">
-                  Point at an item or a public bin
+                <div className="camera-frame-hint">{captureHint}</div>
+                <div
+                  style={{
+                    position: "absolute",
+                    left: "50%",
+                    bottom: 58,
+                    transform: "translateX(-50%)",
+                    zIndex: 6,
+                    display: "flex",
+                    gap: 10,
+                    alignItems: "center",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  <button
+                    type="button"
+                    className="button orange"
+                    onClick={takePhoto}
+                  >
+                    <Camera size={17} aria-hidden="true" />
+                    Capture photo
+                  </button>
+                  <button
+                    type="button"
+                    className="button"
+                    aria-label="Cancel capture"
+                    title="Cancel capture"
+                    onClick={() => {
+                      cancelAttempt();
+                      setCamera("off");
+                    }}
+                    style={{
+                      minWidth: 44,
+                      minHeight: 44,
+                      padding: 10,
+                      background: "var(--paper)",
+                      color: "var(--ink)",
+                    }}
+                  >
+                    <X size={18} aria-hidden="true" />
+                  </button>
                 </div>
               </>
             )}
-            {result && overlay && (
+            {captured && result && (
               <AROverlay
                 detection={result.detection}
                 guidance={tips}
                 frame={frameStyle}
               />
+            )}
+            {(captured || camera === "denied" || camera === "unsupported") &&
+              !receipt && (
+                <button
+                  type="button"
+                  className="button"
+                  aria-label="Retake photo"
+                  title="Retake photo"
+                  onClick={() => void openCamera()}
+                  style={{
+                    position: "absolute",
+                    top: 12,
+                    right: 12,
+                    zIndex: 6,
+                    minWidth: 44,
+                    minHeight: 44,
+                    padding: 10,
+                    background: "var(--paper)",
+                    color: "var(--ink)",
+                    border: "1px solid var(--line)",
+                  }}
+                >
+                  <RotateCcw size={19} aria-hidden="true" />
+                </button>
+              )}
+            {captured && (
+              <div className="camera-frame-hint">
+                {analyzing ? "Analyzing your photo…" : "Photo captured"}
+              </div>
             )}
             {receipt && (
               <div className="saved-overlay" role="status">
@@ -752,11 +755,7 @@ export default function Scanner({
                   <Check size={32} />
                 </span>
                 <strong>
-                  {receipt.duplicate
-                    ? "Already reported"
-                    : receipt.report.source === "camera"
-                      ? "Overflow reported"
-                      : "Report saved"}
+                  {receipt.duplicate ? "Already reported" : "Report saved"}
                 </strong>
                 <p>
                   {receipt.duplicate
@@ -774,79 +773,12 @@ export default function Scanner({
                     View dashboard <ArrowRight size={14} />
                   </Link>
                 </div>
-                <button
-                  onClick={() => {
-                    setReceipt(null);
-                    setRunning(true);
-                    setResult(null);
-                    setReportPhase("idle");
-                    prior.current = null;
-                    lastReported.current = "";
-                  }}
-                >
-                  Keep scanning
+                <button type="button" onClick={() => void openCamera()}>
+                  Take another photo
                 </button>
               </div>
             )}
           </div>
-          {(!receipt || receipt.report.source === "camera") &&
-            (result?.detection.overflow || reportPhase !== "idle") && (
-              <div
-                className="overflow-progress"
-                aria-label="Automatic overflow report progress"
-              >
-                <div className="overflow-progress-heading">
-                  <span className="eyebrow">AUTOMATIC OVERFLOW REPORT</span>
-                  <span>
-                    {receipt ? "Saved" : !bin ? "Bin needed" : "Bin selected"}
-                  </span>
-                </div>
-                <ol>
-                  {["Observe", "Confirm", "Save"].map((label, i) => {
-                    const completed =
-                      reportPhase === "saved"
-                        ? 3
-                        : ["choose_bin", "saving"].includes(reportPhase)
-                          ? 2
-                          : reportPhase === "first"
-                            ? 1
-                            : 0;
-                    return (
-                      <li
-                        key={label}
-                        className={
-                          i < completed
-                            ? "complete"
-                            : i === completed && analyzing
-                              ? "active"
-                              : ""
-                        }
-                      >
-                        <span>
-                          {i < completed ? <Check size={12} /> : i + 1}
-                        </span>
-                        {label}
-                      </li>
-                    );
-                  })}
-                </ol>
-                <p>
-                  {reportPhase === "saved"
-                    ? "Your observation is saved. Open the dashboard to see it on the map."
-                    : reportPhase === "saving"
-                      ? "Saving both observations and updating the map…"
-                      : reportPhase === "choose_bin"
-                        ? "Two observations agree. Choose the physical bin, then scan again."
-                        : reportPhase === "first"
-                          ? "One observation found visible overflow. Keep the same bin steady."
-                          : "Two matching live observations + the right bin. One saved report."}
-                </p>
-              </div>
-            )}
-          <p className="camera-privacy">
-            <ShieldCheck size={13} />
-            Selected images are sent for analysis. Video stays on your device.
-          </p>
         </section>
         <aside className="scanner-assistant">
           {error && (
@@ -854,7 +786,7 @@ export default function Scanner({
               {error}
             </p>
           )}
-          {(analyzing || result || receipt || reportPhase !== "idle") && (
+          {(analyzing || result || receipt) && (
             <div className="scan-feedback" aria-live="polite">
               <span
                 className={`feedback-icon ${result?.detection.overflow ? "alert" : ""}`}
@@ -870,14 +802,16 @@ export default function Scanner({
               <div>
                 <span className="eyebrow">
                   {analyzing
-                    ? "Checking the view"
+                    ? "Analyzing photo"
                     : receipt
                       ? "Report saved"
-                      : result?.detection.scene === "item"
-                        ? "Item detected"
-                        : result?.detection.scene === "bin"
-                          ? "Bin detected"
-                          : "Point at an item or bin"}
+                      : result?.detection.overflow
+                        ? "Overflowing bin detected"
+                        : result?.detection.scene === "item"
+                          ? "Item detected"
+                          : result?.detection.scene === "bin"
+                            ? "Bin detected"
+                            : "Photo result"}
                 </span>
                 <p>{message}</p>
               </div>
@@ -885,8 +819,8 @@ export default function Scanner({
           )}
           {tips.length > 0 && (
             <div className="guidance-list">
-              {tips.map((t, i) => (
-                <GuidanceCard key={i} item={t} number={i + 1} />
+              {tips.map((item, i) => (
+                <GuidanceCard key={i} item={item} number={i + 1} />
               ))}
             </div>
           )}
@@ -899,20 +833,14 @@ export default function Scanner({
             </div>
           ) : null}
           <button
+            type="button"
             className="button outlined full"
-            onClick={(event) => {
-              dialogTrigger.current = event.currentTarget;
-              generation.current++;
-              captureAbort.current?.abort();
-              prior.current = null;
-              setRunning(false);
-              setOverlay(false);
-              setReportPhase("idle");
-              setManualOpen(true);
-            }}
+            onClick={openManualReport}
           >
             <MapPin size={16} />
-            Report an issue manually
+            {result?.detection.overflow
+              ? "Report this bin"
+              : "Report an issue manually"}
           </button>
         </aside>
       </div>
@@ -958,11 +886,6 @@ export default function Scanner({
                   onClick={() => {
                     selectBin(b, "selected");
                     setLocationOpen(false);
-                    prior.current = null;
-                    setReportPhase("idle");
-                    setResult(null);
-                    setOverlay(false);
-                    lastReported.current = "";
                   }}
                 >
                   <span>
@@ -1001,7 +924,6 @@ export default function Scanner({
               aria-label="Close manual report"
               onClick={() => {
                 setManualOpen(false);
-                if (camera === "ready") setRunning(true);
               }}
             >
               <X />
@@ -1010,11 +932,15 @@ export default function Scanner({
             <ManualReport
               scope={scope}
               initialBin={bin}
+              image={captured?.image}
+              capturedAt={
+                captured
+                  ? new Date(captured.capturedAt).toISOString()
+                  : undefined
+              }
               onSaved={(data) => {
                 setReceipt(data);
-                setReportPhase("saved");
                 setManualOpen(false);
-                setRunning(false);
                 setError("");
                 setMessage("Your report is saved in Bin There Done That.");
               }}
@@ -1040,22 +966,11 @@ function GuidanceCard({ item, number }: { item: Guidance; number?: number }) {
         <Icon size={20} />
       </span>
       <div>
-        <span className="eyebrow">
-          {item.stream === "check"
-            ? "MATERIAL NEEDS A CHECK"
-            : item.stream.toUpperCase()}
-        </span>
+        <span className="eyebrow">{guidanceLabel(item).toUpperCase()}</span>
         <h3>
           {number ? <span className="guidance-number">{number}</span> : null}
           {item.label}
         </h3>
-        <p>{item.instruction}</p>
-        <a href={item.source} target="_blank" rel="noreferrer">
-          {item.stream === "check"
-            ? "Check Toronto Waste Wizard"
-            : "Toronto disposal guidance"}{" "}
-          <ArrowUpRight size={11} />
-        </a>
       </div>
     </article>
   );

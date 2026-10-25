@@ -128,12 +128,61 @@ export const stateLabels: Record<string, string> = {
   reopened: "Reopened",
 };
 export async function imageData(file: File): Promise<string> {
-  if (file.size > 8 * 1024 * 1024)
-    throw new Error("Choose an image smaller than 8 MB.");
-  return new Promise((resolve, reject) => {
-    const r = new FileReader();
-    r.onload = () => resolve(String(r.result));
-    r.onerror = () => reject(new Error("Could not read this image."));
-    r.readAsDataURL(file);
-  });
+  if (!file.size || (file.type && !file.type.startsWith("image/")))
+    throw new Error("Choose a photo of the bin.");
+  if (file.size > 20 * 1024 * 1024)
+    throw new Error("Choose an image smaller than 20 MB.");
+  const url = URL.createObjectURL(file);
+  try {
+    const image = new Image();
+    image.src = url;
+    try {
+      await image.decode();
+    } catch {
+      throw new Error("Could not open this photo. Try a JPEG or PNG image.");
+    }
+    const scale = Math.min(
+      1,
+      1280 / Math.max(image.naturalWidth, image.naturalHeight),
+    );
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
+    canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
+    const context = canvas.getContext("2d");
+    if (!context)
+      throw new Error("Could not prepare this photo. Please try again.");
+    context.fillStyle = "#ffffff";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.drawImage(image, 0, 0, canvas.width, canvas.height);
+    const encode = (quality: number) =>
+      new Promise<Blob>((resolve, reject) => {
+        canvas.toBlob(
+          (blob) =>
+            blob
+              ? resolve(blob)
+              : reject(
+                  new Error("Could not prepare this photo. Please try again."),
+                ),
+          "image/jpeg",
+          quality,
+        );
+      });
+    let photo = await encode(0.82);
+    if (photo.size > 2_800_000) photo = await encode(0.6);
+    // Leave room for base64 expansion and the other fields in a report request.
+    if (photo.size > 2_800_000)
+      throw new Error(
+        "This photo is too large. Take another photo and try again.",
+      );
+    return await new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result));
+      reader.onerror = () => reject(new Error("Could not read this photo."));
+      reader.onabort = () =>
+        reject(new Error("Reading this photo was cancelled."));
+      reader.readAsDataURL(photo);
+    });
+  } finally {
+    URL.revokeObjectURL(url);
+  }
 }

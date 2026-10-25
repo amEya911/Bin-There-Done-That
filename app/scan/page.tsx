@@ -1,9 +1,9 @@
-import Scanner from "@/components/scanner";
+import CameraScanner from "@/components/camera-scanner";
 export default async function Page({
   searchParams,
 }: {
   searchParams: Promise<{ camera?: string }>;
 }) {
   const { camera } = await searchParams;
-  return <Scanner cameraOff={camera === "off"} />;
+  return <CameraScanner cameraOff={camera === "off"} />;
 }

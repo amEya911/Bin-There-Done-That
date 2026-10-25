@@ -6,7 +6,7 @@ The app uses **Supabase PostgreSQL + PostGIS** for shared data and **private Sup
 
 ## Run locally
 
-Use Node.js **22.13 or newer** (Node 26 was used for validation).
+Use Node.js **24.x**, matching the Vercel production runtime.
 
 ```sh
 npm install
@@ -26,7 +26,7 @@ Without a usable Gemini connection, the inventory map and heatmaps, manual issue
 
 | Route                  | Purpose                                                                                                 |
 | ---------------------- | ------------------------------------------------------------------------------------------------------- |
-| `/scan`                | Automatic rear-camera analysis, screen-space guidance, two-frame overflow reporting, manual issue fallback |
+| `/scan`                | One-photo rear-camera capture, fixed component arrows, retake and confirmed photo reports                 |
 | `/scan?camera=off`     | Preview scanner without opening hardware; the on button starts it explicitly                            |
 | `/dashboard`           | Inventory, bin-density and report-density maps, live report feed, separate counts                       |
 | `/bins/:id`            | Asset provenance, observations and case history                                                         |
@@ -68,9 +68,11 @@ The import has 10,457 records: 9,822 Existing and 635 Temporarily Removed. Stabl
 
 An initial **Downtown pilot area** is an application-defined rectangle, not an official Toronto service boundary. Administrators can add other designated polygons. Manual additions must be inside an active area, including the boundary. Another approved or pending bin within 15 m blocks registration, with no override. Residents can add a photo and fresh GPS location at `/bins/new`, without management login. Location must be no older than two minutes and accurate to 25 m; the server assigns the active containing area. Photo evidence remains private and follows the existing retention policy. Community additions appear immediately and are labeled as community records, not City-verified assets. Operator-created pending/rejected additions stay out of public matching and maps. Approved records are labeled Community-added and receive no invented City ID.
 
-## Automatic reports and honest counts
+## Photo reports and honest counts
 
-A real automatic report needs an active physical bin and two distinct, fresh server-held camera results from the same session and scope: high-certainty overflow, visible evidence, no quality defects, overlapping target boxes and a stable scene. Identical frames, stale/future detections, uncertainty and negative scenes are rejected. Recent accurate GPS can select a bin only when the candidate is unambiguous; otherwise the user selects a physical bin. Sorting does not require GPS.
+The camera captures one photo per attempt. A supported overflowing-bin result automatically opens `/report?draft=<id>` with the exact photo, original capture time, overflowing issue and visible evidence filled in. GPS suggests the nearest registered bin; the resident can search for another and explicitly submit. The per-tab draft expires after15 minutes, contains no photo in its URL and uploads the photo only on submission. Save/discard removes the stored draft. Sorting does not require GPS.
+
+The server's automatic-report endpoint still requires an active physical bin and two distinct, fresh server-held camera observations from the same session and scope: high-certainty overflow, visible evidence, no quality defects and overlapping target boxes. The one-photo interface does not fabricate a second observation or bypass that safeguard. Recent accurate GPS can select a bin only when the candidate is unambiguous; otherwise the user selects a physical bin.
 
 The server commits the observation and case together. Request retries return the original record. Continued camera reports from the same session/bin are suppressed for 30 minutes, except that a completed episode permits new evidence to open a new episode. Reports from separate sessions are **not claimed to be independent corroboration**.
 
@@ -78,7 +80,7 @@ Three accepted observations can mean three reports, one case and one affected bi
 
 ## Camera behavior and phone access
 
-The first scanner entry requests the rear camera, without audio. No power control is shown in the camera view. The camera-off preview route remains available. Leaving the scanner releases tracks, including a permission request that resolves after navigation. Background tabs stop analysis. The video fills the frame with a centered cover crop. Analysis and motion samples use that same visible crop. Numbered component arrows use the cropped frame coordinates, avoid label collisions, expire on live video, and disappear after substantial movement. Responses to a moved, resized or over-age live frame are discarded before guidance or automatic confirmation. Feedback does not resize the live frame.
+The first scanner entry requests the rear camera without audio. Once camera playback is ready, a two-second countdown takes exactly one photo, regardless of movement. There is no motion comparison or centre framing guide. **Capture photo** is an explicit early-capture option. Every camera track stops before analysis. Item photos remain visible with numbered disposal arrows. **Retake photo** starts a fresh two-second countdown and cancels the prior request. Leaving or hiding the scanner releases hardware and cancels work, including late permission grants. Frozen photos and arrows use matching contained-image coordinates across viewport changes. An overflowing-bin result opens the prefilled report page. A detection alone does not publish a report. When browser draft storage is blocked, the existing inline/modal report form remains available.
 
 The scanner always uses automatic scene selection. The mode selector, pause/capture/upload strip, idle feedback block and manual item lookup were removed following user feedback. Automatic GPS matching starts with the camera and selects only an unambiguous nearby physical bin. The manual-report form independently requests location, suggests the nearest registered bin with its name and distance, and always allows street/City ID search. Sorting items does not require a matched bin.
 
@@ -86,15 +88,15 @@ Both the scanner and dashboard follow `prefers-color-scheme` automatically, incl
 
 The dashboard uses a horizontal header, four distinct overview counts, a large map and an adjacent report list. Street search, inventory/density/report layers, time and source filters, most-reported locations, bin history and photo-based missing-bin registration remain available. The low-noise More menu contains Add a bin, Review cases and About the project. Source attribution starts collapsed behind the map’s information control and remains available in bin details. A narrow viewport stacks the map above the report list; selecting a report brings its location into view.
 
-A phone requires a **trusted HTTPS** origin reaching this server. `http://localhost:3000` works only on the computer itself. Use an HTTPS reverse proxy or tunnel you configure, set `APP_ORIGIN` to the exact origin, and use that same origin when creating demo QR links. The configured Cloudflare Tunnel provides this HTTPS access while the computer, Nginx and app server are running. A quick-tunnel address can change when restarted. Do not bypass certificate warnings. Verify Safari and Chrome on physical phones before presentation.
+A phone requires a **trusted HTTPS** origin reaching the server. The production hosting target is `https://whichbin.fyi`, with Cloudflare DNS pointing to Vercel and shared data in Supabase. See [Vercel deployment](docs/deployment-vercel.md) for configuration and operations. `http://localhost:3000` works only on the computer itself. A Cloudflare quick tunnel remains an optional local preview while the computer is running; its address can change when restarted. Set `APP_ORIGIN` to the exact public origin and use that origin when creating demo QR links. Verify Safari and Chrome on physical phones before presentation.
 
 ## Live projector demo
 
 1. Configure Gemini and test the saved key/model.
 2. Sign in at `/manage/demo`, choose the actual Toronto asset represented by the staged demo, and set the HTTPS app address reachable by the phone.
 3. Create the isolated session. Open its presentation on the projector and its private QR scanner link on the phone.
-4. Point the actual phone camera at the displayed photograph. Two fresh, consistent detections save one report in that demo scope. Its dashboard updates from persisted state.
-5. Test empty/unrelated scenes too. They must not generate an automatic report.
+4. Point the phone camera at the displayed photograph. One image is captured. If overflow is detected, the prefilled report page opens; confirm the selected demo asset and submit. The demo dashboard updates from the saved report.
+5. Use **Retake photo** for another attempt. Empty or unrelated scenes must not create reports on their own.
 
 The included public-domain photo is from **Hamburg, 2005**, visibly labeled as a reference image. The selected Toronto asset supplies demo context; stage GPS is ignored. Displaying the reference image does not itself create detections or reports. [Photo attribution](public/images/ATTRIBUTION.md).
 
@@ -106,12 +108,23 @@ photos. Dataset files, credentials and review state stay in ignored `.data/`;
 source annotations remain proposals until reviewed. The dataset tools do not
 activate new models or change the public application's reporting behavior.
 
-The separate [phone inference prototype](docs/local-vision-test.md) is at
-`/scan/test`. It compares real on-device YOLO26 Nano and RF-DETR Nano detections
-and measures response time. It starts with the camera off, uploads no images and
-creates no reports. These pretrained models do not yet implement the custom
-waste catalog or overflow classification. Follow the guide to prepare model files
-after a fresh checkout; they are deliberately excluded from Git.
+The production camera is at `/scan`; the former `/scan/test` URL redirects there.
+It opens the rear camera unless `camera=off` is requested, waits two seconds after
+playback is ready and analyzes exactly one photo. The clean camera screen shows
+part names, destinations, arrows and Retake; model controls, upload controls,
+per-item descriptions, response timings and export/footer UI are absent. Analysis
+is transient; only a confirmed report uploads its image. The user-selected straw
+policy maps plastic to Litter and paper to Paper · recycling, explicitly attributed
+internally to `project:straw-sorting` rather than Toronto. Other item rules remain
+unchanged. [Historical camera experiments](docs/local-vision-test.md) include
+YOLO26 Nano, RF-DETR Nano and an experimental waste detector; those comparison
+screens are not exposed by the production route. The first
+detector completed30 epochs; a separate source-group classifier completed20.
+The full usable collection is accounted for across the two tasks and their grouped
+evaluation sets. The initial held-out detector results are weak, so these artifacts
+remain experimental. See [training status](training/README.md) for actual counts,
+label provenance and results. Follow the guide to prepare model files after a
+fresh checkout; weights and datasets are deliberately excluded from Git.
 
 ```sh
 npm run typecheck

@@ -20,8 +20,9 @@ export async function providerHealth() {
 export async function recordProviderHealth(
   state: Health["state"],
   message = "",
+  connection?: { apiKey: string; model: string },
 ) {
-  const c = await config();
+  const c = connection ?? await config();
   await put("setting", {
     id: "gemini_health",
     credentialHash: hash(c.apiKey),
@@ -31,7 +32,7 @@ export async function recordProviderHealth(
     checkedAt: new Date().toISOString(),
   });
 }
-export async function providerFailure(error: unknown) {
+export async function providerFailure(error: unknown, connection?: { apiKey: string; model: string }) {
   if (error instanceof HttpError) return error;
   const status = Number(
     (
@@ -49,19 +50,19 @@ export async function providerFailure(error: unknown) {
   if (status === 402) {
     const message =
       "Gemini’s prepaid credits are depleted. Add credits in Google AI Studio, then retry the connection.";
-    await recordProviderHealth("billing_required", message);
+    await recordProviderHealth("billing_required", message, connection);
     return new HttpError(402, message);
   }
   if (status === 401 || status === 403) {
     const message =
       "Gemini rejected this key or its model permissions. Check the key in Setup.";
-    await recordProviderHealth("access_denied", message);
+    await recordProviderHealth("access_denied", message, connection);
     return new HttpError(503, message);
   }
   if (status === 429) {
     const message =
       "Gemini’s usage allowance has been reached. Wait before retrying the connection.";
-    await recordProviderHealth("quota_exceeded", message);
+    await recordProviderHealth("quota_exceeded", message, connection);
     return new HttpError(429, message);
   }
   return new HttpError(

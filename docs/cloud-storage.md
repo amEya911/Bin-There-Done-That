@@ -39,14 +39,14 @@ Only selected, sanitized still frames are sent for analysis. Continuous video st
 
 - Unreported analysis evidence: ten minutes.
 - Accepted report, community-bin and follow-up evidence: seven days by default (`EVIDENCE_RETENTION_DAYS`).
-- The backend refuses an expired image immediately. Hourly maintenance, while an app process is running, removes expired Storage objects in batches. `npm run data:cleanup` performs the same cleanup manually. If every app instance stops, physical cleanup waits until it runs again.
+- The backend refuses an expired image immediately. On Vercel, an authenticated daily cron removes expired Storage objects in bounded batches. Persistent local servers also run hourly maintenance. `npm run data:cleanup` performs cleanup manually. Physical removal requires one of these cleanup runs.
 - The private bucket allows JPEG objects up to 8 MB. No public image URLs or local runtime image files are created in Postgres mode.
 
 No previously retained local image was still eligible for migration at cutover. The actual Storage upload, protected download and removal paths were verified using a disposable test image in a separate demo scope.
 
 ## Connection and operations
 
-Use Node 22.13+ and the checked-in lockfile. Copy `.env.example` to `.env.local` only on a fresh checkout; never overwrite the configured secret file. The active app sets `DATA_BACKEND=postgres`. Set Supabase URL, server secret and the transaction-pooler database fields. The application pool is capped at three connections. TLS verifies the Supabase server using the supplied public CA certificate. Nothing uses `NEXT_PUBLIC_` credentials.
+Use Node 24 and the checked-in lockfile. Copy `.env.example` to `.env.local` only on a fresh checkout; never overwrite the configured secret file. The active app sets `DATA_BACKEND=postgres`. Set Supabase URL, server secret and the transaction-pooler database fields. The application pool is capped at three connections. TLS verifies the Supabase server using the supplied public CA certificate. Nothing uses `NEXT_PUBLIC_` credentials.
 
 The SQL migrations in `supabase/migrations/` create the schema, PostGIS indexes, private bucket, RLS, permissions and internal helper restrictions. Both applied versions are recorded in Supabase’s migration history as well as the application checkpoint table. Direct `anon`/`authenticated` access is revoked deliberately; RLS without browser policies is a deny-by-default boundary, because this app uses its server's authorization checks. Advisor information about RLS without policies is expected. Low initial usage can also produce unused-index information; the spatial/expiry/relationship indexes are retained for their actual query paths.
 
@@ -71,4 +71,4 @@ Do not run an old SQLite copy alongside the active cloud app or switch back casu
 
 ## Hosting boundary
 
-The database and private image storage are managed by Supabase. The Next.js production app still runs on this computer behind Nginx and the existing Cloudflare quick tunnel. The public URL works while those processes and the computer remain online. A quick-tunnel address can change when restarted. This migration does not claim permanent application hosting, automatic failover, field-tested AI accuracy or a changed Gemini billing status.
+The database and private image storage are managed by Supabase Free. The application is configured for Vercel Hobby with the custom domain `whichbin.fyi` managed by Cloudflare DNS. This hosting does not depend on the laptop or a quick tunnel. Deployment status and domain verification must succeed before the custom address is usable. See [deployment operations](deployment-vercel.md). This hosting move does not change Gemini billing or establish field-tested AI accuracy.

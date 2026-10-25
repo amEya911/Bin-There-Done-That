@@ -53,7 +53,7 @@ export function pool() {
   registry.binPostgres.on("error", () => {
     /* A subsequent request obtains a fresh connection. Never log credentials. */
   });
-  if (!registry.binCloudMaintenance) {
+  if (!process.env.VERCEL && !registry.binCloudMaintenance) {
     registry.binCloudMaintenance = setInterval(async () => {
       try {
         const { cleanup } = await import("./db");

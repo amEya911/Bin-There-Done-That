@@ -1,0 +1,60 @@
+{
+  "sourceUrl": "https://www.toronto.ca/data/swms/wastewizard/data.json",
+  "sourcePage": "https://www.toronto.ca/services-payments/recycling-organics-garbage/waste-wizard/",
+  "fetchedAt": "2026-10-24T22:17:30.751670+00:00",
+  "lastModified": "Sat, 24 Oct 2026 20:05:08 GMT",
+  "sourceSha256": "42ebf3ed14a72355ebce1a73cadaeda0930f7314345d1602eec110d15fa2eb88",
+  "scope": "Current City Waste Wizard entries. Follow posted collection labels at private facilities; paper straw lining and reusable status may be estimated from appearance.",
+  "entries": [
+    {
+      "id": "WKvo9EowFx40mD6NTwyRHQ",
+      "title": "Garbage (compostable & wooden items)",
+      "category": "Garbage",
+      "matchedKeywords": ["compostable plastic"]
+    },
+    {
+      "id": "6V5ZK6LEioc5iYBVTH3n$Q",
+      "title": "Green Bin (miscellaneous)",
+      "category": "Green Bin",
+      "matchedKeywords": ["paper straw (without wax/plastic lining)"]
+    },
+    {
+      "id": "09938508-3b5a-4f40-9bf7-d69da1f1ac9f",
+      "title": "NEW Blue Bin (Paper Laminate Containers)",
+      "category": "Blue Bin",
+      "matchedKeywords": ["disposable paper coffee cups"]
+    },
+    {
+      "id": "9e14f342-b1c9-49cc-af54-ec1e59c776b8",
+      "title": "NEW Blue Bin (Paper)",
+      "category": "Blue Bin",
+      "matchedKeywords": ["coffee cup sleeves"]
+    },
+    {
+      "id": "19eda405-90ae-4849-a9c5-702b52d0c771",
+      "title": "NEW Blue Bin (Plastic Containers) 2",
+      "category": "Blue Bin",
+      "matchedKeywords": ["plastic cup lid"]
+    },
+    {
+      "id": "7957cad7-1f6c-44a2-90c3-8f83f923371c",
+      "title": "NEW Blue Bin (Paper Laminate Packaging)",
+      "category": "Blue Bin",
+      "matchedKeywords": [
+        "paper straw (with wax/plastic lining)",
+        "plastic coffee cup lid (black)"
+      ]
+    },
+    {
+      "id": "2303ddfc-282d-452a-a2e6-2a0b19074648",
+      "title": "NEW Blue Bin (Misc)",
+      "category": "Blue Bin",
+      "matchedKeywords": ["plastic straws"]
+    }
+  ],
+  "preparationSources": [
+    "https://www.toronto.ca/services-payments/recycling-organics-garbage/recycling-right-in-public-spaces/",
+    "https://www.toronto.ca/services-payments/recycling-organics-garbage/houses/changes-to-recycling-program/",
+    "https://www.circularmaterials.ca/resident-communities/toronto/"
+  ]
+}

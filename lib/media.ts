@@ -122,10 +122,31 @@ export async function readMedia(id: string): Promise<Buffer> {
     );
   return Buffer.from(await data.arrayBuffer());
 }
-export async function cleanupMedia() {
-  if (!cloudEnabled()) return;
-  const rows = await query(
-    "select id from app_private.media where expires_at<now() order by expires_at limit 200",
-  );
-  for (const row of rows) await removeMedia(row.id);
+export async function cleanupMedia(
+  options: { maxBatches?: number; timeBudgetMs?: number } = {},
+) {
+  if (!cloudEnabled()) return 0;
+  const maxBatches = Math.min(25, Math.max(1, options.maxBatches || 1));
+  const deadline =
+    Date.now() + Math.min(45000, Math.max(100, options.timeBudgetMs || 5000));
+  let removed = 0;
+  for (let batch = 0; batch < maxBatches && Date.now() < deadline; batch++) {
+    const rows = await query<{ id: string; object_path: string }>(
+      "select id,object_path from app_private.media where expires_at<now() order by expires_at limit 200",
+    );
+    if (!rows.length) break;
+    // Remove expired JPEGs together, then their metadata. A failed Storage
+    // request leaves the rows available for the next scheduled retry.
+    const { error } = await bucket().remove(rows.map((row) => row.object_path));
+    if (error)
+      throw Object.assign(new Error("Expired images could not be removed."), {
+        status: 503,
+      });
+    await query("delete from app_private.media where id=any($1::uuid[])", [
+      rows.map((row) => row.id),
+    ]);
+    removed += rows.length;
+    if (rows.length < 200) break;
+  }
+  return removed;
 }

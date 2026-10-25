@@ -52,6 +52,9 @@ import { isCaseOpen } from "@/lib/cases";
 import type { Area, Bin, Case, Demo, Report, Scan } from "@/lib/types";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+export const maxDuration = 60;
+// Leave room below the hosting platform's request limit for JSON overhead.
+const MAX_BODY_BYTES = 4_000_000;
 const point = z.tuple([
   z.number().min(-180).max(180),
   z.number().min(-90).max(90),
@@ -72,7 +75,7 @@ const reportSchema = z.object({
 });
 async function body(req: NextRequest) {
   const length = Number(req.headers.get("content-length") || 0);
-  assert(length <= 12000000, 413, "This request is too large.");
+  assert(length <= MAX_BODY_BYTES, 413, "This request is too large.");
   const reader = req.body?.getReader();
   assert(reader, 400, "Request body required.");
   let bytes = 0;
@@ -81,7 +84,7 @@ async function body(req: NextRequest) {
     const part = await reader.read();
     if (part.done) break;
     bytes += part.value.length;
-    if (bytes > 12000000) {
+    if (bytes > MAX_BODY_BYTES) {
       await reader.cancel();
       throw new HttpError(413, "This request is too large.");
     }
@@ -480,6 +483,40 @@ async function handler(req: NextRequest) {
         updatedAt: new Date().toISOString(),
       });
     }
+    if (route === "vision/preview" && method === "POST") {
+      const started = Date.now();
+      const connection = await config();
+      assert(connection.apiKey, 503, "Connect Gemini on the computer running the app to enable camera guidance.");
+      const health = await providerHealth();
+      if (health && health.state !== "ready")
+        throw new HttpError(health.state === "billing_required" ? 402 : 503, health.message);
+      const input = z.object({
+        image: z.string(),
+        capturedAt: z.string().datetime(),
+        mode: z.enum(["auto", "bin", "item"]),
+        method: z.enum(["camera", "upload"]),
+      }).parse(await body(req));
+      assert(Math.abs(Date.now() - Date.parse(input.capturedAt)) < 30000, 400, "Capture a fresh view and try again.");
+      await consume(`global:${new Date().toISOString().slice(0, 10)}`, Number(process.env.DAILY_SCAN_LIMIT || 500));
+      await consume(`vision-preview:${s.id}:${Math.floor(Date.now() / 60000)}`, 40);
+      const image = await sanitizeImage(input.image);
+      const analysisStarted = Date.now();
+      const detection = await analyze(image.buffer, input.mode, {
+        connection,
+        signal: req.signal,
+        recordSuccessHealth: health?.state !== "ready",
+      });
+      const analysisMs = Date.now() - analysisStarted;
+      // Analysis stays transient. A user can subsequently confirm a report and
+      // attach this photo through /reports; automated evidence still uses /scan.
+      return json({
+        detection, guidance: guidance(detection.components),
+        capturedAt: input.capturedAt, receivedAt: new Date().toISOString(),
+        width: image.width, height: image.height,
+        latencyMs: Date.now() - started, analysisMs, storageMs: 0,
+        provider: "gemini", model: connection.model,
+      });
+    }
     if (route === "scan" && method === "POST") {
       assert(
         (await config()).apiKey,
@@ -515,10 +552,16 @@ async function handler(req: NextRequest) {
       );
       const image = await sanitizeImage(input.image);
       const started = Date.now();
-      const detection = await analyze(image.buffer, input.mode);
+      const detection = await analyze(image.buffer, input.mode, { signal: req.signal });
+      assert(!req.signal.aborted, 499, "Photo analysis cancelled.");
       await cleanup();
+      assert(!req.signal.aborted, 499, "Photo analysis cancelled.");
       const mediaId = uid();
       await saveMedia(mediaId, image.buffer, true);
+      if (req.signal.aborted) {
+        await removeMedia(mediaId);
+        throw new HttpError(499, "Photo analysis cancelled.");
+      }
       const scan: Scan = {
         id: uid(),
         sessionId: s.id,

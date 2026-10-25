@@ -1,0 +1,677 @@
+{
+  "id": "waste-yolo26n-v1",
+  "url": "/models/vision/waste-yolo26n-v1-3e6cd2729403.onnx",
+  "bytes": 9810411,
+  "sha256": "3e6cd2729403e359c640ff152d65ca9c1db92a2c8c9f91e1d6a22dea43403a7b",
+  "size": 512,
+  "decoder": "yolo-raw",
+  "input": "images",
+  "outputs": {
+    "output0": [
+      1,
+      70,
+      5376
+    ]
+  },
+  "classNames": [
+    "aluminium_foil",
+    "battery",
+    "aluminium_blister_pack",
+    "carded_blister_pack",
+    "other_plastic_bottle",
+    "clear_plastic_bottle",
+    "glass_bottle",
+    "plastic_bottle_cap",
+    "metal_bottle_cap",
+    "broken_glass",
+    "food_can",
+    "aerosol",
+    "drink_can",
+    "toilet_tube",
+    "other_carton",
+    "egg_carton",
+    "drink_carton",
+    "corrugated_carton",
+    "meal_carton",
+    "pizza_box",
+    "paper_cup",
+    "disposable_plastic_cup",
+    "foam_cup",
+    "glass_cup",
+    "other_plastic_cup",
+    "food_waste",
+    "glass_jar",
+    "plastic_lid",
+    "metal_lid",
+    "other_plastic",
+    "magazine_paper",
+    "tissues",
+    "wrapping_paper",
+    "normal_paper",
+    "paper_bag",
+    "plastified_paper_bag",
+    "plastic_film",
+    "six_pack_rings",
+    "garbage_bag",
+    "other_plastic_wrapper",
+    "single_use_carrier_bag",
+    "polypropylene_bag",
+    "crisp_packet",
+    "spread_tub",
+    "tupperware",
+    "disposable_food_container",
+    "foam_food_container",
+    "other_plastic_container",
+    "plastic_glooves",
+    "plastic_utensils",
+    "pop_tab",
+    "rope_strings",
+    "scrap_metal",
+    "shoe",
+    "squeezable_tube",
+    "plastic_straw",
+    "paper_straw",
+    "styrofoam_piece",
+    "unlabeled_litter",
+    "cigarette",
+    "app_waste_bin",
+    "app_paper_towel",
+    "app_textile_item",
+    "app_mug",
+    "app_small_electronic",
+    "app_light_bulb"
+  ],
+  "classMap": [
+    {
+      "modelId": 0,
+      "name": "aluminium_foil",
+      "sourceName": "Aluminium foil",
+      "sourceCategoryId": 0,
+      "canonicalSuggestion": "foil_sheet",
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 1,
+      "name": "battery",
+      "sourceName": "Battery",
+      "sourceCategoryId": 1,
+      "canonicalSuggestion": "battery",
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 2,
+      "name": "aluminium_blister_pack",
+      "sourceName": "Aluminium blister pack",
+      "sourceCategoryId": 2,
+      "canonicalSuggestion": null,
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 3,
+      "name": "carded_blister_pack",
+      "sourceName": "Carded blister pack",
+      "sourceCategoryId": 3,
+      "canonicalSuggestion": null,
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 4,
+      "name": "other_plastic_bottle",
+      "sourceName": "Other plastic bottle",
+      "sourceCategoryId": 4,
+      "canonicalSuggestion": "bottle",
+      "requiresSubtypeReview": true,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 5,
+      "name": "clear_plastic_bottle",
+      "sourceName": "Clear plastic bottle",
+      "sourceCategoryId": 5,
+      "canonicalSuggestion": "bottle",
+      "requiresSubtypeReview": true,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 6,
+      "name": "glass_bottle",
+      "sourceName": "Glass bottle",
+      "sourceCategoryId": 6,
+      "canonicalSuggestion": "bottle",
+      "requiresSubtypeReview": true,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 7,
+      "name": "plastic_bottle_cap",
+      "sourceName": "Plastic bottle cap",
+      "sourceCategoryId": 7,
+      "canonicalSuggestion": "bottle_cap",
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 8,
+      "name": "metal_bottle_cap",
+      "sourceName": "Metal bottle cap",
+      "sourceCategoryId": 8,
+      "canonicalSuggestion": "bottle_cap",
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 9,
+      "name": "broken_glass",
+      "sourceName": "Broken glass",
+      "sourceCategoryId": 9,
+      "canonicalSuggestion": null,
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 10,
+      "name": "food_can",
+      "sourceName": "Food Can",
+      "sourceCategoryId": 10,
+      "canonicalSuggestion": "food_tin",
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 11,
+      "name": "aerosol",
+      "sourceName": "Aerosol",
+      "sourceCategoryId": 11,
+      "canonicalSuggestion": "aerosol_can",
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 12,
+      "name": "drink_can",
+      "sourceName": "Drink can",
+      "sourceCategoryId": 12,
+      "canonicalSuggestion": "beverage_can",
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 13,
+      "name": "toilet_tube",
+      "sourceName": "Toilet tube",
+      "sourceCategoryId": 13,
+      "canonicalSuggestion": "paper_tube",
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 14,
+      "name": "other_carton",
+      "sourceName": "Other carton",
+      "sourceCategoryId": 14,
+      "canonicalSuggestion": null,
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 15,
+      "name": "egg_carton",
+      "sourceName": "Egg carton",
+      "sourceCategoryId": 15,
+      "canonicalSuggestion": null,
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 16,
+      "name": "drink_carton",
+      "sourceName": "Drink carton",
+      "sourceCategoryId": 16,
+      "canonicalSuggestion": "carton",
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 17,
+      "name": "corrugated_carton",
+      "sourceName": "Corrugated carton",
+      "sourceCategoryId": 17,
+      "canonicalSuggestion": "cardboard_box",
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 18,
+      "name": "meal_carton",
+      "sourceName": "Meal carton",
+      "sourceCategoryId": 18,
+      "canonicalSuggestion": null,
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 19,
+      "name": "pizza_box",
+      "sourceName": "Pizza box",
+      "sourceCategoryId": 19,
+      "canonicalSuggestion": "cardboard_box",
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 20,
+      "name": "paper_cup",
+      "sourceName": "Paper cup",
+      "sourceCategoryId": 20,
+      "canonicalSuggestion": "cup_body",
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 21,
+      "name": "disposable_plastic_cup",
+      "sourceName": "Disposable plastic cup",
+      "sourceCategoryId": 21,
+      "canonicalSuggestion": "cup_body",
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 22,
+      "name": "foam_cup",
+      "sourceName": "Foam cup",
+      "sourceCategoryId": 22,
+      "canonicalSuggestion": "cup_body",
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 23,
+      "name": "glass_cup",
+      "sourceName": "Glass cup",
+      "sourceCategoryId": 23,
+      "canonicalSuggestion": "drinking_glass",
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 24,
+      "name": "other_plastic_cup",
+      "sourceName": "Other plastic cup",
+      "sourceCategoryId": 24,
+      "canonicalSuggestion": null,
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 25,
+      "name": "food_waste",
+      "sourceName": "Food waste",
+      "sourceCategoryId": 25,
+      "canonicalSuggestion": "food_scraps",
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 26,
+      "name": "glass_jar",
+      "sourceName": "Glass jar",
+      "sourceCategoryId": 26,
+      "canonicalSuggestion": "jar",
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 27,
+      "name": "plastic_lid",
+      "sourceName": "Plastic lid",
+      "sourceCategoryId": 27,
+      "canonicalSuggestion": null,
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 28,
+      "name": "metal_lid",
+      "sourceName": "Metal lid",
+      "sourceCategoryId": 28,
+      "canonicalSuggestion": "container_lid",
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 29,
+      "name": "other_plastic",
+      "sourceName": "Other plastic",
+      "sourceCategoryId": 29,
+      "canonicalSuggestion": null,
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 30,
+      "name": "magazine_paper",
+      "sourceName": "Magazine paper",
+      "sourceCategoryId": 30,
+      "canonicalSuggestion": "paper_sheet",
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 31,
+      "name": "tissues",
+      "sourceName": "Tissues",
+      "sourceCategoryId": 31,
+      "canonicalSuggestion": "napkin_tissue",
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 32,
+      "name": "wrapping_paper",
+      "sourceName": "Wrapping paper",
+      "sourceCategoryId": 32,
+      "canonicalSuggestion": "paper_sheet",
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 33,
+      "name": "normal_paper",
+      "sourceName": "Normal paper",
+      "sourceCategoryId": 33,
+      "canonicalSuggestion": "paper_sheet",
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 34,
+      "name": "paper_bag",
+      "sourceName": "Paper bag",
+      "sourceCategoryId": 34,
+      "canonicalSuggestion": "paper_bag",
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 35,
+      "name": "plastified_paper_bag",
+      "sourceName": "Plastified paper bag",
+      "sourceCategoryId": 35,
+      "canonicalSuggestion": "paper_bag",
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 36,
+      "name": "plastic_film",
+      "sourceName": "Plastic film",
+      "sourceCategoryId": 36,
+      "canonicalSuggestion": "flexible_film",
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 37,
+      "name": "six_pack_rings",
+      "sourceName": "Six pack rings",
+      "sourceCategoryId": 37,
+      "canonicalSuggestion": null,
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 38,
+      "name": "garbage_bag",
+      "sourceName": "Garbage bag",
+      "sourceCategoryId": 38,
+      "canonicalSuggestion": "waste_bag",
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 39,
+      "name": "other_plastic_wrapper",
+      "sourceName": "Other plastic wrapper",
+      "sourceCategoryId": 39,
+      "canonicalSuggestion": null,
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 40,
+      "name": "single_use_carrier_bag",
+      "sourceName": "Single-use carrier bag",
+      "sourceCategoryId": 40,
+      "canonicalSuggestion": "carrier_bag",
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 41,
+      "name": "polypropylene_bag",
+      "sourceName": "Polypropylene bag",
+      "sourceCategoryId": 41,
+      "canonicalSuggestion": null,
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 42,
+      "name": "crisp_packet",
+      "sourceName": "Crisp packet",
+      "sourceCategoryId": 42,
+      "canonicalSuggestion": "snack_packet",
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 43,
+      "name": "spread_tub",
+      "sourceName": "Spread tub",
+      "sourceCategoryId": 43,
+      "canonicalSuggestion": "food_container",
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 44,
+      "name": "tupperware",
+      "sourceName": "Tupperware",
+      "sourceCategoryId": 44,
+      "canonicalSuggestion": "food_container",
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 45,
+      "name": "disposable_food_container",
+      "sourceName": "Disposable food container",
+      "sourceCategoryId": 45,
+      "canonicalSuggestion": "food_container",
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 46,
+      "name": "foam_food_container",
+      "sourceName": "Foam food container",
+      "sourceCategoryId": 46,
+      "canonicalSuggestion": null,
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 47,
+      "name": "other_plastic_container",
+      "sourceName": "Other plastic container",
+      "sourceCategoryId": 47,
+      "canonicalSuggestion": null,
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 48,
+      "name": "plastic_glooves",
+      "sourceName": "Plastic glooves",
+      "sourceCategoryId": 48,
+      "canonicalSuggestion": "disposable_glove",
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 49,
+      "name": "plastic_utensils",
+      "sourceName": "Plastic utensils",
+      "sourceCategoryId": 49,
+      "canonicalSuggestion": "cutlery",
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 50,
+      "name": "pop_tab",
+      "sourceName": "Pop tab",
+      "sourceCategoryId": 50,
+      "canonicalSuggestion": null,
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 51,
+      "name": "rope_strings",
+      "sourceName": "Rope & strings",
+      "sourceCategoryId": 51,
+      "canonicalSuggestion": null,
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 52,
+      "name": "scrap_metal",
+      "sourceName": "Scrap metal",
+      "sourceCategoryId": 52,
+      "canonicalSuggestion": null,
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 53,
+      "name": "shoe",
+      "sourceName": "Shoe",
+      "sourceCategoryId": 53,
+      "canonicalSuggestion": "footwear",
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 54,
+      "name": "squeezable_tube",
+      "sourceName": "Squeezable tube",
+      "sourceCategoryId": 54,
+      "canonicalSuggestion": null,
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 55,
+      "name": "plastic_straw",
+      "sourceName": "Plastic straw",
+      "sourceCategoryId": 55,
+      "canonicalSuggestion": "straw",
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 56,
+      "name": "paper_straw",
+      "sourceName": "Paper straw",
+      "sourceCategoryId": 56,
+      "canonicalSuggestion": "straw",
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 57,
+      "name": "styrofoam_piece",
+      "sourceName": "Styrofoam piece",
+      "sourceCategoryId": 57,
+      "canonicalSuggestion": null,
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 58,
+      "name": "unlabeled_litter",
+      "sourceName": "Unlabeled litter",
+      "sourceCategoryId": 58,
+      "canonicalSuggestion": null,
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 59,
+      "name": "cigarette",
+      "sourceName": "Cigarette",
+      "sourceCategoryId": 59,
+      "canonicalSuggestion": "cigarette_butt",
+      "requiresSubtypeReview": false,
+      "labelOrigin": "TACO original published annotations"
+    },
+    {
+      "modelId": 60,
+      "name": "app_waste_bin",
+      "canonicalSuggestion": "waste_bin",
+      "labelOrigin": "Codex single AI visual review; not independent human verification"
+    },
+    {
+      "modelId": 61,
+      "name": "app_paper_towel",
+      "canonicalSuggestion": "paper_towel",
+      "labelOrigin": "Codex single AI visual review; not independent human verification"
+    },
+    {
+      "modelId": 62,
+      "name": "app_textile_item",
+      "canonicalSuggestion": "textile_item",
+      "labelOrigin": "Codex single AI visual review; not independent human verification"
+    },
+    {
+      "modelId": 63,
+      "name": "app_mug",
+      "canonicalSuggestion": "mug",
+      "labelOrigin": "Codex single AI visual review; not independent human verification"
+    },
+    {
+      "modelId": 64,
+      "name": "app_small_electronic",
+      "canonicalSuggestion": "small_electronic",
+      "labelOrigin": "Codex single AI visual review; not independent human verification"
+    },
+    {
+      "modelId": 65,
+      "name": "app_light_bulb",
+      "canonicalSuggestion": "light_bulb",
+      "labelOrigin": "Codex single AI visual review; not independent human verification"
+    }
+  ],
+  "source": "Local fine-tuning of verified YOLO26 Nano checkpoint",
+  "license": "AGPL-3.0",
+  "trainingDatasetSha256": "a9c8f59d6f501325e1c4a6a5f478a6f3265e300430523380f5583a56cb3b3853",
+  "trainingWeightsSha256": "fceb25056b16721728fe8cff230d0d0419c278ca8342abb5f5d2c81f67dca002",
+  "status": "experimental_detector",
+  "overflowClassifierTrained": false,
+  "automaticReportingEnabled": false,
+  "heldoutMetrics": {
+    "metrics/precision(B)": 0.3627054235467086,
+    "metrics/recall(B)": 0.09897573730833822,
+    "metrics/mAP50(B)": 0.04928897552884976,
+    "metrics/mAP50-95(B)": 0.03692757900067541,
+    "fitness": 0.03692757900067541
+  },
+  "productionReady": false
+}

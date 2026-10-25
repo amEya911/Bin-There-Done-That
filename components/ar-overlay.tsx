@@ -1,6 +1,6 @@
 "use client";
 import { useId } from "react";
-import { layoutCallouts, streamLabel, type Rect } from "@/lib/ar";
+import { layoutCallouts, guidanceLabel, type Rect } from "@/lib/ar";
 import type { Detection, Guidance } from "@/lib/types";
 
 export default function AROverlay({
@@ -110,7 +110,7 @@ export default function AROverlay({
           <span>
             {c.index + 1}. {c.item.label}
           </span>
-          <strong>{streamLabel(c.item.stream)}</strong>
+          <strong>{guidanceLabel(c.item)}</strong>
         </div>
       ))}
     </div>

@@ -111,6 +111,8 @@ test("anonymous management writes are denied; missing model key returns an hones
   assert.equal((await c.request("/api/bins", "POST", {})).status, 401);
   const scan = await c.request("/api/scan", "POST", {});
   assert.equal(scan.status, 503);
+  const preview = await c.request("/api/vision/preview", "POST", {});
+  assert.equal(preview.status, 503);
   assert.equal((await store.list("scan")).length, 0);
 });
 test("local setup creates hashed management credentials and verifies authentication", async () => {

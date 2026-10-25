@@ -1,5 +1,7 @@
 import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
+  devIndicators: false,
+  allowedDevOrigins: process.env.DEV_TUNNEL_HOST ? [process.env.DEV_TUNNEL_HOST] : [],
   serverExternalPackages: ["sharp", "node:sqlite"],
   poweredByHeader: false,
   outputFileTracingIncludes: { "/*": ["./supabase/certs/prod-ca-2021.crt"] },

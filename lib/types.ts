@@ -32,6 +32,7 @@ export type ComponentDetection = {
   label: string;
   item: string;
   material: string;
+  materialBasis?: "observed" | "estimated";
   certainty: "high" | "medium" | "low";
   box: Box;
 };
@@ -52,6 +53,9 @@ export type Guidance = {
   instruction: string;
   source: string;
   reviewed: string;
+  estimated?: boolean;
+  material?: string;
+  action?: "reuse";
   box?: Box;
 };
 export type Scan = {

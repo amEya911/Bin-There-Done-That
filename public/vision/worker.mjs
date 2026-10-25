@@ -87,7 +87,7 @@ self.onmessage = async ({ data }) => {
       outputs = await session.run({ [spec.input]: input });
       const inferredAt = performance.now();
       const detections = spec.decoder === "yolo-raw"
-        ? decodeYolo(outputs[session.outputNames[0]], width, height, spec.size)
+        ? decodeYolo(outputs[session.outputNames[0]], width, height, spec.size, .4, spec.classNames)
         : decodeRfDetr(outputs.dets, outputs.labels);
       send("result", { requestId: data.requestId, detections, preprocessingMs: preprocessedAt - started, inferenceMs: inferredAt - preprocessedAt, decodingMs: performance.now() - inferredAt });
     }

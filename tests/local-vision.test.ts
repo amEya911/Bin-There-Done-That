@@ -25,6 +25,17 @@ test("RF-DETR decodes sparse foreground ID90, not a presumed background slot", (
   assert.equal(COCO_NAMES.length, 80); assert.equal(COCO_IDS.length, 80);
 });
 
+test("a trained waste checkpoint uses its own class names rather than COCO IDs", () => {
+  const names = ["paper_cup", "bottle_cap", "app_waste_bin"];
+  const data = new Float32Array([256, 256, 128, 128, .05, .92, .03]);
+  const found = decodeYolo({ dims: [1, 7, 1], data }, 512, 512, 512, .4, names);
+  assert.equal(found.length, 1);
+  assert.equal(found[0].label, "bottle_cap");
+  assert.deepEqual(found[0].box, { x: .375, y: .375, width: .25, height: .25 });
+  assert.throws(() => decodeYolo({ dims: [1, 7, 1], data }, 512, 512, 512, .4, ["one", "two"]));
+  assert.throws(() => decodeYolo({ dims: [1, 7, 1], data }, 512, 512, 512, .4, ["same", "same", "third"]));
+});
+
 test("overlapping parts of different classes survive NMS; duplicate same-class boxes do not", () => {
   const box = { x: .1, y: .2, width: .3, height: .4 };
   const found = nms([{ label: "cup", score: .8, box }, { label: "cup", score: .9, box }, { label: "bottle", score: .7, box }]);

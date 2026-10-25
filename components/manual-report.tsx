@@ -18,10 +18,16 @@ const metres = (n: number) =>
 export default function ManualReport({
   scope = "public",
   initialBin,
+  initialNote = "",
+  image,
+  capturedAt,
   onSaved,
 }: {
   scope?: string;
   initialBin?: Bin | null;
+  initialNote?: string;
+  image?: string;
+  capturedAt?: string;
   onSaved: (receipt: ReportReceipt) => void;
 }) {
   const [selected, setSelected] = useState<Candidate | null>(
@@ -35,7 +41,7 @@ export default function ManualReport({
   const [searching, setSearching] = useState(false);
   const [searchError, setSearchError] = useState("");
   const [issue, setIssue] = useState("overflowing");
-  const [note, setNote] = useState("");
+  const [note, setNote] = useState(initialNote.slice(0, 1000));
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
   const [editing, setEditing] = useState(!initialBin);
@@ -79,7 +85,7 @@ export default function ManualReport({
           const nearest = data.bins[0];
           setLocationMessage(
             nearest
-            ? `Nearest to your GPS location: ${nearest.name} · ${metres(nearest.distance!)} away`
+              ? `Nearest to your GPS location: ${nearest.name} · ${metres(nearest.distance!)} away`
               : "No registered bins found. Search a street or add a missing bin.",
           );
           if (!edited.current && nearest) {
@@ -167,6 +173,7 @@ export default function ManualReport({
         issue,
         note,
         idempotencyKey: key.current,
+        ...(image ? { image, capturedAt: capturedAt || null } : {}),
       });
       onSaved(receipt);
     } catch (e) {

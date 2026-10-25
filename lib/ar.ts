@@ -1,8 +1,10 @@
 import type { Box, Guidance } from "./types";
 
 export type Rect = { left: number; top: number; width: number; height: number };
+// Preserve the main scanner's evidence window. The separate cloud preview
+// enforces a two-second live-coordinate limit and uses a matching still after it.
 export const LIVE_FRAME_MAX_AGE_MS = 12_000;
-export const OVERLAY_LIFETIME_MS = 4_000;
+export const OVERLAY_LIFETIME_MS = 1_000;
 export const SCENE_CHANGE_THRESHOLD = 22;
 
 // Full-image previews use contain; the live camera uses the matching cover crop below.
@@ -95,10 +97,34 @@ const clamp = (v: number, low: number, high: number) =>
 export const streamLabel = (stream: Guidance["stream"]) =>
   ({
     recycling: "Recycling",
-    organics: "Green Bin if available",
-    garbage: "Garbage",
-    check: "Check material",
+    organics: "Organics",
+    garbage: "Garbage / litter",
+    check: "Not identified",
   })[stream];
+
+export function guidanceLabel(item: Guidance) {
+  if (item.action === "reuse") return "Keep & reuse";
+  if (item.source === "project:straw-sorting" && item.stream === "garbage")
+    return "Litter";
+  if (
+    item.stream === "check" &&
+    /battery|lithium|medical sharp|needle|mercury/i.test(item.material || "")
+  )
+    return "Special collection";
+  if (
+    item.stream === "recycling" &&
+    /paper|cardboard|boxboard|fibre|fiber/i.test(item.material || "") &&
+    !/glass|metal|alumin|steel/i.test(item.material || "")
+  )
+    return "Paper · recycling";
+  return streamLabel(item.stream);
+}
+
+export function guidanceSourceUrl(source: string) {
+  return source === "https://www.toronto.ca/data/swms/wastewizard/data.json"
+    ? "https://www.toronto.ca/services-payments/recycling-organics-garbage/waste-wizard/"
+    : source;
+}
 
 export type Callout = Rect & {
   index: number;
