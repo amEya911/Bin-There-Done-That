@@ -20,7 +20,27 @@ After verification, make `whichbin.fyi` the production domain. If `www.whichbin.
 
 ## Updating and operating
 
-Publish updates from the linked local directory with the Vercel CLI. A GitHub connection is not required. Preview deployments are separate from production; production changes should follow a successful build and checks.
+The existing Vercel project is connected to [`amEya911/Bin-There-Done-That`](https://github.com/amEya911/Bin-There-Done-That). Its production branch is **`main`**.
+
+The publishing flow is:
+
+```text
+Push to GitHub main
+        |
+        v
+Vercel builds the app automatically
+        |
+        v
+A successful production deployment updates https://whichbin.fyi
+```
+
+Cloudflare provides DNS for the custom domain. It points visitors to Vercel and does not need its own repository connection or a second application deployment. Supabase continues to store shared data and private images independently of application deployments.
+
+After pushing, check the project's **Deployments** page in Vercel. Wait for the matching commit to show **Ready** before expecting its changes on the public site. A failed build leaves the previous successful deployment serving the domain. Use the build logs to diagnose failures.
+
+Vercel's GitHub account connection and GitHub app access must remain enabled for this repository. The production branch must remain `main`. The Vercel CLI remains available for explicit manual deployments, but a separate CLI publish is no longer needed for ordinary pushes to `main`.
+
+Keep Gemini, Supabase and database credentials in Vercel's private environment settings; never add them to GitHub. Preview deployments are separate from production and retain their existing access protection. Run relevant checks before pushing application changes.
 
 The dashboard and report endpoints use the existing shared Supabase data. Public report counters exclude resolved and withdrawn observations as before. No live database migration or reimport is needed for this hosting move.
 
