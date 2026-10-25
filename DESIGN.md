@@ -2,33 +2,33 @@
 name: "Bin There Done That"
 description: "Quiet Toronto cartography and a neutral camera workspace that follow the system theme."
 colors:
-  bg: "#fafaf8"
+  bg: "#f5f1e8"
   paper: "#ffffff"
-  ink: "#252820"
-  muted: "#656c5f"
-  line: "#dfe3da"
-  surface-alt: "#f0f2ed"
-  brand: "#c65330"
+  ink: "#17231e"
+  muted: "#47524c"
+  line: "#ddd6c6"
+  surface-alt: "#ece7da"
+  brand: "#1f5e3b"
   action: "#c74b25"
   action-hover: "#ad3e1c"
   action-ink: "#ffffff"
-  link: "#ae4322"
+  link: "#165788"
   orange-soft: "#f9ece6"
-  green-soft: "#eef2e9"
-  scrim: "#10140f66"
-  bg-dark: "#141614"
-  paper-dark: "#1d211c"
-  ink-dark: "#edf0e8"
-  muted-dark: "#afb8a7"
-  line-dark: "#3a4235"
-  surface-alt-dark: "#252b22"
-  brand-dark: "#f19168"
+  green-soft: "#e5ede1"
+  scrim: "#00261f66"
+  bg-dark: "#0e1a16"
+  paper-dark: "#15241f"
+  ink-dark: "#eaf1ec"
+  muted-dark: "#c2cfc7"
+  line-dark: "#2d4038"
+  surface-alt-dark: "#1c2e27"
+  brand-dark: "#a3c7a8"
   action-dark: "#f19168"
   action-hover-dark: "#ffac86"
   action-ink-dark: "#2a1c13"
-  link-dark: "#f5a17d"
+  link-dark: "#8cc0ec"
   orange-soft-dark: "#33281f"
-  green-soft-dark: "#263021"
+  green-soft-dark: "#1d3326"
   scrim-dark: "#00000099"
   camera-video: "#101310"
   camera-hint: "#101310cc"
@@ -198,7 +198,7 @@ typography:
     fontWeight: 400
   wordmark:
     fontFamily: "\"Space Grotesk Variable\", Arial, sans-serif"
-    fontSize: "17px"
+    fontSize: "20px"
     fontWeight: 650
     lineHeight: 1.05
     letterSpacing: "-0.035em"
@@ -338,6 +338,12 @@ components:
 ---
 
 # Design System: Bin There Done That
+
+## Shared brand default
+
+The approved forest dashboard identity is the default on every page. `app/theme.css` owns the single light/dark palette; no page-scoped or classic theme remains. Light uses warm cream `#f5f1e8`, forest branding `#1f5e3b` and orange actions `#c74b25`; dark uses `#0e1a16`, sage branding `#a3c7a8` and peach actions `#f19168`. Both follow the system preference. The framed bin/check icon and the wordmark “Bin There, Done That.” are the only brand, including bin details, reporting, add-bin, receipts, About, management, error states and favicon. Wordmark sizes are 20px desktop, 17px mobile and 15px compact mobile. The shared responsive header applies across Shell pages; dashboard-only counts and time filters stay on the dashboard. All maps use the same forest palette.
+
+`/setup`, `/scan/test`, `/manage/demo`, all `/demo/...` pages and all `/api/demo/*` endpoints are retired. Do not restore their old styles, navigation or controls. The current `Brand`, `Shell`, root metadata and theme tokens take precedence over older surface descriptions below.
 
 ## Overview
 

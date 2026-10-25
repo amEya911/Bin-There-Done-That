@@ -7,7 +7,6 @@ import {
   remove,
   uid,
   hash,
-  secret,
   config,
   cloudEnabled,
   withRequestCache,
@@ -49,7 +48,7 @@ import { providerHealth } from "@/lib/provider-health";
 import { guidance, ITEM_OPTIONS } from "@/lib/rules";
 import { contains, validPolygon } from "@/lib/geo";
 import { isCaseOpen } from "@/lib/cases";
-import type { Area, Bin, Case, Demo, Report, Scan } from "@/lib/types";
+import type { Area, Bin, Case, Report, Scan } from "@/lib/types";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -110,6 +109,7 @@ async function handler(req: NextRequest) {
         .filter(Boolean),
       route = parts.join("/"),
       method = req.method;
+    if (parts[0] === "demo") throw new HttpError(404, "Endpoint not found.");
     const json = (data: unknown, status = 200) =>
       attachCookie(
         NextResponse.json(data, {
@@ -926,79 +926,6 @@ async function handler(req: NextRequest) {
             .map(publicReport),
         ),
       });
-    }
-    if (route === "demo/sessions" && method === "POST") {
-      admin(s);
-      const input = z
-        .object({ title: z.string().min(3).max(100), binId: z.string() })
-        .parse(await body(req));
-      const bin = await binById(input.binId);
-      assert(
-        bin && bin.status === "Existing",
-        400,
-        "Choose an active Toronto bin.",
-      );
-      const writeKey = secret();
-      const demo: Demo = {
-        ...input,
-        id: uid(),
-        createdAt: new Date().toISOString(),
-        expiresAt: new Date(Date.now() + 24 * 3600000).toISOString(),
-        writeHash: hash(writeKey),
-      };
-      await put("demo", demo);
-      return json(
-        {
-          id: demo.id,
-          title: demo.title,
-          bin,
-          writeKey,
-          expiresAt: demo.expiresAt,
-        },
-        201,
-      );
-    }
-    if (
-      parts[0] === "demo" &&
-      parts[1] === "sessions" &&
-      parts.length === 3 &&
-      method === "GET"
-    ) {
-      const d = await get<Demo>("demo", parts[2]);
-      assert(
-        d && Date.parse(d.expiresAt) > Date.now(),
-        404,
-        "Demo session expired.",
-      );
-      return json({
-        id: d.id,
-        title: d.title,
-        bin: await binById(d.binId),
-        expiresAt: d.expiresAt,
-      });
-    }
-    if (
-      parts[0] === "demo" &&
-      parts[1] === "sessions" &&
-      parts[3] === "join" &&
-      method === "POST"
-    ) {
-      const d = await get<Demo>("demo", parts[2]);
-      const input = z
-        .object({ key: z.string().max(100) })
-        .parse(await body(req));
-      assert(
-        d &&
-          Date.parse(d.expiresAt) > Date.now() &&
-          equal(hash(input.key), d.writeHash),
-        403,
-        "This private demo link is invalid or expired.",
-      );
-      await put("session", {
-        ...s,
-        demoScopes: [...new Set([...s.demoScopes, `demo:${d.id}`])],
-      });
-      return json({ ok: true });
     }
     if (parts[0] === "media" && parts.length === 2 && method === "GET") {
       assert(/^[0-9a-f-]{36}$/.test(parts[1]), 404, "Image not found.");

@@ -16,7 +16,7 @@ Connect camera-based waste sorting with location-based reporting and a Toronto b
 
 ## Operating Context
 
-Mobile entry opens the scanner; desktop entry opens the dashboard. The hackathon demonstration may point a phone at a projected bin photograph, using an isolated demo session rather than creating public incidents.
+Mobile entry opens the scanner; desktop entry opens the dashboard. The website now uses the public camera, map and reporting flow; separate demo pages and demo session APIs have been retired.
 
 ## Capabilities and Constraints
 
@@ -43,3 +43,7 @@ The live video fills its rounded frame with a centered cover crop. Analysis fram
 ## Manual reporting and resolution
 
 Camera manual reporting suggests the nearest registered bin with a distance and editable street/City ID search. Location failure must never block street search. Bin details show location, side, ward, inventory status, current issues and history, and offer the same report form with that bin selected. Community members can explicitly confirm that the displayed open cases are resolved. This clears active map/heatmap highlights and affected-bin/open-case counts without deleting historical observations. New reports after resolution open a new episode. Reporters can withdraw their own mistaken report on the details page; other people's reports remain. Community resolution is labeled as such and does not claim City verification.
+
+## Shared brand and retired routes
+
+Use the approved forest/cream dashboard theme and framed bin/check logo by default across every page, including errors, details, reporting, receipts and administration. The wordmark is “Bin There, Done That.” with the comma. System light/dark preference and browser safe areas share the global root tokens; the classic icon and page-specific theme switch have been removed. `/setup`, `/scan/test`, `/manage/demo`, `/demo/...` and `/api/demo/*` are retired. Administrator bin changes remain protected, and no public bin-deletion control is introduced by this cleanup.

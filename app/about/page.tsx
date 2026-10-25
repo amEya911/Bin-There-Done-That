@@ -92,19 +92,6 @@ export default function About() {
           OpenFreeMap · OpenMapTiles · OpenStreetMap contributors{" "}
           <ArrowUpRight size={14} />
         </a>
-        <a
-          href="https://commons.wikimedia.org/wiki/File:Overflowing_Hamburg_street_garbage_bin.jpg"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Demo photo · Alexander Marks, Hamburg, 2005 · Public domain{" "}
-          <ArrowUpRight size={14} />
-        </a>
-        <p className="small muted">
-          The demo uses a historical photograph as a camera-recognition target,
-          with an explicitly selected Toronto asset. It is isolated from the
-          public observation feed.
-        </p>
       </div>
     </Shell>
   );

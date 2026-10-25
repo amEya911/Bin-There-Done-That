@@ -2,37 +2,34 @@
 
 All JSON mutations use same-origin requests. The server owns an HttpOnly anonymous session. Management mutations additionally require a signed-in operator. Responses use `{ "error": "…" }` with a non-2xx status on failure. Keys, raw phone GPS, private notes, evidence and recovery hashes are not public.
 
-Use `?scope=public` (default) or `?scope=demo:ID`. The server validates demo existence/expiry and requires a private writer grant for demo mutations. Changing a query parameter does not grant writer access.
+The website uses `?scope=public` by default. Demo pages and all `/api/demo/*` endpoints have been retired and return 404. Internal scope checks remain for historical records and isolated tests; a query parameter never grants access.
 
-| Method     | Endpoint                              | Behavior                                                                                         |
-| ---------- | ------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| GET        | `/api/status`                         | Connection flags and current role; no credentials                                                |
-| POST       | `/api/settings`                       | Localhost initial setup; later requires management access                                        |
-| POST       | `/api/settings/test`                  | Real generation/access check; management only                                                    |
-| POST       | `/api/auth/login`, `/api/auth/logout` | Local management session                                                                         |
-| GET        | `/api/rules`                          | Reviewed rule subset                                                                             |
-| GET        | `/api/bins?q=…&limit=…`               | Search, inventory totals and permitted records                                                   |
-| GET        | `/api/bins/nearby?lng=…&lat=…`        | Active approved candidates within 500 m                                                          |
-| GET        | `/api/bins/:id`                       | Public-safe bin history                                                                          |
-| POST       | `/api/bins/submit`                    | Resident photo + fresh GPS registration; designated area, hard 15 m duplicate block; idempotent      |
-| POST       | `/api/bins`                           | Operator registration; area and duplicate checks                                                 |
-| PATCH      | `/api/bins/:id`                       | Operator approval/rejection with review note                                                     |
-| GET / POST | `/api/areas`                          | Read permitted areas / operator creates simple closed polygon                                    |
-| POST       | `/api/scan`                           | Selected image → validated vision result, sourced guidance, short-lived scan ID                  |
-| POST       | `/api/reports`                        | Transactional observation and case creation with idempotency                                     |
-| GET        | `/api/reports?offset=0&limit=30`      | Paginated scoped accepted observations; `nextOffset`                                             |
-| POST       | `/api/reports/:id/withdraw`           | Original session, recovery secret or operator                                                    |
-| POST       | `/api/receipts/:id`                   | Original session, recovery secret or operator; private receipt                                   |
+| Method     | Endpoint                              | Behavior                                                                                                                           |
+| ---------- | ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| GET        | `/api/status`                         | Connection flags and current role; no credentials                                                                                  |
+| POST       | `/api/settings`                       | Localhost initial setup; later requires management access                                                                          |
+| POST       | `/api/settings/test`                  | Real generation/access check; management only                                                                                      |
+| POST       | `/api/auth/login`, `/api/auth/logout` | Local management session                                                                                                           |
+| GET        | `/api/rules`                          | Reviewed rule subset                                                                                                               |
+| GET        | `/api/bins?q=…&limit=…`               | Search, inventory totals and permitted records                                                                                     |
+| GET        | `/api/bins/nearby?lng=…&lat=…`        | Active approved candidates within 500 m                                                                                            |
+| GET        | `/api/bins/:id`                       | Public-safe bin history                                                                                                            |
+| POST       | `/api/bins/submit`                    | Resident photo + fresh GPS registration; designated area, hard 15 m duplicate block; idempotent                                    |
+| POST       | `/api/bins`                           | Operator registration; area and duplicate checks                                                                                   |
+| PATCH      | `/api/bins/:id`                       | Operator approval/rejection with review note                                                                                       |
+| GET / POST | `/api/areas`                          | Read permitted areas / operator creates simple closed polygon                                                                      |
+| POST       | `/api/scan`                           | Selected image → validated vision result, sourced guidance, short-lived scan ID                                                    |
+| POST       | `/api/reports`                        | Transactional observation and case creation with idempotency                                                                       |
+| GET        | `/api/reports?offset=0&limit=30`      | Paginated scoped accepted observations; `nextOffset`                                                                               |
+| POST       | `/api/reports/:id/withdraw`           | Original session, recovery secret or operator                                                                                      |
+| POST       | `/api/receipts/:id`                   | Original session, recovery secret or operator; private receipt                                                                     |
 | GET        | `/api/dashboard?window=24h`           | Open counts, latest 200 open reports, accepted-history count and aggregate map points across the complete window; also `7d`, `all` |
-| GET        | `/api/cases/:id`                      | Operator evidence, notes and timeline                                                            |
-| POST       | `/api/cases/:id/actions`              | Review, ready, assign, associate, complete, recheck, reopen                                      |
-| POST       | `/api/cases/:id/merge`                | Operator merges same-bin case after an explicit reason                                           |
-| POST       | `/api/cases/:id/split`                | Operator separates a selected observation with a reason                                          |
-| GET        | `/api/cases/:id/handoff`              | Prepared packet; not an external submission                                                      |
-| GET        | `/api/media/:id`                      | Private, expiring sanitized image; operator or original reporter only                            |
-| POST       | `/api/demo/sessions`                  | Presenter creates selected-bin demo and receives write secret once                               |
-| GET        | `/api/demo/sessions/:id`              | Unlisted, expiring demo context, no write secret                                                 |
-| POST       | `/api/demo/sessions/:id/join`         | Validate secret and grant this session demo writes                                               |
+| GET        | `/api/cases/:id`                      | Operator evidence, notes and timeline                                                                                              |
+| POST       | `/api/cases/:id/actions`              | Review, ready, assign, associate, complete, recheck, reopen                                                                        |
+| POST       | `/api/cases/:id/merge`                | Operator merges same-bin case after an explicit reason                                                                             |
+| POST       | `/api/cases/:id/split`                | Operator separates a selected observation with a reason                                                                            |
+| GET        | `/api/cases/:id/handoff`              | Prepared packet; not an external submission                                                                                        |
+| GET        | `/api/media/:id`                      | Private, expiring sanitized image; operator or original reporter only                                                              |
 
 ## Camera request
 

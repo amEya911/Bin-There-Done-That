@@ -8,11 +8,8 @@ export default async function Page({
   searchParams: Promise<{ scope?: string }>;
 }) {
   const [{ section }, { scope }] = await Promise.all([params, searchParams]);
-  if (!["bins", "cases", "demo"].includes(section)) notFound();
+  if (!["bins", "cases"].includes(section)) notFound();
   return (
-    <Manage
-      section={section as "bins" | "cases" | "demo"}
-      scope={scope || "public"}
-    />
+    <Manage section={section as "bins" | "cases"} scope={scope || "public"} />
   );
 }

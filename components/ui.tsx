@@ -2,44 +2,30 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import styles from "./shell.module.css";
-import theme from "./brand-theme.module.css";
 import {
-  ArrowUpRight,
   Camera,
   LayoutDashboard,
   MapPin,
   Info,
   ArrowRight,
-  Trash2,
   ScanLine,
   Radio,
   ChevronDown,
   Check,
   Clock,
 } from "lucide-react";
-export function Brand({
-  light = false,
-  href = "/dashboard",
-  variant = "classic",
-}: {
-  light?: boolean;
-  href?: string;
-  variant?: "classic" | "forest";
-}) {
-  const forest = variant === "forest";
+export function Brand({ href = "/dashboard" }: { href?: string }) {
   return (
     <Link
       href={href}
-      className={`brand ${styles.brand} ${forest ? styles.forestBrand : ""} ${light ? `light ${styles.light}` : ""}`}
-      aria-label={
-        forest ? "Bin There, Done That home" : "Bin There Done That home"
-      }
+      className={`brand ${styles.brand}`}
+      aria-label="Bin There, Done That home"
     >
       <span className={styles.symbol} aria-hidden="true">
-        {forest ? <ForestLogo /> : <Trash2 size={27} strokeWidth={1.8} />}
+        <BrandLogo />
       </span>
       <span className={styles.wordmark}>
-        <span>Bin There{forest ? "," : ""}</span>{" "}
+        <span>Bin There,</span>{" "}
         <span>
           Done That<span className={styles.period}>.</span>
         </span>
@@ -47,9 +33,15 @@ export function Brand({
     </Link>
   );
 }
-function ForestLogo() {
+function BrandLogo({ size = 54 }: { size?: number }) {
   return (
-    <svg width="54" height="54" viewBox="0 0 100 100" fill="none">
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 100 100"
+      fill="none"
+      aria-hidden="true"
+    >
       <path
         d="M6 28V14Q6 6 14 6H28M72 6H86Q94 6 94 14V28M94 72V86Q94 94 86 94H72M28 94H14Q6 94 6 86V72"
         stroke="var(--logo-frame)"
@@ -111,11 +103,9 @@ export function Shell({
     { href: "/manage/cases", name: "Review cases", icon: Radio },
   ];
   return (
-    <div
-      className={`${styles.shell} ${dashboard ? `${styles.dashboard} ${theme.theme}` : ""}`}
-    >
+    <div className={`${styles.shell} ${dashboard ? styles.dashboard : ""}`}>
       <header className={styles.header}>
-        <Brand variant={dashboard ? "forest" : "classic"} />
+        <Brand />
         <nav className={styles.navigation} aria-label="Main navigation">
           {dashboard && (
             <span
@@ -134,11 +124,7 @@ export function Shell({
           )}
           <Link
             href="/dashboard"
-            className={
-              path === "/dashboard" || path.startsWith("/demo/")
-                ? styles.current
-                : ""
-            }
+            className={path === "/dashboard" ? styles.current : ""}
             aria-current={path === "/dashboard" ? "page" : undefined}
           >
             Overview
@@ -223,43 +209,7 @@ export function ErrorNote({ children }: { children: React.ReactNode }) {
   );
 }
 export function EmptyBin({ small = false }: { small?: boolean }) {
-  return (
-    <svg
-      width={small ? 80 : 150}
-      height={small ? 90 : 150}
-      viewBox="0 0 160 160"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M47 49L54 136H111L119 49"
-        fill="#D7E7BD"
-        stroke="#20251C"
-        strokeWidth="3"
-      />
-      <path
-        d="M42 48H122M63 46V34H100V46M69 67L73 119M95 67L91 119"
-        stroke="#20251C"
-        strokeWidth="3"
-        strokeLinecap="round"
-      />
-      <path
-        d="M118 18L122 31M131 34L142 29M39 82L25 87M37 94L30 103"
-        stroke="#FD643B"
-        strokeWidth="3"
-        strokeLinecap="round"
-      />
-      <path
-        d="M67 87L78 98L99 75"
-        stroke="#20251C"
-        strokeWidth="4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <circle cx="52" cy="142" r="5" fill="#20251C" />
-      <circle cx="110" cy="142" r="5" fill="#20251C" />
-    </svg>
-  );
+  return <BrandLogo size={small ? 80 : 150} />;
 }
 export function PageHeading({
   eyebrow,

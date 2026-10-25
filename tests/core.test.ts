@@ -385,43 +385,47 @@ test("negative, replayed, stale, shifted and foreign-scope camera evidence canno
     ]),
   );
 });
-test("demo sessions require a private write grant and never affect public counts", async () => {
+test("retired demo APIs return 404 and cannot create sessions or grant access", async () => {
   const before = (await service.summary("public", "all")).totalReports;
-  const d = await manager.request("/api/demo/sessions", "POST", {
-    title: "Test projector session",
-    binId: inventory()[0].id,
-  });
-  assert.equal(d.status, 201);
-  const scope = "demo:" + d.data.id;
+  const demoCount = (await store.list("demo")).length;
   const c = new Client();
-  const input = {
-    binId,
-    location: [0, 0],
-    matchMethod: "demo",
-    scanIds: [],
-    idempotencyKey: "demo-observation-001",
-    source: "manual",
-    issue: "overflowing",
-    note: "",
-  };
-  assert.equal(
-    (await c.request("/api/reports?scope=" + scope, "POST", input)).status,
-    403,
-  );
-  assert.equal(
-    (
-      await c.request(`/api/demo/sessions/${d.data.id}/join`, "POST", {
-        key: d.data.writeKey,
-      })
-    ).status,
-    200,
-  );
-  const report = await c.request("/api/reports?scope=" + scope, "POST", input);
-  assert.equal(report.status, 201);
-  assert.equal(report.data.report.binId, inventory()[0].id);
-  assert.equal((await service.summary(scope, "all")).totalReports, 1);
+  for (const client of [c, manager]) {
+    const result = await client.request("/api/demo/sessions", "POST", {
+      title: "Retired projector session",
+      binId: inventory()[0].id,
+    });
+    assert.equal(result.status, 404);
+  }
+  assert.equal((await store.list("demo")).length, demoCount);
+  const id = "retired-demo-fixture";
+  await store.put("demo", {
+    id,
+    title: "Previously created demo",
+    binId: inventory()[0].id,
+    writeHash: store.hash("retired-demo-write-key"),
+    createdAt: new Date().toISOString(),
+    expiresAt: new Date(Date.now() + 86400000).toISOString(),
+  });
+  try {
+    for (const client of [c, manager]) {
+      assert.equal(
+        (await client.request(`/api/demo/sessions/${id}`)).status,
+        404,
+      );
+      assert.equal(
+        (
+          await client.request(`/api/demo/sessions/${id}/join`, "POST", {
+            key: "retired-demo-write-key",
+          })
+        ).status,
+        404,
+      );
+    }
+    assert.deepEqual((await c.session()).demoScopes, []);
+  } finally {
+    await store.remove("demo", id);
+  }
   assert.equal((await service.summary("public", "all")).totalReports, before);
-  assert.equal((await c.request("/api/bins?scope=" + scope)).data.manual, 0);
 });
 test("model normalization abstains on low certainty and sorting guidance does not invent unknown materials", () => {
   const d = normalizeDetection({

@@ -12,7 +12,6 @@ import type { Detection, Guidance } from "@/lib/types";
 import ManualReport, { type ReportReceipt } from "./manual-report";
 import AROverlay from "./ar-overlay";
 import styles from "./camera-scanner.module.css";
-import theme from "./brand-theme.module.css";
 
 type CapturedPhoto = {
   src: string;
@@ -383,9 +382,9 @@ export default function CameraScanner({
     captured && result?.detection.scene === "bin" && result.detection.overflow;
 
   return (
-    <div className={`${styles.page} ${theme.theme}`}>
+    <div className={styles.page}>
       <header className={styles.header}>
-        <Brand variant="forest" />
+        <Brand />
       </header>
       <main className={styles.main}>
         <div className={styles.heading}>

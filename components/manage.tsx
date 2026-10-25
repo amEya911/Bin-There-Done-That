@@ -4,18 +4,14 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import {
   ArrowRight,
-  ArrowUpRight,
   Check,
   MapPin,
   Plus,
   Lock,
   LogOut,
-  Copy,
   Download,
-  Camera,
   Square,
   ShieldCheck,
-  RefreshCw,
   ExternalLink,
   X,
 } from "lucide-react";
@@ -36,7 +32,7 @@ export default function Manage({
   section = "bins",
   scope = "public",
 }: {
-  section?: "bins" | "cases" | "demo" | "setup";
+  section?: "bins" | "cases";
   scope?: string;
 }) {
   const [status, setStatus] = useState<any>(null),
@@ -68,23 +64,13 @@ export default function Manage({
   const titles = {
     bins: [
       "FILL IN THE GAPS",
-      "Every bin belongs on the map.",
-      "Register physical bins within an approved area. Review them before they appear publicly.",
+      "Bin management",
+      "Review community additions and maintain the bin inventory.",
     ],
     cases: [
       "FOLLOW THROUGH",
       "From noticed to rechecked.",
       "Review evidence, assign work and keep an honest record of what happened.",
-    ],
-    demo: [
-      "A REAL CAMERA. A SHARED MOMENT.",
-      "Make the connection visible.",
-      "Create a private demo session. Fresh camera observations update its own dashboard.",
-    ],
-    setup: [
-      "THE LITTLE DETAILS",
-      "Connect your corner of the city.",
-      "Set up Gemini and management access on the computer running Bin There Done That.",
     ],
   };
   const t = titles[section];
@@ -100,7 +86,7 @@ export default function Manage({
     <Shell>
       <div className="topbar">
         <span>
-          <span className="status-dot" /> LOCAL WORKSPACE{" "}
+          <span className="status-dot" /> ADMINISTRATION{" "}
           <span className="slash">/</span> MANAGEMENT
         </span>
         {status?.isAdmin && (
@@ -126,30 +112,23 @@ export default function Manage({
       )}
       {!status ? (
         <div className="panel">Opening the workspace…</div>
-      ) : section === "setup" ? (
-        <Setup
-          status={status}
-          onUpdate={refreshStatus}
-          setError={setError}
-          setMessage={setMessage}
-        />
       ) : !status.adminConfigured ? (
         <div className="panel auth-panel">
           <ShieldCheck size={36} />
-          <h2>A little setup first.</h2>
+          <h2>Administrator access only</h2>
           <p>
-            Choose a management password on localhost before managing bins,
-            reviewing cases or creating demos.
+            Bin management is restricted to the site owner. Public access is
+            disabled.
           </p>
-          <Link href="/setup" className="button primary">
-            Open setup <ArrowRight size={16} />
+          <Link href="/dashboard" className="button primary">
+            Back to the map <ArrowRight size={16} />
           </Link>
         </div>
       ) : !status.isAdmin ? (
         <form className="panel auth-panel" onSubmit={login}>
           <Lock size={32} />
           <h2>Management access</h2>
-          <p>Sign in with the password configured on this computer.</p>
+          <p>Sign in with the site owner’s administrator password.</p>
           <label>
             Password
             <input
@@ -167,218 +146,14 @@ export default function Manage({
         </form>
       ) : section === "bins" ? (
         <BinManagement setError={setError} setMessage={setMessage} />
-      ) : section === "cases" ? (
+      ) : (
         <CaseManagement
           setError={setError}
           setMessage={setMessage}
           scope={scope}
         />
-      ) : (
-        <DemoManagement setError={setError} />
       )}
     </Shell>
-  );
-}
-function Setup({
-  status,
-  onUpdate,
-  setError,
-  setMessage,
-}: {
-  status: any;
-  onUpdate: () => Promise<void>;
-  setError: (s: string) => void;
-  setMessage: (s: string) => void;
-}) {
-  const [apiKey, setApiKey] = useState(""),
-    [model, setModel] = useState(status.model),
-    [password, setPassword] = useState(""),
-    [loginPassword, setLoginPassword] = useState(""),
-    [busy, setBusy] = useState(false);
-  async function save(e: React.FormEvent) {
-    e.preventDefault();
-    setBusy(true);
-    setError("");
-    try {
-      await post("/api/settings", {
-        apiKey,
-        model,
-        password: password || undefined,
-      });
-      setApiKey("");
-      setPassword("");
-      setMessage(
-        "Connection settings saved locally. Test the connection before scanning.",
-      );
-      await onUpdate();
-    } catch (e) {
-      setError((e as Error).message);
-    } finally {
-      setBusy(false);
-    }
-  }
-  if (status.adminConfigured && !status.isAdmin)
-    return (
-      <form
-        className="panel auth-panel"
-        onSubmit={async (e) => {
-          e.preventDefault();
-          try {
-            await post("/api/auth/login", { password: loginPassword });
-            await onUpdate();
-          } catch (e) {
-            setError((e as Error).message);
-          }
-        }}
-      >
-        <Lock size={30} />
-        <h2>Sign in to change connections</h2>
-        <label>
-          Password
-          <input
-            type="password"
-            value={loginPassword}
-            autoComplete="current-password"
-            onChange={(e) => setLoginPassword(e.target.value)}
-            required
-          />
-        </label>
-        <button className="button primary">
-          Sign in <ArrowRight size={16} />
-        </button>
-      </form>
-    );
-  return (
-    <div className="setup-grid">
-      <form className="panel" onSubmit={save}>
-        <span className="section-number">01 / CAMERA INTELLIGENCE</span>
-        <h2>A real look at real things.</h2>
-        <p>
-          Gemini analyzes selected images. Your key stays on this server, in
-          ignored local storage, and is never returned to the browser.
-        </p>
-        <div className="connection-status">
-          <span
-            className={`status-dot ${status.aiConnected ? "" : "muted-dot"}`}
-          />
-          {status.aiConnected
-            ? "Gemini key saved · not yet verified here"
-            : "Gemini is not connected"}
-        </div>
-        <label>
-          Gemini API key
-          <input
-            type="password"
-            autoComplete="off"
-            placeholder={
-              status.aiConnected
-                ? "Leave blank to keep the saved key"
-                : "Enter your key from Google AI Studio"
-            }
-            value={apiKey}
-            onChange={(e) => setApiKey(e.target.value)}
-          />
-          <small>
-            <a
-              href="https://aistudio.google.com/api-keys"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Get a key in Google AI Studio <ArrowUpRight size={12} />
-            </a>
-          </small>
-        </label>
-        <label>
-          Vision model
-          <input
-            value={model}
-            onChange={(e) => setModel(e.target.value)}
-            required
-          />
-        </label>
-        <label>
-          {status.adminConfigured
-            ? "New management password (optional)"
-            : "Choose a management password"}
-          <input
-            type="password"
-            minLength={12}
-            autoComplete="new-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required={!status.adminConfigured}
-          />
-          <small>
-            At least 12 characters. Used for bin approval, case actions and demo
-            setup.
-          </small>
-        </label>
-        <button className="button primary" disabled={busy}>
-          {busy ? "Saving…" : "Save local settings"}
-          <ArrowRight size={16} />
-        </button>
-        {status.aiConnected && (
-          <button
-            type="button"
-            className="button outlined"
-            onClick={async () => {
-              setError("");
-              try {
-                const d = await post("/api/settings/test", {});
-                setMessage(
-                  `Connection verified: ${d.model}. Run a real camera scan next.`,
-                );
-              } catch (e) {
-                setError((e as Error).message);
-              }
-            }}
-          >
-            <RefreshCw size={15} />
-            Test connection
-          </button>
-        )}
-      </form>
-      <div className="setup-aside">
-        <div className="panel">
-          <span className="section-number">02 / DURABLE LOCAL DATA</span>
-          <h3>Your project, on this computer.</h3>
-          <p>
-            The working app uses SQLite for reports, cases, areas and settings.
-            Data survives restarts in the ignored <code>.data/</code> directory.
-          </p>
-          <div className="mini-fact">
-            <Check size={16} />
-            Toronto inventory imported
-          </div>
-          <div className="mini-fact">
-            <Check size={16} />
-            Local persistence ready
-          </div>
-          <div className="mini-fact">
-            <Check size={16} />
-            Seven-day evidence retention
-          </div>
-          <p className="small muted">
-            Run <code>npm run db:backup</code> before moving the project. This
-            version requires a server with a persistent disk; it is not ready
-            for ephemeral serverless hosting.
-          </p>
-        </div>
-        <div className="panel warm-panel">
-          <span className="section-number">03 / ON YOUR PHONE</span>
-          <h3>The camera needs HTTPS.</h3>
-          <p>
-            Localhost works on this computer. A phone needs a trusted HTTPS
-            address that reaches this same server. Use that address when
-            creating a demo QR code.
-          </p>
-          <p className="small">
-            Set <code>APP_ORIGIN</code> in <code>.env.local</code> to that HTTPS
-            origin and restart. No site has been published automatically.
-          </p>
-        </div>
-      </div>
-    </div>
   );
 }
 function BinManagement({
@@ -1157,196 +932,6 @@ function CaseManagement({
           </div>
         </div>
       )}
-    </div>
-  );
-}
-function DemoManagement({ setError }: { setError: (s: string) => void }) {
-  const [query, setQuery] = useState(""),
-    [bins, setBins] = useState<Bin[]>([]),
-    [bin, setBin] = useState<Bin | null>(null),
-    [title, setTitle] = useState("Bin There Done That · live camera demo"),
-    [origin, setOrigin] = useState(""),
-    [demo, setDemo] = useState<any>(null),
-    [qr, setQr] = useState("");
-  useEffect(() => {
-    setOrigin(window.location.origin);
-  }, []);
-  useEffect(() => {
-    if (query.length < 2) return;
-    const t = setTimeout(
-      () =>
-        api("/api/bins?q=" + encodeURIComponent(query) + "&limit=6")
-          .then((d) =>
-            setBins(d.bins.filter((b: Bin) => b.status === "Existing")),
-          )
-          .catch((e) => setError(e.message)),
-      250,
-    );
-    return () => clearTimeout(t);
-  }, [query]);
-  async function create(e: React.FormEvent) {
-    e.preventDefault();
-    try {
-      if (!bin)
-        throw new Error(
-          "Choose the Toronto bin represented in this demonstration.",
-        );
-      const url = new URL(origin);
-      if (!["http:", "https:"].includes(url.protocol))
-        throw new Error("Use a valid HTTP or HTTPS app address.");
-      const d = await post("/api/demo/sessions", { title, binId: bin.id });
-      const link = `${url.origin}/demo/${d.id}/scan#key=${d.writeKey}`;
-      const QR = (await import("qrcode")).default;
-      setQr(
-        await QR.toDataURL(link, {
-          width: 260,
-          margin: 2,
-          color: { dark: "#20251c", light: "#ffffff" },
-        }),
-      );
-      setDemo({ ...d, link, origin: url.origin });
-    } catch (e) {
-      setError((e as Error).message);
-    }
-  }
-  return (
-    <div className="setup-grid">
-      <form className="panel" onSubmit={create}>
-        <span className="section-number">01 / SELECT THE CONTEXT</span>
-        <h2>Real detection. Clear context.</h2>
-        <p>
-          The phone will analyze fresh camera frames. This session supplies the
-          Toronto bin identity, so stage GPS is never mistaken for the
-          photographed location.
-        </p>
-        <label>
-          Session title
-          <input
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
-          />
-        </label>
-        <label>
-          Find a Toronto bin
-          <input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search a street or City ID"
-          />
-        </label>
-        <div className="picker-list">
-          {bins.map((b) => (
-            <button
-              type="button"
-              key={b.id}
-              className={bin?.id === b.id ? "selected" : ""}
-              onClick={() => setBin(b)}
-            >
-              <span>
-                <strong>{b.name}</strong>
-                <small>
-                  {b.sourceId} · {b.side} side
-                </small>
-              </span>
-              {bin?.id === b.id ? <Check size={17} /> : <MapPin size={17} />}
-            </button>
-          ))}
-        </div>
-        {bin && (
-          <div className="notice success">
-            <Check size={16} />
-            Selected: {bin.name}
-          </div>
-        )}
-        <label>
-          App address reachable by your phone
-          <input
-            type="url"
-            value={origin}
-            onChange={(e) => setOrigin(e.target.value)}
-            required
-          />
-          <small>
-            A phone needs trusted HTTPS. Localhost only works on this computer.
-          </small>
-        </label>
-        <button className="button primary full">
-          Create isolated demo <ArrowRight size={16} />
-        </button>
-        <p className="small muted">
-          Sessions expire after 24 hours. This creates no reports and no
-          preloaded detections.
-        </p>
-      </form>
-      <div className="panel demo-result">
-        {!demo ? (
-          <>
-            <Camera size={40} />
-            <h2>
-              The little moment
-              <br />
-              that connects it all.
-            </h2>
-            <ol>
-              <li>Create the demo with a selected Toronto bin.</li>
-              <li>Open a real overflow photo in the presentation view.</li>
-              <li>Scan the private QR link with your phone.</li>
-              <li>
-                Point at the projected photo. Two live observations create one
-                demo report.
-              </li>
-              <li>Watch the separate dashboard update.</li>
-            </ol>
-            <p className="small muted">
-              Recognition of a displayed photo does not establish real-world
-              location accuracy. Test your actual phone and display before
-              presenting.
-            </p>
-          </>
-        ) : (
-          <>
-            <span className="eyebrow">02 / PHONE → CAMERA → DASHBOARD</span>
-            <h2>Ready for a real scan.</h2>
-            <img
-              className="demo-qr"
-              src={qr}
-              alt="Private QR link to the demo camera scanner"
-            />
-            <p className="small">
-              Keep the private scanner link with your presentation team.
-            </p>
-            <button
-              className="button outlined"
-              onClick={() =>
-                navigator.clipboard
-                  .writeText(demo.link)
-                  .catch(() =>
-                    setError(
-                      "Clipboard unavailable. Copy the scanner link below.",
-                    ),
-                  )
-              }
-            >
-              <Copy size={15} />
-              Copy private scanner link
-            </button>
-            <a className="button outlined" href={demo.link}>
-              Open demo scanner <ArrowUpRight size={16} />
-            </a>
-            <Link className="button primary" href={`/demo/${demo.id}/present`}>
-              Open presentation <ArrowUpRight size={16} />
-            </Link>
-            <Link className="text-button" href={`/demo/${demo.id}/dashboard`}>
-              Open isolated dashboard <ArrowRight size={16} />
-            </Link>
-            <details>
-              <summary>Private scanner URL</summary>
-              <p className="break-all small">{demo.link}</p>
-            </details>
-          </>
-        )}
-      </div>
     </div>
   );
 }

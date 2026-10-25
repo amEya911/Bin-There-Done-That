@@ -28,10 +28,8 @@ type Data = Summary & {
 };
 export default function Dashboard({
   scope = "public",
-  demoTitle,
 }: {
   scope?: string;
-  demoTitle?: string;
 }) {
   const [data, setData] = useState<Data | null>(null);
   const [error, setError] = useState("");
@@ -96,7 +94,7 @@ export default function Dashboard({
       if (version === selectionVersion.current) setError((e as Error).message);
     }
   }
-  const scanner = scope === "public" ? "/scan" : `/demo/${scope.slice(5)}/scan`;
+  const scanner = "/scan";
   const filtered =
     data?.reports.filter(
       (r) =>
@@ -124,18 +122,6 @@ export default function Dashboard({
       reportWindow={window}
       onReportWindowChange={setWindow}
     >
-      {scope !== "public" && (
-        <div className="notice demo-notice">
-          <strong>Demo session</strong> {demoTitle || "Camera demonstration"} ·
-          Reports are separate from the public map.{" "}
-          <Link href={`/demo/${scope.slice(5)}/present`}>
-            Presentation <ArrowUpRight size={14} />
-          </Link>
-          <Link href={scoped("/manage/cases", scope)}>
-            Review cases <ArrowUpRight size={14} />
-          </Link>
-        </div>
-      )}
       <section className={styles.intro} aria-label="Toronto overview">
         <div className={styles.title}>
           <h1>
@@ -178,7 +164,6 @@ export default function Dashboard({
         </div>
         <div className={styles.map} ref={mapRoot}>
           <BinMap
-            palette="forest"
             layer={layer}
             reports={data?.reports || []}
             mapPoints={data?.mapPoints}

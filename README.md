@@ -168,7 +168,8 @@ Open **[localhost:3000](http://localhost:3000)**. The terminal will show a diffe
 - **[Dashboard](http://localhost:3000/dashboard):** explore the map and reports.
 - **[Camera](http://localhost:3000/scan):** try the scanner with a configured Gemini key.
 - **[Camera-off view](http://localhost:3000/scan?camera=off):** inspect the screen without starting the camera.
-- **[Local setup](http://localhost:3000/setup):** optionally configure management access for operator tools and isolated demos.
+
+Operator tools require a private, server-only `ADMIN_PASSWORD` setting. Visitors never configure AI keys or administrator access through the website.
 
 A phone needs a trusted **HTTPS** address and camera permission. `localhost` on your phone refers to the phone itself. Use the live website or a separately configured HTTPS development tunnel when testing on a physical phone.
 
@@ -207,9 +208,11 @@ The repository and some internal identifiers retain earlier names, including **B
 | `/bins/:id`     | View a bin, report an issue, or review its history.                            |
 | `/bins/new`     | Add a photographed bin in an allowed area.                                     |
 | `/manage/cases` | Read public case details; signed-in operators can access protected tools.      |
-| `/setup`        | Configure connections and management on localhost.                             |
+| `/about`        | Read about the project and its data.                                           |
+| `/receipts/:id` | Open a report receipt with the original browser session or recovery link.      |
+| `/manage/bins`  | Administrator-only bin inventory management.                                   |
 
-The former `/scan/test` page redirects to `/scan`. Additional operator and isolated-demo endpoints are described in the [API guide](docs/api.md).
+The retired `/setup`, `/scan/test`, `/manage/demo` and `/demo/...` pages have been removed and return 404. Demo API endpoints are also retired. Operator and API endpoints are described in the [API guide](docs/api.md).
 
 ## Useful commands
 
@@ -250,7 +253,7 @@ Sorting labels and rule coverage are maintained in the app. Project-specific cho
 
 The included [City of Toronto litter-receptacle dataset](https://open.toronto.ca/dataset/street-furniture-litter-receptacle/) contains **10,457 records** in this snapshot: **9,822 existing** and **635 temporarily removed** bins. Removed assets are excluded from active matching. Community additions are labeled separately and receive no invented City asset ID.
 
-Map attribution remains available in the interface: [OpenFreeMap](https://openfreemap.org/), [OpenMapTiles](https://www.openmaptiles.org/), and [OpenStreetMap contributors](https://www.openstreetmap.org/copyright). The optional projector-demo reference photo has its own [attribution](public/images/ATTRIBUTION.md). Data, photos, and experimental models retain their respective source licences.
+Map attribution remains available in the interface: [OpenFreeMap](https://openfreemap.org/), [OpenMapTiles](https://www.openmaptiles.org/), and [OpenStreetMap contributors](https://www.openstreetmap.org/copyright). Reference photographs used by tests retain their [attribution](public/images/ATTRIBUTION.md). Data, photos, and experimental models retain their respective source licences.
 
 ## Project guides
 

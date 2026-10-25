@@ -24,19 +24,13 @@
   display: flex;
   flex-direction: column;
   font-family: var(--display);
-  font-size: 17px;
+  font-size: 20px;
   font-weight: 650;
   letter-spacing: -0.035em;
   line-height: 1.05;
 }
 .period {
   color: var(--brand);
-}
-.light .wordmark {
-  color: var(--ink);
-}
-.light .symbol {
-  color: #423025;
 }
 .navigation {
   display: flex;
@@ -164,10 +158,7 @@
 .wide {
   max-width: 1800px;
 }
-.forestBrand .wordmark {
-  font-size: 20px;
-}
-.dashboard .navigation .current::after {
+.navigation .current::after {
   background: var(--action);
 }
 .affectedBins {
@@ -192,14 +183,24 @@
 @media (max-width: 760px) {
   .header {
     min-height: calc(76px + env(safe-area-inset-top));
-    padding: env(safe-area-inset-top) 20px 0;
-    gap: 20px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    padding: calc(env(safe-area-inset-top) + 12px) 20px 0;
+    gap: 0 16px;
   }
   .navigation {
-    gap: 18px;
+    grid-column: 1 / -1;
+    grid-row: 2;
+    justify-content: flex-end;
+    width: 100%;
+    margin-left: 0;
+    min-height: 50px;
+    gap: 22px;
     font-size: 12px;
   }
   .scanLink {
+    grid-column: 2;
+    grid-row: 1;
     width: 42px;
     padding: 0;
   }
@@ -210,41 +211,15 @@
     padding: 26px 20px 22px;
   }
   .wordmark {
-    font-size: 15px;
-  }
-  .symbol svg {
-    width: 24px;
-  }
-  .brand {
-    gap: 7px;
-  }
-  .dashboard .header {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 0 16px;
-    padding-top: calc(env(safe-area-inset-top) + 12px);
-  }
-  .dashboard .brand {
-    min-height: 54px;
-  }
-  .forestBrand .wordmark {
     font-size: 17px;
   }
-  .forestBrand .symbol svg {
+  .symbol svg {
     width: 46px;
     height: 46px;
   }
-  .dashboard .scanLink {
-    grid-column: 2;
-    grid-row: 1;
-  }
-  .dashboard .navigation {
-    grid-column: 1 / -1;
-    grid-row: 2;
-    width: 100%;
-    margin-left: 0;
-    min-height: 50px;
-    gap: 22px;
+  .brand {
+    gap: 7px;
+    min-height: 54px;
   }
   .dashboard .affectedBins {
     margin-right: auto;
@@ -254,8 +229,8 @@
 }
 @media (max-width: 380px) {
   .header {
-    padding: env(safe-area-inset-top) 14px 0;
-    gap: 14px;
+    padding-inline: 14px;
+    column-gap: 14px;
   }
   .navigation {
     gap: 12px;
@@ -263,10 +238,10 @@
   .main {
     padding-inline: 14px;
   }
-  .forestBrand .wordmark {
+  .wordmark {
     font-size: 15px;
   }
-  .forestBrand .symbol svg {
+  .symbol svg {
     width: 38px;
     height: 38px;
   }
