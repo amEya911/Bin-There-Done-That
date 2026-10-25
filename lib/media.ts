@@ -142,7 +142,7 @@ export async function cleanupMedia(
       throw Object.assign(new Error("Expired images could not be removed."), {
         status: 503,
       });
-    await query("delete from app_private.media where id=any($1::uuid[])", [
+    await query("delete from app_private.media where id=any($1::text[])", [
       rows.map((row) => row.id),
     ]);
     removed += rows.length;
